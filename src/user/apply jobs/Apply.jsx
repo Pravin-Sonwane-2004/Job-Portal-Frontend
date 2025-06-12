@@ -21,7 +21,7 @@ const Apply = () => {
       setFetchingApplied(true);
       setFetchError('');
       try {
-        const res = await fetch('http://localhost:8080/apply/applications/my-applied-dto', {
+        const res = await fetch('https://job-portal-backend-production-8f84.up.railway.app/apply/applications/my-applied-dto', {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem('jwt')}`,
@@ -48,7 +48,7 @@ const Apply = () => {
     setLoading(true);
     setStatus('');
     try {
-      const res = await fetch(`http://localhost:8080/apply/applications/apply?userId=${userId}&jobId=${jobId}`, {
+      const res = await fetch(`https://job-portal-backend-production-8f84.up.railway.app/apply/applications/apply?userId=${userId}&jobId=${jobId}`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem('jwt')}`,
@@ -59,7 +59,7 @@ const Apply = () => {
       // Refresh applied jobs after applying
       if (msg.includes('successfully')) {
         // Re-fetch applied jobs
-        const jobsRes = await fetch('http://localhost:8080/apply/applications/my-applied-dto', {
+        const jobsRes = await fetch('https://job-portal-backend-production-8f84.up.railway.app/apply/applications/my-applied-dto', {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem('jwt')}`,

@@ -23,6 +23,7 @@ import {
   IconPhone,
   IconBrandLinkedin,
   IconListCheck,
+  IconLogout,
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -76,7 +77,7 @@ const Profile = () => {
     setVerifySuccess(false);
     try {
       // If you have a verification endpoint, update it here as well
-      await axios.post('http://127.0.0.1:8080/api/user/verify', {}, { withCredentials: true });
+      await axios.post('https://job-portal-backend-production-8f84.up.railway.app/api/user/verify', {}, { withCredentials: true });
       setVerifySuccess(true);
       setUserData({ ...userData, verified: true });
     } catch (err) {
@@ -254,6 +255,20 @@ const Profile = () => {
             {verifyError}
           </Notification>
         )}
+      {/* Logout Button at the end */}
+        <Group position="center" mt="xl">
+          <Button
+            variant="outline"
+            color="red"
+            leftSection={<IconLogout size={18} />}
+            onClick={() => {
+              sessionStorage.removeItem('jwt');
+              navigate('/login');
+            }}
+          >
+            Logout
+          </Button>
+        </Group>
       </Card>
     </Container>
   );

@@ -12,7 +12,7 @@ const FindTalent = () => {
 
   // ✅ Fetch talent data from backend
   useEffect(() => {
-    fetch('http://localhost:8080/api/talents') // Update the URL as per your backend
+    fetch('https://job-portal-backend-production-8f84.up.railway.app/api/talents') // Update the URL as per your backend
       .then((res) => res.json())
       .then((data) => {
         setAllTalents(data);

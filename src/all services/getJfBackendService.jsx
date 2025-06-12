@@ -1,106 +1,106 @@
 import axios from 'axios';
 
 // --- AUTH ENDPOINTS ---
-export const LOGIN_URL = 'http://localhost:8080/public/login';
-export const REGISTER_URL = 'http://localhost:8080/public/signup';
-export const GET_JOBS_PUBLIC = 'http://localhost:8080/public/jobs/paginated';
+export const LOGIN_URL = 'https://job-portal-backend-production-8f84.up.railway.app/public/login';
+export const REGISTER_URL = 'https://job-portal-backend-production-8f84.up.railway.app/public/signup';
+export const GET_JOBS_PUBLIC = 'https://job-portal-backend-production-8f84.up.railway.app/public/jobs/paginated';
 
 // --- ADMIN DASHBOARD ENDPOINTS ---
-export const ADMIN_GET_ALL_USERS = 'http://localhost:8080/admin/users';
-export const ADMIN_DELETE_USER = 'http://localhost:8080/admin/user'; // + /{username}
-export const ADMIN_UPDATE_USER = 'http://localhost:8080/admin/user'; // + /{username}
-export const ADMIN_CREATE_JOB = 'http://localhost:8080/admin/jobs';
-export const ADMIN_BULK_CREATE_JOBS = 'http://localhost:8080/admin/jobs/bulk';
-export const ADMIN_DELETE_JOB = 'http://localhost:8080/admin/jobs'; // + /{id}
-export const ADMIN_UPDATE_JOB = 'http://localhost:8080/admin/jobs'; // + /{id}
-export const ADMIN_DELETE_ALL_JOBS = 'http://localhost:8080/admin/deletealljobs';
-export const ADMIN_GET_ALL_APPLICATIONS = 'http://localhost:8080/admin/applications';
-export const ADMIN_GET_ALL_APPLICATIONS_WITH_PROFILES = 'http://localhost:8080/admin/all';
-export const ADMIN_GET_ALL_APPLIERS = 'http://localhost:8080/admin/all-appliers';
-export const ADMIN_GET_APPLICATIONS_FOR_JOB = 'http://localhost:8080/admin/applications/job'; // + /{jobId}
-export const ADMIN_GET_APPLICATIONS_BY_USER = 'http://localhost:8080/admin/applications/user'; // + /{userId}
-export const ADMIN_CREATE_ADMIN_USER = 'http://localhost:8080/admin/signup';
+export const ADMIN_GET_ALL_USERS = 'https://job-portal-backend-production-8f84.up.railway.app/admin/users';
+export const ADMIN_DELETE_USER = 'https://job-portal-backend-production-8f84.up.railway.app/admin/user'; // + /{username}
+export const ADMIN_UPDATE_USER = 'https://job-portal-backend-production-8f84.up.railway.app/admin/user'; // + /{username}
+export const ADMIN_CREATE_JOB = 'https://job-portal-backend-production-8f84.up.railway.app/admin/jobs';
+export const ADMIN_BULK_CREATE_JOBS = 'https://job-portal-backend-production-8f84.up.railway.app/admin/jobs/bulk';
+export const ADMIN_DELETE_JOB = 'https://job-portal-backend-production-8f84.up.railway.app/admin/jobs'; // + /{id}
+export const ADMIN_UPDATE_JOB = 'https://job-portal-backend-production-8f84.up.railway.app/admin/jobs'; // + /{id}
+export const ADMIN_DELETE_ALL_JOBS = 'https://job-portal-backend-production-8f84.up.railway.app/admin/deletealljobs';
+export const ADMIN_GET_ALL_APPLICATIONS = 'https://job-portal-backend-production-8f84.up.railway.app/admin/applications';
+export const ADMIN_GET_ALL_APPLICATIONS_WITH_PROFILES = 'https://job-portal-backend-production-8f84.up.railway.app/admin/all';
+export const ADMIN_GET_ALL_APPLIERS = 'https://job-portal-backend-production-8f84.up.railway.app/admin/all-appliers';
+export const ADMIN_GET_APPLICATIONS_FOR_JOB = 'https://job-portal-backend-production-8f84.up.railway.app/admin/applications/job'; // + /{jobId}
+export const ADMIN_GET_APPLICATIONS_BY_USER = 'https://job-portal-backend-production-8f84.up.railway.app/admin/applications/user'; // + /{userId}
+export const ADMIN_CREATE_ADMIN_USER = 'https://job-portal-backend-production-8f84.up.railway.app/admin/signup';
 // --- USER DASHBOARD ENDPOINTS ---
-export const USER_PAGINATION_URL = 'http://localhost:8080/user/jobs/paginated';
-export const USER_UPLOAD_JOBS = 'http://localhost:8080/user/jobs';
-export const USER_GET_JOBS = 'http://localhost:8080/user/jobs';
-export const USER_GET_JOB_BY_ID = 'http://localhost:8080/user/jobs'; // + /{id}
-export const USER_GET_JOBS_SORTED = 'http://localhost:8080/user/jobs/sorted';
+export const USER_PAGINATION_URL = 'https://job-portal-backend-production-8f84.up.railway.app/user/jobs/paginated';
+export const USER_UPLOAD_JOBS = 'https://job-portal-backend-production-8f84.up.railway.app/user/jobs';
+export const USER_GET_JOBS = 'https://job-portal-backend-production-8f84.up.railway.app/user/jobs';
+export const USER_GET_JOB_BY_ID = 'https://job-portal-backend-production-8f84.up.railway.app/user/jobs'; // + /{id}
+export const USER_GET_JOBS_SORTED = 'https://job-portal-backend-production-8f84.up.railway.app/user/jobs/sorted';
 
 // --- JOB APPLICATIONS ---
-export const APPLY_JOB = 'http://localhost:8080/apply/applications/apply';
-export const GET_MY_APPLIED_JOBS = 'http://localhost:8080/apply/applications/my-applied-entities';
-export const GET_MY_APPLIED_JOBS_DTO = 'http://localhost:8080/apply/applications/my-applied-dto';
-export const CANCEL_APPLICATION = 'http://localhost:8080/apply/applications/cancel';
-export const ADMIN_GET_ALL_APPLICATIONS_APPLY = 'http://localhost:8080/apply/applications/admin/all';
+export const APPLY_JOB = 'https://job-portal-backend-production-8f84.up.railway.app/apply/applications/apply';
+export const GET_MY_APPLIED_JOBS = 'https://job-portal-backend-production-8f84.up.railway.app/apply/applications/my-applied-entities';
+export const GET_MY_APPLIED_JOBS_DTO = 'https://job-portal-backend-production-8f84.up.railway.app/apply/applications/my-applied-dto';
+export const CANCEL_APPLICATION = 'https://job-portal-backend-production-8f84.up.railway.app/apply/applications/cancel';
+export const ADMIN_GET_ALL_APPLICATIONS_APPLY = 'https://job-portal-backend-production-8f84.up.railway.app/apply/applications/admin/all';
 
 // --- RECRUITER DASHBOARD ENDPOINTS ---
-export const RECRUITER_BASE = 'http://localhost:8080/recruiter';
+export const RECRUITER_BASE = 'https://job-portal-backend-production-8f84.up.railway.app/recruiter';
 
 // --- SAVED JOBS ---
-export const SAVED_JOBS_BASE = 'http://localhost:8080/api/saved-jobs';
-export const GET_SAVED_JOBS_BY_USER = 'http://localhost:8080/api/saved-jobs/user'; // + /{userId}
-export const SAVE_JOB = 'http://localhost:8080/api/saved-jobs/save';
-export const UNSAVE_JOB = 'http://localhost:8080/api/saved-jobs/unsave';
+export const SAVED_JOBS_BASE = 'https://job-portal-backend-production-8f84.up.railway.app/api/saved-jobs';
+export const GET_SAVED_JOBS_BY_USER = 'https://job-portal-backend-production-8f84.up.railway.app/api/saved-jobs/user'; // + /{userId}
+export const SAVE_JOB = 'https://job-portal-backend-production-8f84.up.railway.app/api/saved-jobs/save';
+export const UNSAVE_JOB = 'https://job-portal-backend-production-8f84.up.railway.app/api/saved-jobs/unsave';
 
 // --- USER REGISTRATION ---
-export const USER_REGISTER_BASE = 'http://localhost:8080/api/register';
+export const USER_REGISTER_BASE = 'https://job-portal-backend-production-8f84.up.railway.app/api/register';
 
 // --- USER MANAGEMENT ---
-export const USERS_BASE = 'http://localhost:8080/api/users';
-export const GET_USER_BY_ID = 'http://localhost:8080/api/users'; // + /{id}
+export const USERS_BASE = 'https://job-portal-backend-production-8f84.up.railway.app/api/users';
+export const GET_USER_BY_ID = 'https://job-portal-backend-production-8f84.up.railway.app/api/users'; // + /{id}
 
 // --- EMAIL ---
-export const EMAIL_BASE = 'http://localhost:8080/email';
-export const EMAIL_SEND = 'http://localhost:8080/email/send';
+export const EMAIL_BASE = 'https://job-portal-backend-production-8f84.up.railway.app/email';
+export const EMAIL_SEND = 'https://job-portal-backend-production-8f84.up.railway.app/email/send';
 
 // --- ROLE PROFILE ---
-export const ROLE_PROFILE_BASE = 'http://localhost:8080/role-profile';
-export const UPDATE_PROFILE = 'http://localhost:8080/role-profile/update-profile';
-export const GET_PROFILE = 'http://localhost:8080/role-profile/get-profile';
-export const GET_USERS_NAME = 'http://localhost:8080/role-profile/users-name';
-export const GET_NAME = 'http://localhost:8080/role-profile/full-name';
+export const ROLE_PROFILE_BASE = 'https://job-portal-backend-production-8f84.up.railway.app/role-profile';
+export const UPDATE_PROFILE = 'https://job-portal-backend-production-8f84.up.railway.app/role-profile/update-profile';
+export const GET_PROFILE = 'https://job-portal-backend-production-8f84.up.railway.app/role-profile/get-profile';
+export const GET_USERS_NAME = 'https://job-portal-backend-production-8f84.up.railway.app/role-profile/users-name';
+export const GET_NAME = 'https://job-portal-backend-production-8f84.up.railway.app/role-profile/full-name';
 
 // --- JOB ALERTS ---
-export const JOB_ALERTS_BASE = 'http://localhost:8080/api/job-alerts';
-export const GET_JOB_ALERTS_BY_USER = 'http://localhost:8080/api/job-alerts/user'; // + /{userId}
-export const CREATE_JOB_ALERT = 'http://localhost:8080/api/job-alerts/create';
-export const DELETE_JOB_ALERT = 'http://localhost:8080/api/job-alerts/delete'; // + /{alertId}
+export const JOB_ALERTS_BASE = 'https://job-portal-backend-production-8f84.up.railway.app/api/job-alerts';
+export const GET_JOB_ALERTS_BY_USER = 'https://job-portal-backend-production-8f84.up.railway.app/api/job-alerts/user'; // + /{userId}
+export const CREATE_JOB_ALERT = 'https://job-portal-backend-production-8f84.up.railway.app/api/job-alerts/create';
+export const DELETE_JOB_ALERT = 'https://job-portal-backend-production-8f84.up.railway.app/api/job-alerts/delete'; // + /{alertId}
 
 // --- RESUMES ---
-export const RESUMES_BASE = 'http://localhost:8080/api/resumes';
-export const GET_RESUMES_BY_USER = 'http://localhost:8080/api/resumes/user'; // + /{userId}
-export const UPLOAD_RESUME = 'http://localhost:8080/api/resumes/upload';
-export const DELETE_RESUME = 'http://localhost:8080/api/resumes/delete'; // + /{resumeId}
+export const RESUMES_BASE = 'https://job-portal-backend-production-8f84.up.railway.app/api/resumes';
+export const GET_RESUMES_BY_USER = 'https://job-portal-backend-production-8f84.up.railway.app/api/resumes/user'; // + /{userId}
+export const UPLOAD_RESUME = 'https://job-portal-backend-production-8f84.up.railway.app/api/resumes/upload';
+export const DELETE_RESUME = 'https://job-portal-backend-production-8f84.up.railway.app/api/resumes/delete'; // + /{resumeId}
 
 // --- MESSAGES ---
-export const MESSAGES_BASE = 'http://localhost:8080/api/messages';
-export const GET_SENT_MESSAGES = 'http://localhost:8080/api/messages/sent'; // + /{userId}
-export const GET_RECEIVED_MESSAGES = 'http://localhost:8080/api/messages/received'; // + /{userId}
-export const GET_CONVERSATION = 'http://localhost:8080/api/messages/conversation';
-export const SEND_MESSAGE = 'http://localhost:8080/api/messages/send';
-export const DELETE_MESSAGE = 'http://localhost:8080/api/messages/delete'; // + /{messageId}
+export const MESSAGES_BASE = 'https://job-portal-backend-production-8f84.up.railway.app/api/messages';
+export const GET_SENT_MESSAGES = 'https://job-portal-backend-production-8f84.up.railway.app/api/messages/sent'; // + /{userId}
+export const GET_RECEIVED_MESSAGES = 'https://job-portal-backend-production-8f84.up.railway.app/api/messages/received'; // + /{userId}
+export const GET_CONVERSATION = 'https://job-portal-backend-production-8f84.up.railway.app/api/messages/conversation';
+export const SEND_MESSAGE = 'https://job-portal-backend-production-8f84.up.railway.app/api/messages/send';
+export const DELETE_MESSAGE = 'https://job-portal-backend-production-8f84.up.railway.app/api/messages/delete'; // + /{messageId}
 
 // --- COMPANIES ---
-export const COMPANIES_BASE = 'http://localhost:8080/api/companies';
-export const CREATE_COMPANY = 'http://localhost:8080/api/companies/create-or-update';
-export const DELETE_COMPANY = 'http://localhost:8080/api/companies/delete'; // + /{id}
-export const GET_COMPANY_BY_ID = 'http://localhost:8080/api/companies'; // + /{id}
+export const COMPANIES_BASE = 'https://job-portal-backend-production-8f84.up.railway.app/api/companies';
+export const CREATE_COMPANY = 'https://job-portal-backend-production-8f84.up.railway.app/api/companies/create-or-update';
+export const DELETE_COMPANY = 'https://job-portal-backend-production-8f84.up.railway.app/api/companies/delete'; // + /{id}
+export const GET_COMPANY_BY_ID = 'https://job-portal-backend-production-8f84.up.railway.app/api/companies'; // + /{id}
 
 // --- COMPANY REVIEWS ---
-export const COMPANY_REVIEWS_BASE = 'http://localhost:8080/api/company-reviews';
-export const GET_COMPANY_REVIEWS = 'http://localhost:8080/api/company-reviews/company'; // + /{companyId}
-export const ADD_COMPANY_REVIEW = 'http://localhost:8080/api/company-reviews/add';
-export const DELETE_COMPANY_REVIEW = 'http://localhost:8080/api/company-reviews/delete'; // + /{reviewId}
+export const COMPANY_REVIEWS_BASE = 'https://job-portal-backend-production-8f84.up.railway.app/api/company-reviews';
+export const GET_COMPANY_REVIEWS = 'https://job-portal-backend-production-8f84.up.railway.app/api/company-reviews/company'; // + /{companyId}
+export const ADD_COMPANY_REVIEW = 'https://job-portal-backend-production-8f84.up.railway.app/api/company-reviews/add';
+export const DELETE_COMPANY_REVIEW = 'https://job-portal-backend-production-8f84.up.railway.app/api/company-reviews/delete'; // + /{reviewId}
 
 // --- INTERVIEWS ---
-export const INTERVIEWS_BASE = 'http://localhost:8080/api/interviews';
-export const GET_INTERVIEWS_BY_USER = 'http://localhost:8080/api/interviews/user'; // + /{userId}
-export const GET_INTERVIEWS_BY_EMPLOYER = 'http://localhost:8080/api/interviews/employer'; // + /{employerId}
-export const GET_INTERVIEWS_BY_APPLICATION = 'http://localhost:8080/api/interviews/application'; // + /{applicationId}
-export const SCHEDULE_INTERVIEW = 'http://localhost:8080/api/interviews/schedule';
-export const UPDATE_INTERVIEW_STATUS = 'http://localhost:8080/api/interviews/update-status'; // + /{interviewId}
-export const DELETE_INTERVIEW = 'http://localhost:8080/api/interviews/delete'; // + /{interviewId}
+export const INTERVIEWS_BASE = 'https://job-portal-backend-production-8f84.up.railway.app/api/interviews';
+export const GET_INTERVIEWS_BY_USER = 'https://job-portal-backend-production-8f84.up.railway.app/api/interviews/user'; // + /{userId}
+export const GET_INTERVIEWS_BY_EMPLOYER = 'https://job-portal-backend-production-8f84.up.railway.app/api/interviews/employer'; // + /{employerId}
+export const GET_INTERVIEWS_BY_APPLICATION = 'https://job-portal-backend-production-8f84.up.railway.app/api/interviews/application'; // + /{applicationId}
+export const SCHEDULE_INTERVIEW = 'https://job-portal-backend-production-8f84.up.railway.app/api/interviews/schedule';
+export const UPDATE_INTERVIEW_STATUS = 'https://job-portal-backend-production-8f84.up.railway.app/api/interviews/update-status'; // + /{interviewId}
+export const DELETE_INTERVIEW = 'https://job-portal-backend-production-8f84.up.railway.app/api/interviews/delete'; // + /{interviewId}
 
 // --- GENERIC AXIOS CALLS ---
 const getAuthHeaders = () => {
@@ -144,8 +144,8 @@ export const applyToJob = (jobId) => axios.post(APPLY_JOB, null, { params: { job
 export const getMyAppliedJobs = () => axios.get(GET_MY_APPLIED_JOBS_DTO, { headers: getAuthHeaders() });
 export const getMyAppliedJobsDTO = () => axios.get(GET_MY_APPLIED_JOBS_DTO, { headers: getAuthHeaders() });
 export const cancelApplication = (jobId) => axios.delete(CANCEL_APPLICATION, { params: { jobId }, headers: getAuthHeaders() });
-export const deleteApplicationById = (applicationId) => axios.delete(`http://localhost:8080/apply/applications/${applicationId}`, { headers: getAuthHeaders() });
-export const updateApplicationById = (applicationId, updates) => axios.put(`http://localhost:8080/apply/applications/${applicationId}`, updates, { headers: getAuthHeaders() });
+export const deleteApplicationById = (applicationId) => axios.delete(`https://job-portal-backend-production-8f84.up.railway.app/apply/applications/${applicationId}`, { headers: getAuthHeaders() });
+export const updateApplicationById = (applicationId, updates) => axios.put(`https://job-portal-backend-production-8f84.up.railway.app/apply/applications/${applicationId}`, updates, { headers: getAuthHeaders() });
 export const adminGetAllApplicationsApply = () => axios.get(ADMIN_GET_ALL_APPLICATIONS_APPLY, { headers: getAuthHeaders() });
 
 // --- RECRUITER ---

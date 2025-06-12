@@ -28,7 +28,7 @@ const JobCard = ({ job }) => {
     setLoading(true);
     setApplyStatus('');
     try {
-      const res = await fetch(`http://localhost:8080/apply/applications/apply?userId=${userId}&jobId=${job.id}`, {
+      const res = await fetch(`https://job-portal-backend-production-8f84.up.railway.app/apply/applications/apply?userId=${userId}&jobId=${job.id}`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem('jwt')}`,

@@ -142,7 +142,7 @@ export default function SignUp() {
                 className="w-full p-2 text-sm rounded border border-masala-500 bg-masala-900 text-white"
               >
                 <option value="USER">User</option>
-                <option value="ADMIN">Admin</option>
+                {/* <option value="ADMIN">Admin</option> */}
                 <option value="RECRUITER">Recruiter</option>
               </select>
             </div>

@@ -119,7 +119,7 @@ const SignIn = ({ onToggle }) => {
               onChange={setRole}
               data={[
                 { value: 'USER', label: 'User' },
-                { value: 'ADMIN', label: 'Admin' },
+                // { value: 'ADMIN', label: 'Admin' },
                 { value: 'RECRUITER', label: 'Recruiter' },
               ]}
               required
