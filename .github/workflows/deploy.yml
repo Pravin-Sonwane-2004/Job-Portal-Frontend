@@ -13,14 +13,14 @@ jobs:
     - name: Checkout source code
       uses: actions/checkout@v3
 
-    - name: SSH into Linux VM and deploy Docker containers
+    - name: SSH into Linux VM and deploy frontend Docker container
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          cd /home/pravin/jobportal-backend
+          cd /home/pravin/job-portal-frontend
           git pull origin main
           docker compose down
           docker compose up -d --build
