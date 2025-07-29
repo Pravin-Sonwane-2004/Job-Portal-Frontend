@@ -20,7 +20,7 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          cd /home/pravin/jobportal-backend  # update this path to your project directory
+          cd /home/pravin/jobportal-backend
           git pull origin main
           docker compose down
           docker compose up -d --build
