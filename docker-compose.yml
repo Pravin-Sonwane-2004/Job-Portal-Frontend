@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   react-frontend:
@@ -7,10 +7,10 @@ services:
       dockerfile: Dockerfile.dev
     container_name: jobportal-frontend
     ports:
-      - "3000:5173"
+      - "3000:3000"
     volumes:
-      - .:/app
-      - /app/node_modules
+      - .:/app                # Mount code
+      - /app/node_modules     # Prevent host overwrite
     networks:
       - app-network
 
