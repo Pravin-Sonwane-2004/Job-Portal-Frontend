@@ -19,8 +19,9 @@ jobs:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 22
         script: |
           cd /home/pravin/job-portal-frontend
           git pull origin main
-          docker compose down
-          docker compose up -d --build
+          docker-compose down
+          docker-compose up -d --build
