@@ -7,12 +7,16 @@ services:
       dockerfile: Dockerfile.dev
     container_name: jobportal-frontend
     ports:
-      - "3000:3000"
+      - "3000:3000"  # Maps container:host ports
     volumes:
-      - .:/app                # Mount code
-      - /app/node_modules     # Prevent host overwrite
+      - .:/app                # Syncs code changes live (for HMR)
+      - /app/node_modules     # Prevents host from overwriting container node_modules
     networks:
       - app-network
+    environment:
+      - NODE_ENV=development
+    tty: true                 # Allows proper console output
+    stdin_open: true          # Keeps STDIN open for live feedback
 
 networks:
   app-network:
