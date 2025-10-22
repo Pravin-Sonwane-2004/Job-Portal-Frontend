@@ -1,38 +1,37 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import SettingsPage from './settings/SettingsPage';
+import { Route, Routes } from "react-router-dom";
+import SettingsPage from "./settings/SettingsPage";
 
-import HomePage from './public/landing page/HomePage';
-import FindJobs from './public/pages/FindJobsPage';
-import UploadJobs from './admin/pages/UploadJobs';
-import SignIn from './public/signup signin/SignIn';
-import SignUp from './public/signup signin/SignUp';
-import UploadJob from './admin/Upload Job';
-import AdminPage from './admin/pages/AdminPage';
-import MyApplication from './user/MyApplication';
-import AllUser from './admin/pages/AllUser';
+import UploadJob from "./admin/Upload Job";
+import AdminPage from "./admin/pages/AdminPage";
+import AllUser from "./admin/pages/AllUser";
+import UploadJobs from "./admin/pages/UploadJobs";
+import SignIn from "./public/auth/LogIn";
+import SignUp from "./public/auth/Register";
+import HomePage from "./public/landing page/HomePage";
+import FindJobs from "./public/pages/FindJobsPage";
+import MyApplication from "./user/MyApplication";
 // import AllApplications from './admin/AllApplications';
-import { Dashboard } from './user/find jobs/Dashboard';
-import ProfilePage from './public/pages/ProfilePage';
-import EditProfile from './profile/EditProfile';
-import ResumeBuild from './public/pages/ResumeBuild';
-import Apply from './user/apply jobs/Apply';
-import FindTalentPage from './admin/pages/FindTalentPage';
+import FindTalentPage from "./admin/pages/FindTalentPage";
+import EditProfile from "./profile/EditProfile";
+import ProfilePage from "./public/pages/ProfilePage";
+import ResumeBuild from "./public/pages/ResumeBuild";
+import Apply from "./user/apply jobs/Apply";
+import { Dashboard } from "./user/find jobs/Dashboard";
 
-import ProtectedRoute from './ProtectedRoute';
-import SavedJobsPage from './user/SavedJobsPage';
-import JobAlertsPage from './user/JobAlertsPage';
-import ResumeUploadPage from './profile/pages/ResumeUploadPage';
-import MessagesPage from './user/MessagesPage';
-import CompanyProfilePage from './public/pages/CompanyProfilePage';
-import InterviewSchedulePage from './user/InterviewSchedulePage';
+import ProtectedRoute from "./ProtectedRoute";
+import ResumeUploadPage from "./profile/pages/ResumeUploadPage";
+import CompanyProfilePage from "./public/pages/CompanyProfilePage";
+import InterviewSchedulePage from "./user/InterviewSchedulePage";
+import JobAlertsPage from "./user/JobAlertsPage";
+import MessagesPage from "./user/MessagesPage";
+import SavedJobsPage from "./user/SavedJobsPage";
 
 export default function Router() {
   return (
     <Routes>
       {/* Public Routes */}
       <Route path="/signin" element={<SignIn />} />
-      <Route path="/signup" element={<SignUp />} />
+      <Route path="/register" element={<SignUp />} />
       <Route path="*" element={<HomePage />} />
       <Route path="/find-jobs" element={<FindJobs />} />
       <Route path="/resume-builder" element={<ResumeBuild />} />
@@ -132,7 +131,7 @@ export default function Router() {
           </ProtectedRoute>
         }
       />
-    {/* Settings Page (protected for logged-in users) */}
+      {/* Settings Page (protected for logged-in users) */}
       <Route
         path="/settings"
         element={
@@ -141,7 +140,7 @@ export default function Router() {
           </ProtectedRoute>
         }
       />
-    {/* Saved Jobs */}
+      {/* Saved Jobs */}
       <Route
         path="/saved-jobs"
         element={
@@ -178,10 +177,7 @@ export default function Router() {
         }
       />
       {/* Company Profile (public) */}
-      <Route
-        path="/company/:companyId"
-        element={<CompanyProfilePage />}
-      />
+      <Route path="/company/:companyId" element={<CompanyProfilePage />} />
       {/* Interview Scheduling */}
       <Route
         path="/interviews"

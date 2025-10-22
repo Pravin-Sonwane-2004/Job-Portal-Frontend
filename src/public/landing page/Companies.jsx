@@ -37,7 +37,7 @@ const Companies = () => {
           </div>
         ))}
       </Marquee>
-    </div>
+    </div>  
   );
 };
 

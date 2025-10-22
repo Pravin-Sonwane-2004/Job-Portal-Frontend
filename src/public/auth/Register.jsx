@@ -1,89 +1,98 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
   Button,
   PasswordInput,
-  TextInput,
-  Text,
-  Title,
   Stack,
-} from '@mantine/core';
-import { IconMail, IconLock } from '@tabler/icons-react';
-import { REGISTER_URL } from '../../all services/getJfBackendService';
+  Text,
+  TextInput,
+  Title,
+} from "@mantine/core";
+import { IconLock, IconMail, IconUser } from "@tabler/icons-react";
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { REGISTER_URL } from "../../all services/getJfBackendService";
 
 export default function SignUp() {
   const [form, setForm] = useState({
-    email: '',
-    password: '',
-    confirmPassword: '',
-    role: 'USER',
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    role: "USER",
   });
 
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (sessionStorage.getItem('jwt')) {
-      navigate('/signin', { replace: true });
+    if (sessionStorage.getItem("jwt")) {
+      navigate("/signin", { replace: true });
     }
   }, [navigate]);
 
-  const handleChange = (e) => {
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     setForm((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: value.trimStart(), // prevent leading spaces
     }));
-  };
+  }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
+      setError("");
+      setSuccess("");
 
-    if (form.password !== form.confirmPassword) {
-      setError('Passwords do not match.');
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const response = await fetch(REGISTER_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: form.email,
-          password: form.password,
-          role: form.role, // e.g., "USER", "ADMIN", or "RECRUITER"
-        }),
-      });
-
-      const message = await response.text();
-
-      if (response.ok) {
-        setSuccess('Account created successfully! Redirecting to sign-in...');
-        setTimeout(() => navigate('/signin'), 1500);
-      } else {
-        if (message.toLowerCase().includes('email already exists')) {
-          setError('Email already exists.');
-        } else {
-          setError(message || 'Error creating account.');
-        }
+      if (form.password !== form.confirmPassword) {
+        setError("Passwords do not match.");
+        return;
       }
-    } catch {
-      setError('Error connecting to server.');
-    } finally {
-      setLoading(false);
-    }
-  };
+
+      setLoading(true);
+
+      try {
+        const response = await fetch(REGISTER_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: form.name.trim(),
+            email: form.email.trim(),
+            password: form.password,
+            role: form.role,
+          }),
+        });
+
+        const message = await response.text();
+
+        if (response.ok) {
+          setSuccess("Account created successfully! Redirecting to sign-in...");
+          setTimeout(() => navigate("/signin"), 1500);
+        } else {
+          if (message.toLowerCase().includes("email already exists")) {
+            setError("Email already exists.");
+          } else {
+            setError(message || "Error creating account.");
+          }
+        }
+      } catch {
+        setError("Error connecting to server.");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [form, navigate]
+  );
 
   return (
     <div className="h-screen flex items-center justify-center bg-masala-950 px-2">
       <div className="w-full max-w-xl bg-masala-950 border border-bright-sun-300 shadow-md rounded-xl p-6">
-        <Title align="center" order={2} className="text-bright-sun-500 font-semibold mb-4">
+        <Title
+          align="center"
+          order={2}
+          className="text-bright-sun-500 font-semibold mb-4"
+        >
           Register
         </Title>
 
@@ -100,6 +109,17 @@ export default function SignUp() {
 
         <form onSubmit={handleSubmit}>
           <Stack spacing="md">
+            <TextInput
+              icon={<IconUser size={16} />}
+              label="Name"
+              name="name"
+              size="sm"
+              value={form.name}
+              onChange={handleChange}
+              required
+              placeholder="e.g. John Doe"
+            />
+
             <TextInput
               icon={<IconMail size={16} />}
               label="Email"
@@ -134,7 +154,9 @@ export default function SignUp() {
             />
 
             <div>
-              <Text size="sm" className="mb-1 text-white font-medium">Role</Text>
+              <Text size="sm" className="mb-1 text-white font-medium">
+                Role
+              </Text>
               <select
                 name="role"
                 value={form.role}
@@ -154,13 +176,13 @@ export default function SignUp() {
               size="md"
               styles={{
                 root: {
-                  backgroundColor: '#f99b07',
-                  color: '#fff',
+                  backgroundColor: "#f99b07",
+                  color: "#fff",
                   fontWeight: 600,
-                  fontSize: '16px',
-                  paddingTop: '8px',
-                  paddingBottom: '8px',
-                  '&:hover': { backgroundColor: '#dd7302' },
+                  fontSize: "16px",
+                  paddingTop: "8px",
+                  paddingBottom: "8px",
+                  "&:hover": { backgroundColor: "#dd7302" },
                 },
               }}
             >
@@ -169,13 +191,13 @@ export default function SignUp() {
           </Stack>
 
           <Text align="center" size="sm" mt="md" className="text-masala-300">
-            Already registered?{' '}
+            Already registered?{" "}
             <button
               type="button"
-              onClick={() => navigate('/signin')}
+              onClick={() => navigate("/signin")}
               className="text-bright-sun-400 hover:underline focus:outline-none"
             >
-              Sign In
+              Log In
             </button>
           </Text>
         </form>
