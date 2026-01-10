@@ -1,8 +1,8 @@
 import axios from "axios";
 
 // --- AUTH ENDPOINTS ---
-export const LOGIN_URL = "http://localhost:8080/public/auth/login";
-export const REGISTER_URL = "http://localhost:8080/public/auth/register";
+export const LOGIN_URL = "http://localhost:8080/public/login";
+export const REGISTER_URL = "http://localhost:8080/public/signup";
 export const GET_JOBS_PUBLIC = "http://localhost:8080/public/jobs/paginated";
 
 // --- ADMIN DASHBOARD ENDPOINTS ---
