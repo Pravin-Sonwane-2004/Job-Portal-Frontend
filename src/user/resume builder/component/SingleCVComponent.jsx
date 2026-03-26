@@ -343,22 +343,22 @@ const SingleCVComponent = () => {
             <Tabs defaultValue="personal" orientation="vertical" variant="pills" color="blue">
               <Tabs.List>
                 <Tabs.Tab value="personal" icon={<IconUser size={18} />}>
-                  <Text fw={600} color="gray.2">Personal</Text>
+                  <Text fw={600} color="neutral.2">Personal</Text>
                 </Tabs.Tab>
                 <Tabs.Tab value="experience" icon={<IconBriefcase size={18} />}>
-                  <Text fw={600} color="gray.2">Experience</Text>
+                  <Text fw={600} color="neutral.2">Experience</Text>
                 </Tabs.Tab>
                 <Tabs.Tab value="education" icon={<IconBook size={18} />}>
-                  <Text fw={600} color="gray.2">Education</Text>
+                  <Text fw={600} color="neutral.2">Education</Text>
                 </Tabs.Tab>
                 <Tabs.Tab value="skills" icon={<IconDeviceFloppy size={18} />}>
-                  <Text fw={600} color="gray.2">Skills</Text>
+                  <Text fw={600} color="neutral.2">Skills</Text>
                 </Tabs.Tab>
                 <Tabs.Tab value="languages" icon={<IconLanguage size={18} />}>
-                  <Text fw={600} color="gray.2">Languages</Text>
+                  <Text fw={600} color="neutral.2">Languages</Text>
                 </Tabs.Tab>
                 <Tabs.Tab value="hobbies" icon={<IconHeart size={18} />}>
-                  <Text fw={600} color="gray.2">Hobbies</Text>
+                  <Text fw={600} color="neutral.2">Hobbies</Text>
                 </Tabs.Tab>
               </Tabs.List>
               <Tabs.Panel value="personal" pt="xs">

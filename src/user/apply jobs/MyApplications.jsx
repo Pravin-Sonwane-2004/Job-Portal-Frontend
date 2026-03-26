@@ -65,8 +65,8 @@ const MyApplications = () => {
             <li key={job.id} className="border rounded p-4 shadow flex flex-col md:flex-row md:items-center md:justify-between">
               <div>
                 <div className="font-semibold text-lg">{job.title}</div>
-                <div className="text-gray-600">{job.company}</div>
-                <div className="text-sm text-gray-500">
+                <div className="text-neutral-600">{job.company}</div>
+                <div className="text-sm text-neutral-500">
                   Posted: {job.postedDate ? job.postedDate : 'N/A'}
                 </div>
               </div>

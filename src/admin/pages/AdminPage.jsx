@@ -14,7 +14,7 @@ const AdminPage = () => {
 
   return (
     <PageWrapper>
-        <h1 className="text-3xl text-bright-sun-400 font-bold">Admin Dashboard</h1>
+        <h1 className="text-3xl text-accent-400 font-bold">Admin Dashboard</h1>
     </PageWrapper>
   );
 };

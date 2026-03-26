@@ -88,19 +88,19 @@ const Profile = () => {
 
   if (loading) {
     return (
-      <Container fluid className="min-h-screen flex items-center justify-center bg-masala-950">
-        <Loader size="lg" color="yellow" />
+      <Container fluid className="min-h-screen flex items-center justify-center bg-neutral-950">
+        <Loader size="lg" color="accent" />
       </Container>
     );
   }
 
   if (!userData) {
     return (
-      <Container fluid className="min-h-screen flex items-center justify-center bg-masala-950">
+      <Container fluid className="min-h-screen flex items-center justify-center bg-neutral-950">
         <div className="flex flex-col items-center">
           <Text color="red" className="mb-4">Failed to load profile data.</Text>
           <Button
-            color="bright-sun"
+            color="accent"
             variant="outline"
             onClick={() => navigate('/edit-profile')}
           >
@@ -115,14 +115,14 @@ const Profile = () => {
     <Container
       size="md"
       fluid
-      className="min-h-screen py-10 bg-masala-950 font-poppins flex items-center justify-center"
+      className="min-h-screen py-10 bg-neutral-950 font-poppins flex items-center justify-center"
       style={{ maxWidth: '100vw' }}
     >
       <Card
         shadow="xl"
         radius="lg"
         padding="xl"
-        className="bg-masala-950 border border-gray-700 w-full max-w-2xl mx-auto hover:shadow-2xl transition-all duration-300"
+        className="bg-neutral-950 border border-neutral-700 w-full max-w-2xl mx-auto hover:shadow-2xl transition-all duration-300"
         style={{ width: '100%', minWidth: 0 }}
       >
         <Group position="center" className="relative mb-3">
@@ -131,9 +131,9 @@ const Profile = () => {
             size={100}
             radius="xl"
             alt={`${userData.name}'s profile picture`}
-            className="border-4 border-bright-sun-400 shadow-xl transition-transform hover:scale-105"
+            className="border-4 border-accent-400 shadow-xl transition-transform hover:scale-105"
           />
-          <Text align="right" size="xl" weight={700} className="text-bright-sun-400 mb-1">
+          <Text align="right" size="xl" weight={700} className="text-accent-400 mb-1">
             {userData.name}
           </Text> 
         </Group>
@@ -144,7 +144,7 @@ const Profile = () => {
         <Group position="center" mt="xs" mb="xs">
           <Badge
             variant="light"
-            color={userData.verified ? 'teal' : 'gray'}
+            color={userData.verified ? 'teal' : 'neutral'}
             leftSection={
               userData.verified ? <IconShieldCheck size={14} /> : <IconShieldX size={14} />
             }
@@ -156,36 +156,36 @@ const Profile = () => {
         <Divider my="lg" />
 
         {/* Profile fields with icons */}
-        <div className="p-0 text-sm text-gray-300 space-y-2">
+        <div className="p-0 text-sm text-neutral-300 space-y-2">
           <p>
-            <IconUser size={16} className="inline mr-2 text-bright-sun-400" />
-            <span className="font-medium text-gray-400">Name:</span> {userData.name}
+            <IconUser size={16} className="inline mr-2 text-accent-400" />
+            <span className="font-medium text-neutral-400">Name:</span> {userData.name}
           </p>
           <p>
-            <IconMail size={16} className="inline mr-2 text-bright-sun-400" />
-            <span className="font-medium text-gray-400">Email:</span> {userData.email}
+            <IconMail size={16} className="inline mr-2 text-accent-400" />
+            <span className="font-medium text-neutral-400">Email:</span> {userData.email}
           </p>
           <p>
-            <IconMapPin size={16} className="inline mr-2 text-bright-sun-400" />
-            <span className="font-medium text-gray-400">Location:</span> {userData.location || 'N/A'}
+            <IconMapPin size={16} className="inline mr-2 text-accent-400" />
+            <span className="font-medium text-neutral-400">Location:</span> {userData.location || 'N/A'}
           </p>
           <p>
-            <IconInfoCircle size={16} className="inline mr-2 text-bright-sun-400" />
-            <span className="font-medium text-gray-400">Bio:</span> {userData.bio || 'No bio added yet.'}
+            <IconInfoCircle size={16} className="inline mr-2 text-accent-400" />
+            <span className="font-medium text-neutral-400">Bio:</span> {userData.bio || 'No bio added yet.'}
           </p>
           <p>
-            <IconPhone size={16} className="inline mr-2 text-bright-sun-400" />
-            <span className="font-medium text-gray-400">Phone:</span> {userData.phone || 'N/A'}
+            <IconPhone size={16} className="inline mr-2 text-accent-400" />
+            <span className="font-medium text-neutral-400">Phone:</span> {userData.phone || 'N/A'}
           </p>
           <p>
-            <IconBrandLinkedin size={16} className="inline mr-2 text-bright-sun-400" />
-            <span className="font-medium text-gray-400">LinkedIn:</span>{' '}
+            <IconBrandLinkedin size={16} className="inline mr-2 text-accent-400" />
+            <span className="font-medium text-neutral-400">LinkedIn:</span>{' '}
             {userData.linkedin ? (
               <a
                 href={userData.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-bright-sun-400 underline"
+                className="text-accent-400 underline"
               >
                 {userData.linkedin}
               </a>
@@ -194,8 +194,8 @@ const Profile = () => {
             )}
           </p>
           <p>
-            <IconListCheck size={16} className="inline mr-2 text-bright-sun-400" />
-            <span className="font-medium text-gray-400">Skills:</span>{' '}
+            <IconListCheck size={16} className="inline mr-2 text-accent-400" />
+            <span className="font-medium text-neutral-400">Skills:</span>{' '}
             {userData.skills && userData.skills.length
               ? Array.isArray(userData.skills)
                 ? userData.skills.join(', ')
@@ -209,7 +209,7 @@ const Profile = () => {
             <Button
               variant="light"
               leftSection={<IconEdit size={18} />}
-              color="bright-sun"
+              color="accent"
               onClick={() => navigate('/edit-profile')}
               disabled={loading}
             >

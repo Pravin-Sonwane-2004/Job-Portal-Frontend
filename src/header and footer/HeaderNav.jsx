@@ -73,10 +73,10 @@ const HeaderNav = ({ mobile = false }) => {
 
   // Responsive classes
   const navClass = mobile
-    ? 'flex flex-col gap-4 text-white text-lg'
-    : 'flex gap-4 sm:gap-8 text-white text-base sm:text-lg relative';
+    ? 'flex flex-col gap-4 text-slate-900 dark:text-slate-100 text-lg'
+    : 'flex gap-4 sm:gap-8 text-slate-900 dark:text-slate-100 text-base sm:text-lg relative';
   const linkClass = ({ isActive }) =>
-    `relative pb-2 transition-all ${isActive ? 'text-bright-sun-400' : 'hover:text-bright-sun-400'}` +
+    `relative pb-2 transition-all ${isActive ? 'text-primary-500' : 'hover:text-primary-500'}` +
     (mobile ? ' text-xl py-2' : '');
 
   return (
@@ -88,7 +88,7 @@ const HeaderNav = ({ mobile = false }) => {
             {({ isActive }) => (
               <>
                 Find Jobs
-                <span className={`block h-0.5 bg-bright-sun-400 transition-all duration-300 absolute left-0 right-0 bottom-0 ${isActive ? 'w-full' : 'w-0'}`} />
+                <span className={`block h-0.5 bg-primary-500 transition-all duration-300 absolute left-0 right-0 bottom-0 ${isActive ? 'w-full' : 'w-0'}`} />
               </>
             )}
           </NavLink>
@@ -96,7 +96,7 @@ const HeaderNav = ({ mobile = false }) => {
             {({ isActive }) => (
               <>
                 Resume Builder
-                <span className={`block h-0.5 bg-bright-sun-400 transition-all duration-300 absolute left-0 right-0 bottom-0 ${isActive ? 'w-full' : 'w-0'}`} />
+                <span className={`block h-0.5 bg-primary-500 transition-all duration-300 absolute left-0 right-0 bottom-0 ${isActive ? 'w-full' : 'w-0'}`} />
               </>
             )}
           </NavLink>
@@ -104,7 +104,7 @@ const HeaderNav = ({ mobile = false }) => {
             {({ isActive }) => (
               <>
                 My Applications
-                <span className={`block h-0.5 bg-bright-sun-400 transition-all duration-300 absolute left-0 right-0 bottom-0 ${isActive ? 'w-full' : 'w-0'}`} />
+                <span className={`block h-0.5 bg-primary-500 transition-all duration-300 absolute left-0 right-0 bottom-0 ${isActive ? 'w-full' : 'w-0'}`} />
               </>
             )}
           </NavLink>
@@ -112,7 +112,7 @@ const HeaderNav = ({ mobile = false }) => {
             {({ isActive }) => (
               <>
                 Dashboard
-                <span className={`block h-0.5 bg-bright-sun-400 transition-all duration-300 absolute left-0 right-0 bottom-0 ${isActive ? 'w-full' : 'w-0'}`} />
+                <span className={`block h-0.5 bg-primary-500 transition-all duration-300 absolute left-0 right-0 bottom-0 ${isActive ? 'w-full' : 'w-0'}`} />
               </>
             )}
           </NavLink>
@@ -125,7 +125,7 @@ const HeaderNav = ({ mobile = false }) => {
             {({ isActive }) => (
               <>
                 All Users
-                <span className={`block h-0.5 bg-bright-sun-400 transition-all duration-300 absolute left-0 right-0 bottom-0 ${isActive ? 'w-full' : 'w-0'}`} />
+                <span className={`block h-0.5 bg-primary-500 transition-all duration-300 absolute left-0 right-0 bottom-0 ${isActive ? 'w-full' : 'w-0'}`} />
               </>
             )}
           </NavLink>
@@ -133,7 +133,7 @@ const HeaderNav = ({ mobile = false }) => {
             {({ isActive }) => (
               <>
                 All Applications
-                <span className={`block h-0.5 bg-bright-sun-400 transition-all duration-300 absolute left-0 right-0 bottom-0 ${isActive ? 'w-full' : 'w-0'}`} />
+                <span className={`block h-0.5 bg-primary-500 transition-all duration-300 absolute left-0 right-0 bottom-0 ${isActive ? 'w-full' : 'w-0'}`} />
               </>
             )}
           </NavLink>
@@ -141,7 +141,7 @@ const HeaderNav = ({ mobile = false }) => {
             {({ isActive }) => (
               <>
                 Find Talent
-                <span className={`block h-0.5 bg-bright-sun-400 transition-all duration-300 absolute left-0 right-0 bottom-0 ${isActive ? 'w-full' : 'w-0'}`} />
+                <span className={`block h-0.5 bg-primary-500 transition-all duration-300 absolute left-0 right-0 bottom-0 ${isActive ? 'w-full' : 'w-0'}`} />
               </>
             )}
           </NavLink>
@@ -149,7 +149,7 @@ const HeaderNav = ({ mobile = false }) => {
             {({ isActive }) => (
               <>
                 Upload Job
-                <span className={`block h-0.5 bg-bright-sun-400 transition-all duration-300 absolute left-0 right-0 bottom-0 ${isActive ? 'w-full' : 'w-0'}`} />
+                <span className={`block h-0.5 bg-primary-500 transition-all duration-300 absolute left-0 right-0 bottom-0 ${isActive ? 'w-full' : 'w-0'}`} />
               </>
             )}
           </NavLink>

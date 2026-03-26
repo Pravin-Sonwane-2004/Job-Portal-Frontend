@@ -12,10 +12,10 @@ const TalentCard = ({ talent, onViewProfile }) => {
       p="lg"
       radius="md"
       withBorder
-      className="bg-masala-800 text-white hover:shadow-xl hover:scale-[1.02] transition-all duration-300 cursor-pointer"
+      className="bg-neutral-800 text-white hover:shadow-xl hover:scale-[1.02] transition-all duration-300 cursor-pointer"
     >
       {/* Header Section */}
-      <Card.Section className="p-4 border-b border-masala-700">
+      <Card.Section className="p-4 border-b border-neutral-700">
         <Group position="apart">
           <Group>
             <Avatar
@@ -25,7 +25,7 @@ const TalentCard = ({ talent, onViewProfile }) => {
               alt={talent.name}
             />
             <div>
-              <Text weight={600} size="lg" className="text-bright-sun-400">
+              <Text weight={600} size="lg" className="text-accent-400">
                 {talent.name}
               </Text>
               <Text size="sm" color="dimmed">{talent.role}</Text>
@@ -34,7 +34,7 @@ const TalentCard = ({ talent, onViewProfile }) => {
           </Group>
           <ActionIcon
             variant="subtle"
-            color={isLiked ? "red" : "gray"}
+            color={isLiked ? "red" : "neutral"}
             onClick={() => setIsLiked(!isLiked)}
             className="transition-all hover:scale-110"
           >
@@ -44,13 +44,13 @@ const TalentCard = ({ talent, onViewProfile }) => {
       </Card.Section>
 
       {/* About Section */}
-      <Text size="sm" mt="md" color="gray.3">
+      <Text size="sm" mt="md" color="neutral.3">
         {expanded ? talent.about : talent.about.slice(0, 100) + (talent.about.length > 100 ? "..." : "")}
       </Text>
       {talent.about.length > 100 && (
         <Text
           size="xs"
-          color="bright-sun"
+          color="accent"
           className="cursor-pointer mt-1"
           onClick={() => setExpanded(!expanded)}
         >
@@ -61,12 +61,12 @@ const TalentCard = ({ talent, onViewProfile }) => {
       {/* Skills Section */}
       <Group spacing={7} mt="md" mb="md" wrap="wrap">
         {talent.topSkills?.slice(0, 4).map((skill, idx) => (
-          <Badge key={idx} color="bright-sun" variant="light">
+          <Badge key={idx} color="accent" variant="light">
             {skill}
           </Badge>
         ))}
         {talent.topSkills.length > 4 && (
-          <Badge variant="outline" color="gray">
+          <Badge variant="outline" color="neutral">
             +{talent.topSkills.length - 4} more
           </Badge>
         )}
@@ -76,7 +76,7 @@ const TalentCard = ({ talent, onViewProfile }) => {
       <Group mt="md" position="apart">
         <Button
           variant="filled"
-          color="bright-sun"
+          color="accent"
           leftIcon={<IconMessageCircle size={18} />}
           fullWidth
           radius="md"
@@ -86,7 +86,7 @@ const TalentCard = ({ talent, onViewProfile }) => {
         </Button>
         <Button
           variant="outline"
-          color="gray"
+          color="neutral"
           leftIcon={<IconUserCircle size={18} />}
           fullWidth
           radius="md"

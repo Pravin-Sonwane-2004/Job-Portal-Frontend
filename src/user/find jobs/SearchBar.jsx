@@ -168,7 +168,7 @@ const SearchBar = () => {
     const parts = text.split(regex);
     return parts.map((part, index) =>
       regex.test(part) ? (
-        <span key={index} className="font-semibold bg-yellow-100">
+        <span key={index} className="font-semibold bg-accent-100">
           {part}
         </span>
       ) : (
@@ -218,7 +218,7 @@ const SearchBar = () => {
           <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto md:max-w-[700px]">
             <div
               ref={containerRef}
-              className="flex flex-row items-center justify-end bg-masala-950 p-4 gap-4 w-full"
+              className="flex flex-row items-center justify-end bg-neutral-950 p-4 gap-4 w-full"
             >
               {/* Search fields */}
               {dropdownData.map((item, idx) => {
@@ -250,7 +250,7 @@ const SearchBar = () => {
                       style={{ minWidth: 0 }}
                     />
                     {loadingSuggest[key] && (
-                      <div className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-gray-100 italic animate-pulse">
+                      <div className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-neutral-100 italic animate-pulse">
                         Loading...
                       </div>
                     )}
@@ -278,7 +278,7 @@ const SearchBar = () => {
               {/* Salary Range Slider (actual size, inline) */}
               {/* 
               <div className="flex flex-col items-center min-w-[160px] max-w-[220px] px-2">
-                <span className="text-xs text-gray-200 mb-1">Salary (₹)</span>
+                <span className="text-xs text-neutral-200 mb-1">Salary (₹)</span>
                 <RangeSlider
                   min={0}
                   max={200000}
@@ -286,12 +286,12 @@ const SearchBar = () => {
                   value={filters.salaryRange || [0, 200000]}
                   onChange={handleSalaryChange}
                   size="md"
-                  color="yellow"
+                  color="accent"
                   thumbSize={18}
                   style={{ width: 140 }}
                   label={null}
                 />
-                <div className="flex justify-between w-full text-xs text-gray-300 mt-1">
+                <div className="flex justify-between w-full text-xs text-neutral-300 mt-1">
                   <span>
                     Salary: ₹
                     {filters.salaryRange?.[0]
@@ -310,7 +310,7 @@ const SearchBar = () => {
               {/* Search button */}
               <button
                 type="button"
-                className="h-10 w-12 flex items-center justify-center bg-white hover:bg-indigo-100 text-gray-700 hover:text-indigo-800 rounded transition-colors"
+                className="h-10 w-12 flex items-center justify-center bg-white hover:bg-indigo-100 text-neutral-700 hover:text-indigo-800 rounded transition-colors"
                 aria-label="Search"
                 onClick={handleSearchClick}
               >
@@ -341,7 +341,7 @@ const SearchBar = () => {
           <Alert
             icon={<IconAlertCircle size={24} />}
             title="No jobs found"
-            color="yellow"
+            color="accent"
             radius="md"
             className="my-10"
           >
@@ -349,7 +349,7 @@ const SearchBar = () => {
           </Alert>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 bg-masala-950/40 p-4 rounded-xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 bg-neutral-950/40 p-4 rounded-xl">
               {jobList.map((job, index) => (
                 <Paper key={index} >
                   <JobCard job={job} />
@@ -361,7 +361,7 @@ const SearchBar = () => {
                 total={totalPages}
                 value={page}
                 onChange={setPage}
-                color="yellow"
+                color="accent"
                 size="md"
                 radius="md"
                 disabled={totalPages <= 1}

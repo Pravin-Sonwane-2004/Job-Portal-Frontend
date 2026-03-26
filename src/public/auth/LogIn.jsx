@@ -1,12 +1,3 @@
-import {
-  Button,
-  PasswordInput,
-  Select,
-  Stack,
-  Text,
-  TextInput,
-  Title,
-} from "@mantine/core";
 import { IconLock, IconUser } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -79,89 +70,88 @@ const SignIn = ({ onToggle }) => {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center bg-masala-950 px-4">
-      <div className="w-full max-w-xl bg-masala-950 border border-bright-sun-300 shadow-lg rounded-xl p-6">
-        <Title
-          align="center"
-          order={2}
-          className="text-bright-sun-500 font-bold mb-4"
-        >
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900 px-4 py-8">
+      <div className="w-full max-w-md bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm rounded-xl p-6">
+        <h2 className="text-2xl font-bold text-center text-slate-900 dark:text-slate-100 mb-6">
           Log In to Your Account
-        </Title>
+        </h2>
 
         {error && (
-          <Text color="red" align="center" className="mb-3">
+          <p className="text-error text-center mb-4 p-2 bg-red-50 dark:bg-red-900/20 rounded-lg">
             {error}
-          </Text>
+          </p>
         )}
 
-        <form onSubmit={handleSubmit}>
-          <Stack spacing="md">
-            <TextInput
-              icon={<IconUser size={16} />}
-              label="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              placeholder="Enter your email"
-              size="sm"
-            />
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+              Email
+            </label>
+            <div className="relative">
+              <IconUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full pl-10 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+          </div>
 
-            <PasswordInput
-              icon={<IconLock size={16} />}
-              label="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              placeholder="Enter your password"
-              size="sm"
-            />
+          <div>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+              Password
+            </label>
+            <div className="relative">
+              <IconLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full pl-10 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+          </div>
 
-            <Select
-              label="Role"
+          <div>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+              Role
+            </label>
+            <select
               value={role}
-              onChange={setRole}
-              data={[
-                { value: "USER", label: "User" },
-                { value: "ADMIN", label: "Admin" },
-                { value: "RECRUITER", label: "Recruiter" },
-              ]}
-              required
-              size="sm"
-            />
-
-            <Button
-              type="submit"
-              loading={loading}
-              fullWidth
-              size="md"
-              styles={{
-                root: {
-                  backgroundColor: "#f99b07",
-                  color: "#fff",
-                  fontWeight: 600,
-                  fontSize: "16px",
-                  paddingTop: "8px",
-                  paddingBottom: "8px",
-                  "&:hover": { backgroundColor: "#dd7302" },
-                },
-              }}
+              onChange={(e) => setRole(e.target.value)}
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
             >
-              Log In
-            </Button>
-          </Stack>
+              <option value="USER">User</option>
+              <option value="ADMIN">Admin</option>
+              <option value="RECRUITER">Recruiter</option>
+            </select>
+          </div>
 
-          <Text align="center" size="sm" mt="md" className="text-masala-300">
-            Don’t have an account?{" "}
-            <button
-              type="button"
-              className="text-bright-sun-400 hover:underline focus:outline-none"
-              onClick={() => navigate("/register")}
-            >
-              Register
-            </button>
-          </Text>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? "Logging In..." : "Log In"}
+          </button>
         </form>
+
+        <div className="mt-6 text-center">
+          <p className="text-slate-600 dark:text-slate-400">
+            Don't have an account?{" "}
+            <button
+              onClick={onToggle}
+              className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 font-medium transition-colors"
+            >
+              Sign Up
+            </button>
+          </p>
+        </div>
       </div>
     </div>
   );

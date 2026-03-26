@@ -31,9 +31,9 @@
 //           {applications.map((app) => (
 //             <li key={app.applicationId} className="border rounded p-4 shadow">
 //               <div className="font-semibold text-lg">{app.jobTitle}</div>
-//               <div className="text-gray-600">{app.company || 'N/A'}</div>
-//               <div className="text-sm text-gray-500 mb-2">Applied by: {app.applicantName} ({app.applicantEmail})</div>
-//               <div className="text-sm text-gray-500">Profile: {app.applicantProfile || 'N/A'}</div>
+//               <div className="text-neutral-600">{app.company || 'N/A'}</div>
+//               <div className="text-sm text-neutral-500 mb-2">Applied by: {app.applicantName} ({app.applicantEmail})</div>
+//               <div className="text-sm text-neutral-500">Profile: {app.applicantProfile || 'N/A'}</div>
 //             </li>
 //           ))}
 //         </ul>

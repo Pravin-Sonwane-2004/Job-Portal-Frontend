@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Divider, SimpleGrid, Text, Center, Loader } from '@mantine/core';
-import { useNavigate } from 'react-router-dom';
 import TalentCard from './TalentCard';
-import SearchBar from './SearchBar';
 
 const FindTalent = () => {
   const navigate = useNavigate();
@@ -26,44 +23,35 @@ const FindTalent = () => {
   }, []);
 
   return (
-    <Container size="xl" className="min-h-[90vh] bg-masala-950 font-poppins py-8">
-      <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-        {/* <SearchBar onFilterChange={handleFilterChange} /> */}
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 font-poppins py-8">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+          {/* <SearchBar onFilterChange={handleFilterChange} /> */}
+        </div>
+
+        <div className="border-t border-slate-200 dark:border-slate-700 mb-6"></div>
+
+        {/* Loading State */}
+        {loading ? (
+          <div className="flex items-center justify-center h-60">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+          </div>
+        ) : filteredTalents.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredTalents.map((talent, index) => (
+              <div key={index} className="hover:scale-105 transition-transform">
+                <TalentCard talent={talent} onViewProfile={() => handleViewProfile(talent)} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center h-60">
+            <div className="text-2xl text-slate-400 dark:text-slate-500 mb-2">😕 No talents match your filters!</div>
+            <div className="text-sm text-slate-500 dark:text-slate-400">Try adjusting your search criteria.</div>
+          </div>
+        )}
       </div>
-
-      <Divider my="md" color="masala-800" />
-
-      {/* Loading State */}
-      {loading ? (
-        <Center className="h-60">
-          <Loader color="blue" />
-        </Center>
-      ) : filteredTalents.length > 0 ? (
-        <SimpleGrid
-          cols={3}
-          spacing="xl"
-          breakpoints={[
-            { maxWidth: 'lg', cols: 2 },
-            { maxWidth: 'sm', cols: 1 },
-          ]}
-        >
-          {filteredTalents.map((talent, index) => (
-            <div key={index} className="hover:scale-105 transition-transform">
-              <TalentCard talent={talent} onViewProfile={() => handleViewProfile(talent)} />
-            </div>
-          ))}
-        </SimpleGrid>
-      ) : (
-        <Center className="h-60 flex flex-col">
-          <Text size="xl" className="text-gray-400 mb-2">
-            😕 No talents match your filters!
-          </Text>
-          <Text size="sm" className="text-gray-500">
-            Try adjusting your search criteria.
-          </Text>
-        </Center>
-      )}
-    </Container>
+    </div>
   );
 };
 

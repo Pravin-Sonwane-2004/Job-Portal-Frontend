@@ -114,10 +114,10 @@ const Header = () => {
   const user = isUser();
 
   return (
-    <header className="bg-masala-950 text-white w-full px-8 h-20 flex justify-between items-center shadow-md">
+    <header className="bg-neutral-950 text-white w-full px-8 h-20 flex justify-between items-center shadow-md">
       {/* Logo Section */}
       <div
-        className="flex gap-2 items-center text-bright-sun-400 cursor-pointer"
+        className="flex gap-2 items-center text-accent-400 cursor-pointer"
         onClick={() => navigate("/")}
       >
         <IconBriefcaseFilled className="h-10 w-10" stroke={2.5} />
@@ -132,7 +132,7 @@ const Header = () => {
             to="/all-users"
             className={({ isActive }) =>
               `relative pb-2 transition-all ${
-                isActive ? "text-bright-sun-400" : "hover:text-bright-sun-400"
+                isActive ? "text-accent-400" : "hover:text-accent-400"
               }`
             }
           >
@@ -140,7 +140,7 @@ const Header = () => {
               <>
                 All Users
                 <span
-                  className={`block h-0.5 bg-bright-sun-400 transition-all duration-300 absolute left-0 right-0 bottom-0 ${
+                  className={`block h-0.5 bg-accent-400 transition-all duration-300 absolute left-0 right-0 bottom-0 ${
                     isActive ? "w-full" : "w-0"
                   }`}
                 />
@@ -152,7 +152,7 @@ const Header = () => {
             to="/find-jobs"
             className={({ isActive }) =>
               `relative pb-2 transition-all ${
-                isActive ? "text-bright-sun-400" : "hover:text-bright-sun-400"
+                isActive ? "text-accent-400" : "hover:text-accent-400"
               }`
             }
           >
@@ -160,7 +160,7 @@ const Header = () => {
               <>
                 Find Jobs
                 <span
-                  className={`block h-0.5 bg-bright-sun-400 transition-all duration-300 absolute left-0 right-0 bottom-0 ${
+                  className={`block h-0.5 bg-accent-400 transition-all duration-300 absolute left-0 right-0 bottom-0 ${
                     isActive ? "w-full" : "w-0"
                   }`}
                 />
@@ -175,7 +175,7 @@ const Header = () => {
               to="/find-talent"
               className={({ isActive }) =>
                 `relative pb-2 transition-all ${
-                  isActive ? "text-bright-sun-400" : "hover:text-bright-sun-400"
+                  isActive ? "text-accent-400" : "hover:text-accent-400"
                 }`
               }
             >
@@ -183,7 +183,7 @@ const Header = () => {
                 <>
                   Find Talent
                   <span
-                    className={`block h-0.5 bg-bright-sun-400 transition-all duration-300 absolute left-0 right-0 bottom-0 ${
+                    className={`block h-0.5 bg-accent-400 transition-all duration-300 absolute left-0 right-0 bottom-0 ${
                       isActive ? "w-full" : "w-0"
                     }`}
                   />
@@ -197,7 +197,7 @@ const Header = () => {
             to="/resume-builder"
             className={({ isActive }) =>
               `relative pb-2 transition-all ${
-                isActive ? "text-bright-sun-400" : "hover:text-bright-sun-400"
+                isActive ? "text-accent-400" : "hover:text-accent-400"
               }`
             }
           >
@@ -205,7 +205,7 @@ const Header = () => {
               <>
                 Resume Builder
                 <span
-                  className={`block h-0.5 bg-bright-sun-400 transition-all duration-300 absolute left-0 right-0 bottom-0 ${
+                  className={`block h-0.5 bg-accent-400 transition-all duration-300 absolute left-0 right-0 bottom-0 ${
                     isActive ? "w-full" : "w-0"
                   }`}
                 />
@@ -219,7 +219,7 @@ const Header = () => {
             to="/upload-jobs"
             className={({ isActive }) =>
               `relative pb-2 transition-all ${
-                isActive ? "text-bright-sun-400" : "hover:text-bright-sun-400"
+                isActive ? "text-accent-400" : "hover:text-accent-400"
               }`
             }
           >
@@ -227,7 +227,7 @@ const Header = () => {
               <>
                 Upload Job
                 <span
-                  className={`block h-0.5 bg-bright-sun-400 transition-all duration-300 absolute left-0 right-0 bottom-0 ${
+                  className={`block h-0.5 bg-accent-400 transition-all duration-300 absolute left-0 right-0 bottom-0 ${
                     isActive ? "w-full" : "w-0"
                   }`}
                 />
@@ -241,7 +241,7 @@ const Header = () => {
             to="/my-applications"
             className={({ isActive }) =>
               `relative pb-2 transition-all ${
-                isActive ? "text-bright-sun-400" : "hover:text-bright-sun-400"
+                isActive ? "text-accent-400" : "hover:text-accent-400"
               }`
             }
           >
@@ -249,7 +249,7 @@ const Header = () => {
               <>
                 My Applications
                 <span
-                  className={`block h-0.5 bg-bright-sun-400 transition-all duration-300 absolute left-0 right-0 bottom-0 ${
+                  className={`block h-0.5 bg-accent-400 transition-all duration-300 absolute left-0 right-0 bottom-0 ${
                     isActive ? "w-full" : "w-0"
                   }`}
                 />
@@ -263,7 +263,7 @@ const Header = () => {
             to="/dashboard"
             className={({ isActive }) =>
               `relative pb-2 transition-all ${
-                isActive ? "text-bright-sun-400" : "hover:text-bright-sun-400"
+                isActive ? "text-accent-400" : "hover:text-accent-400"
               }`
             }
           >
@@ -271,7 +271,7 @@ const Header = () => {
               <>
                 Dashboard
                 <span
-                  className={`block h-0.5 bg-bright-sun-400 transition-all duration-300 absolute left-0 right-0 bottom-0 ${
+                  className={`block h-0.5 bg-accent-400 transition-all duration-300 absolute left-0 right-0 bottom-0 ${
                     isActive ? "w-full" : "w-0"
                   }`}
                 />
@@ -286,7 +286,7 @@ const Header = () => {
         {!isLoggedIn ? (
           <Button
             variant="outline"
-            color="bright-sun"
+            color="accent"
             onClick={() => {
               navigate("/SignIn");
             }}
@@ -294,7 +294,7 @@ const Header = () => {
             Log In
           </Button>
         ) : (
-          <Button variant="outline" color="bright-sun" onClick={handleLogout}>
+          <Button variant="outline" color="accent" onClick={handleLogout}>
             Logout
           </Button>
         )}
@@ -324,7 +324,7 @@ const Header = () => {
               })()}
           </span>
         </div>
-        <button className="bg-masala-900 p-2 rounded-full hover:bg-masala-800 transition">
+        <button className="bg-neutral-900 p-2 rounded-full hover:bg-neutral-800 transition">
           <IconSettings stroke={1.5} />
         </button>
 
@@ -338,8 +338,8 @@ const Header = () => {
           transitionProps={{ transition: "scale-y", duration: 200 }}
         >
           <Popover.Target>
-            <button className="bg-masala-900 p-2 rounded-full hover:bg-masala-800 transition relative">
-              <Indicator color="bright-sun" offset={6} size={8} processing>
+            <button className="bg-neutral-900 p-2 rounded-full hover:bg-neutral-800 transition relative">
+              <Indicator color="accent" offset={6} size={8} processing>
                 <IconBell stroke={1.5} />
               </Indicator>
             </button>

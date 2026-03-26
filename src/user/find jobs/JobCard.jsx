@@ -48,41 +48,37 @@ const JobCard = ({ job }) => {
   };
 
   return (
-    <Paper
-      shadow="md"
-      radius="lg"
-      p="lg"
-      withBorder
-      className="bg-masala-950 border-masala-800 font-poppins flex flex-col gap-4 transition-shadow duration-300 h-full"
+    <div
+      className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 font-poppins flex flex-col gap-4 transition-shadow duration-300 h-full shadow-sm hover:shadow-md"
       style={{ minHeight: 260 }}
     >
       {/* Header: Title & Company */}
       <div>
-        <Text size="xl" weight={600} className="text-masala-50 flex items-center gap-2">
-          <IconBriefcase size={20} className="text-bright-sun-400" />
+        <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+          <IconBriefcase size={20} className="text-primary-500" />
           {job?.title || 'Job Title'}
-        </Text>
-        <Text size="sm" className="text-masala-300 flex items-center gap-2 mt-1">
-          <IconBuilding size={16} className="text-masala-400" />
+        </h3>
+        <p className="text-sm text-slate-600 dark:text-slate-400 flex items-center gap-2 mt-1">
+          <IconBuilding size={16} className="text-slate-500 dark:text-slate-500" />
           {job?.company || 'Unknown Company'}
-        </Text>
+        </p>
       </div>
 
       {/* Job Details */}
-      <div className="text-sm text-masala-200 space-y-1 mt-2">
+      <div className="text-sm text-slate-700 dark:text-slate-300 space-y-1 mt-2">
         <div className="flex items-center gap-2">
-          <IconMapPin size={16} className="text-bright-sun-400" />
-          <span className="text-masala-50 font-medium">Location:</span>
+          <IconMapPin size={16} className="text-primary-500" />
+          <span className="text-slate-900 dark:text-slate-100 font-medium">Location:</span>
           <span>{job?.location || 'N/A'}</span>
         </div>
         <div className="flex items-center gap-2">
-          <IconCurrencyDollar size={16} className="text-bright-sun-400" />
-          <span className="text-masala-50 font-medium">Salary:</span>
+          <IconCurrencyDollar size={16} className="text-primary-500" />
+          <span className="text-slate-900 dark:text-slate-100 font-medium">Salary:</span>
           <span>{job?.salary || 'Negotiable'}</span>
         </div>
         <div className="flex items-center gap-2">
-          <IconCalendar size={16} className="text-bright-sun-400" />
-          <span className="text-masala-50 font-medium">Posted:</span>
+          <IconCalendar size={16} className="text-primary-500" />
+          <span className="text-slate-900 dark:text-slate-100 font-medium">Posted:</span>
           <span>{job?.postedDaysAgo ? `${job.postedDaysAgo} days ago` : 'Recently'}</span>
         </div>
       </div>
@@ -92,16 +88,16 @@ const JobCard = ({ job }) => {
 
       {/* Action Button */}
       <button
-        className="mt-4 bg-bright-sun-400 text-masala-950 font-semibold py-2 px-5 rounded-lg hover:bg-bright-sun-500 transition-colors duration-200 shadow"
+        className="mt-4 bg-primary-500 text-white font-semibold py-2 px-5 rounded-lg hover:bg-primary-600 transition-colors duration-200 shadow-sm"
         onClick={handleApplyClick}
         disabled={loading}
       >
         Apply Now
       </button>
       {applyStatus && (
-        <div className="mt-2 text-xs text-center text-yellow-400">{applyStatus}</div>
+        <div className="mt-2 text-xs text-center text-primary-500">{applyStatus}</div>
       )}
-    </Paper>
+    </div>
   );
 };
 

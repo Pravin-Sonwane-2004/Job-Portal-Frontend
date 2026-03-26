@@ -154,22 +154,22 @@ const EditProfile = () => {
 
   if (loading) {
     return (
-      <Container fluid className="min-h-screen flex items-center justify-center bg-masala-950">
-        <Loader size="lg" color="yellow" />
+      <Container fluid className="min-h-screen flex items-center justify-center bg-neutral-950">
+        <Loader size="lg" color="accent" />
       </Container>
     );
   }
 
   return (
-    <Container size="xl" className="min-h-screen py-2 bg-masala-950 font-poppins flex items-center justify-center">
+    <Container size="xl" className="min-h-screen py-2 bg-neutral-950 font-poppins flex items-center justify-center">
       <Card
         shadow="xl"
         radius="lg"
         padding="xl"
-        className="bg-masala-950 border border-gray-700 w-full max-w-4xl mx-auto"
+        className="bg-neutral-950 border border-neutral-700 w-full max-w-4xl mx-auto"
         style={{ width: '100%', minWidth: 0 }}
       >
-        <Title order={2} align="center" className="text-bright-sun-400 mb-4">
+        <Title order={2} align="center" className="text-accent-400 mb-4">
           Edit Profile
         </Title>
         <Text align="center" color="white" className="mb-6">
@@ -182,16 +182,16 @@ const EditProfile = () => {
               src={formData.avatarUrl || '/avatars/default.png'}
               size={100}
               radius={100}
-              className="border-4 border-bright-sun-400 shadow-lg"
+              className="border-4 border-accent-400 shadow-lg"
             />
           </Group>
 
-          <div className="mb-6 text-center text-sm text-gray-300">
+          <div className="mb-6 text-center text-sm text-neutral-300">
             <input
               type="file"
               accept="image/*"
               onChange={handleAvatarChange}
-              className="cursor-pointer file:mr-2 file:px-3 file:py-1 file:rounded-md file:border-none file:bg-bright-sun-400 file:text-black"
+              className="cursor-pointer file:mr-2 file:px-3 file:py-1 file:rounded-md file:border-none file:bg-accent-400 file:text-black"
             />
           </div>
 
@@ -289,7 +289,7 @@ const EditProfile = () => {
           <Group justify="left">
             <Button
               type="submit"
-              color="bright-sun"
+              color="accent"
               loading={saving}
               className="px-8"
               leftSection={<IconDeviceFloppy size={18} />}

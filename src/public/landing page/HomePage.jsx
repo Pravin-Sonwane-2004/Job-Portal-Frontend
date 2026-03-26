@@ -5,7 +5,7 @@ import JobCategory from './JobCategory';
 
 const HomePage = () => {
   return (
-    <div className="min-h-[90vh] bg-masala-950 font-poppins py-8">
+    <div className="min-h-[90vh] bg-slate-50 dark:bg-slate-900 font-poppins py-8">
       <DreamJob />
       <Companies />
       <JobCategory />

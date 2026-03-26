@@ -89,14 +89,14 @@ const Apply = () => {
       <div className="mb-2"><b>Salary:</b> {job.salary}</div>
       <div className="mb-2"><b>Posted:</b> {job.postedDaysAgo}</div>
       <button
-        className="mt-4 bg-bright-sun-400 text-masala-950 font-semibold py-2 px-5 rounded-lg hover:bg-bright-sun-500 transition-colors duration-200 shadow"
+        className="mt-4 bg-accent-400 text-neutral-950 font-semibold py-2 px-5 rounded-lg hover:bg-accent-500 transition-colors duration-200 shadow"
         onClick={handleApply}
         disabled={loading}
       >
         {loading ? 'Applying...' : 'Confirm Apply'}
       </button>
       {status && (
-        <div className="mt-4 text-yellow-500">{status}</div>
+        <div className="mt-4 text-accent-500">{status}</div>
       )}
       <button
         className="mt-4 ml-4 text-blue-500 underline"

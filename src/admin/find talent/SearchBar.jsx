@@ -27,7 +27,7 @@ const SearchBar = ({ onFilterChange }) => {
   };
 
   return (
-    <div className="flex flex-wrap justify-between items-center bg-masala-950 p-6 rounded-2xl shadow-2xl gap-4">
+    <div className="flex flex-wrap justify-between items-center bg-neutral-950 p-6 rounded-2xl shadow-2xl gap-4">
       {/* {dropdownData.map((item, index) => (
         <React.Fragment key={index}>
           <div className="min-w-[180px] flex-1">
@@ -40,7 +40,7 @@ const SearchBar = ({ onFilterChange }) => {
             />
           </div>
           {index < dropdownData.length - 1 && (
-            <Divider orientation="vertical" color="gray" size="xs" className="hidden lg:block mx-4" />
+            <Divider orientation="vertical" color="neutral" size="xs" className="hidden lg:block mx-4" />
           )}
         </React.Fragment>
       ))} */}

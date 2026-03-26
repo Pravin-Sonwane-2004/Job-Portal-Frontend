@@ -15,41 +15,37 @@ const AppliedJobCard = ({ job, onCancel, onUpdate, loading }) => {
   if (!job) return null;
 
   return (
-    <Paper
-      shadow="md"
-      radius="lg"
-      p="lg"
-      withBorder
-      className="bg-masala-950 border-masala-800 font-poppins flex flex-col gap-4 transition-shadow duration-300 h-full"
+    <div
+      className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 font-poppins flex flex-col gap-4 transition-shadow duration-300 h-full shadow-sm hover:shadow-md"
       style={{ minHeight: 260 }}
     >
       {/* Header: Title & Company */}
       <div>
-        <Text size="xl" weight={600} className="text-masala-50 flex items-center gap-2">
-          <IconBriefcase size={20} className="text-bright-sun-400" />
+        <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+          <IconBriefcase size={20} className="text-primary-500" />
           {job?.jobTitle || 'Job Title'}
-        </Text>
-        <Text size="sm" className="text-masala-300 flex items-center gap-2 mt-1">
-          <IconBuilding size={16} className="text-masala-400" />
+        </h3>
+        <p className="text-sm text-slate-600 dark:text-slate-400 flex items-center gap-2 mt-1">
+          <IconBuilding size={16} className="text-slate-500 dark:text-slate-500" />
           {job?.company || 'Unknown Company'}
-        </Text>
+        </p>
       </div>
 
       {/* Job Details */}
-      <div className="text-sm text-masala-200 space-y-1 mt-2">
+      <div className="text-sm text-slate-700 dark:text-slate-300 space-y-1 mt-2">
         <div className="flex items-center gap-2">
-          <IconMapPin size={16} className="text-bright-sun-400" />
-          <span className="text-masala-50 font-medium">Location:</span>
+          <IconMapPin size={16} className="text-primary-500" />
+          <span className="text-slate-900 dark:text-slate-100 font-medium">Location:</span>
           <span>{job?.location || 'N/A'}</span>
         </div>
         <div className="flex items-center gap-2">
-          <IconCurrencyDollar size={16} className="text-bright-sun-400" />
-          <span className="text-masala-50 font-medium">Salary:</span>
+          <IconCurrencyDollar size={16} className="text-primary-500" />
+          <span className="text-slate-900 dark:text-slate-100 font-medium">Salary:</span>
           <span>{job?.salary || 'Negotiable'}</span>
         </div>
         <div className="flex items-center gap-2">
-          <IconCalendar size={16} className="text-bright-sun-400" />
-          <span className="text-masala-50 font-medium">Posted:</span>
+          <IconCalendar size={16} className="text-primary-500" />
+          <span className="text-slate-900 dark:text-slate-100 font-medium">Posted:</span>
           <span>{job?.postedDate ? `${job.postedDate} days ago` : 'Recently'}</span>
         </div>
       </div>
@@ -60,20 +56,20 @@ const AppliedJobCard = ({ job, onCancel, onUpdate, loading }) => {
       {/* Action Buttons */}
       <div className="flex gap-3 mt-4">
         <button
-          className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200 shadow"
+          className="bg-error hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200 shadow-sm"
           onClick={() => onCancel(job)}
           disabled={loading}
         >
           Cancel
         </button>
         <button
-          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200 shadow"
+          className="bg-primary-500 hover:bg-primary-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200 shadow-sm"
           onClick={() => onUpdate(job, navigate)}
         >
           Update
         </button>
       </div>
-    </Paper>
+    </div>
   );
 };
 

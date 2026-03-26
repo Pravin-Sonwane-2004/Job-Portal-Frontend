@@ -68,6 +68,27 @@ const Header = () => {
   const [userName, setUserName] = useState('');
   const [userId, setUserId] = useState(null);
 
+  // Theme state
+  const [themeDark, setThemeDark] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    }
+    return false;
+  });
+
+  // Toggle theme
+  const toggleTheme = () => {
+    const newThemeDark = !themeDark;
+    setThemeDark(newThemeDark);
+    localStorage.setItem('theme', newThemeDark ? 'dark' : 'light');
+    document.documentElement.classList.toggle('dark', newThemeDark);
+  };
+
+  // Apply theme on mount
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', themeDark);
+  }, [themeDark]);
+
   // Notification states
   const [notifications, setNotifications] = useState([]);
   const [notifLoading, setNotifLoading] = useState(false);
@@ -218,20 +239,37 @@ const Header = () => {
   const user = isUser(jwt);
 
   return (
-    <header className="bg-masala-950 text-white w-full px-4 sm:px-8 h-16 sm:h-20 flex justify-between items-center shadow-md relative">
+    <header className="bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 w-full px-4 sm:px-8 h-16 sm:h-20 flex justify-between items-center shadow-sm dark:shadow-slate-700 relative">
       {/* Logo Section */}
       <div
-        className="flex gap-2 items-center text-bright-sun-400 cursor-pointer min-w-0"
+        className="flex gap-2 items-center text-indigo-600 dark:text-indigo-400 cursor-pointer min-w-0"
         onClick={() => navigate('/')}
       >
         <IconBriefcaseFilled className="h-8 w-8 sm:h-10 sm:w-10" stroke={2.5} />
-        <span className="text-lg sm:text-2xl font-bold tracking-wide truncate">JobSearch</span>
+        <span className="text-lg sm:text-2xl font-bold tracking-wide truncate">SkillSync</span>
       </div>
+
+      {/* Theme Toggle */}
+      <button
+        onClick={toggleTheme}
+        className="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
+        aria-label="Toggle theme"
+      >
+        {themeDark ? (
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
+          </svg>
+        ) : (
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+          </svg>
+        )}
+      </button>
 
       {/* Hamburger for mobile */}
       <div className="sm:hidden flex items-center">
         <button
-          className="text-white focus:outline-none"
+          className="text-slate-900 dark:text-slate-100 focus:outline-none"
           onClick={() => setOpened((prev) => !prev)}
           aria-label="Open navigation menu"
         >
@@ -278,9 +316,9 @@ const Header = () => {
       {/* Mobile Drawer */}
       {opened && (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-60 flex justify-end sm:hidden">
-          <div className="w-3/4 max-w-xs bg-masala-950 h-full shadow-lg p-6 flex flex-col gap-6">
+          <div className="w-3/4 max-w-xs bg-white dark:bg-slate-800 h-full shadow-lg p-6 flex flex-col gap-6">
             <button
-              className="self-end mb-4 text-white"
+              className="self-end mb-4 text-slate-900 dark:text-slate-100"
               onClick={() => setOpened(false)}
               aria-label="Close navigation menu"
             >

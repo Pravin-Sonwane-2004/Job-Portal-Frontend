@@ -17,7 +17,7 @@ const CVTemplateClassic = forwardRef(({ cv, colorScheme, style }, ref) => {
       p={0}
       style={{
         minHeight: 800,
-        background: theme.colors.gray[0],
+        background: theme.colors.neutral[0],
         color: theme.colors.dark[7],
         ...style,
         overflow: 'hidden',
@@ -93,7 +93,7 @@ const CVTemplateClassic = forwardRef(({ cv, colorScheme, style }, ref) => {
               {cv.experience.map(item => (
                 <Box key={item.id}>
                   <Text fw={600}>{item.position}</Text>
-                  <Text size="xs" color="gray.7">{item.company} - {item.city} ({item.from} - {item.to})</Text>
+                  <Text size="xs" color="neutral.7">{item.company} - {item.city} ({item.from} - {item.to})</Text>
                 </Box>
               ))}
             </Stack>
@@ -110,7 +110,7 @@ const CVTemplateClassic = forwardRef(({ cv, colorScheme, style }, ref) => {
               {cv.education.map(item => (
                 <Box key={item.id}>
                   <Text fw={600}>{item.universityName}</Text>
-                  <Text size="xs" color="gray.7">{item.degree} in {item.subject} - {item.city} ({item.from} - {item.to})</Text>
+                  <Text size="xs" color="neutral.7">{item.degree} in {item.subject} - {item.city} ({item.from} - {item.to})</Text>
                 </Box>
               ))}
             </Stack>

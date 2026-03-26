@@ -76,7 +76,7 @@ const MessagesPage = () => {
               {conversations.map(uid => (
                 <li key={uid}>
                   <button
-                    className={`w-full text-left py-2 px-3 rounded ${selectedUser === uid ? 'bg-bright-sun-200' : 'hover:bg-masala-900'}`}
+                    className={`w-full text-left py-2 px-3 rounded ${selectedUser === uid ? 'bg-accent-200' : 'hover:bg-neutral-900'}`}
                     onClick={() => setSelectedUser(uid)}
                   >
                     User #{uid}
@@ -91,14 +91,14 @@ const MessagesPage = () => {
           {selectedUser ? (
             <>
               <div className="mb-2 font-semibold">Conversation with User #{selectedUser}</div>
-              <div className="h-64 overflow-y-auto border rounded p-2 bg-masala-900 mb-2">
+              <div className="h-64 overflow-y-auto border rounded p-2 bg-neutral-900 mb-2">
                 {messages.length === 0 ? <div>No messages yet.</div> : (
                   messages.map(msg => (
                     <div key={msg.id} className={`mb-2 ${msg.sender.id === userId ? 'text-right' : 'text-left'}`}>
-                      <span className={`inline-block px-3 py-1 rounded ${msg.sender.id === userId ? 'bg-bright-sun-400 text-black' : 'bg-masala-700 text-white'}`}>
+                      <span className={`inline-block px-3 py-1 rounded ${msg.sender.id === userId ? 'bg-accent-400 text-black' : 'bg-neutral-700 text-white'}`}>
                         {msg.content}
                       </span>
-                      <div className="text-xs text-gray-400">{new Date(msg.sentAt).toLocaleString()}</div>
+                      <div className="text-xs text-neutral-400">{new Date(msg.sentAt).toLocaleString()}</div>
                     </div>
                   ))
                 )}
@@ -111,7 +111,7 @@ const MessagesPage = () => {
                   placeholder="Type a message..."
                   onKeyDown={e => { if (e.key === 'Enter') handleSend(); }}
                 />
-                <button onClick={handleSend} className="bg-bright-sun-400 px-4 py-1 rounded text-black flex items-center gap-1 font-semibold">
+                <button onClick={handleSend} className="bg-accent-400 px-4 py-1 rounded text-black flex items-center gap-1 font-semibold">
                   <IconSend size={18} /> Send
                 </button>
               </div>

@@ -113,7 +113,7 @@ const HeaderUserSection = ({
       {!isLoggedIn ? (
         <Button
           variant="outline"
-          color="bright-sun"
+          color="accent"
           onClick={() => {
             navigate('/SignIn');
           }}
@@ -122,7 +122,7 @@ const HeaderUserSection = ({
         </Button>
       ) : (
         <button
-          className="flex items-center gap-3 focus:outline-none hover:bg-masala-900 rounded-lg px-2 py-1 transition"
+          className="flex items-center gap-3 focus:outline-none hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg px-2 py-1 transition-colors"
           onClick={() => navigate('/profile')}
           style={{ border: 'none', background: 'none' }}
         >
@@ -143,7 +143,7 @@ const HeaderUserSection = ({
         <Tooltip label="Messages" withArrow>
           <ActionIcon
             variant="filled"
-            color="bright-sun"
+            color="accent"
             size="lg"
             onClick={() => navigate('/messages')}
           >
@@ -163,7 +163,7 @@ const HeaderUserSection = ({
       >
         <Popover.Target>
           <button
-            className="bg-masala-900 p-2 rounded-full hover:bg-masala-800 transition"
+            className="bg-slate-100 dark:bg-slate-700 p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
             onClick={() => setSettingsOpened((o) => !o)}
           >
             <IconSettings stroke={1.5} />
@@ -191,43 +191,43 @@ const HeaderUserSection = ({
               checked={darkMode}
               onChange={(e) => setDarkMode(e.currentTarget.checked)}
               size="md"
-              color="bright-sun"
+              color="accent"
             />
             <Switch
               label="Email notifications"
               checked={emailNotif}
               onChange={(e) => setEmailNotif(e.currentTarget.checked)}
               size="md"
-              color="bright-sun"
+              color="accent"
             />
             <Divider />
             {isLoggedIn && (
               <>
                 <Group spacing={12} position="center" wrap="wrap">
                   <Tooltip label="Saved Jobs" withArrow>
-                    <ActionIcon size={40} color="bright-sun" variant="filled" onClick={() => { setSettingsOpened(false); navigate('/saved-jobs'); }}>
+                    <ActionIcon size={40} color="accent" variant="filled" onClick={() => { setSettingsOpened(false); navigate('/saved-jobs'); }}>
                       <IconBookmark size={22} color="#f99b07" />
                     </ActionIcon>
                   </Tooltip>
                   <Tooltip label="Job Alerts" withArrow>
-                    <ActionIcon size={40} color="bright-sun" variant="filled" onClick={() => { setSettingsOpened(false); navigate('/job-alerts'); }}>
+                    <ActionIcon size={40} color="accent" variant="filled" onClick={() => { setSettingsOpened(false); navigate('/job-alerts'); }}>
                       <IconBell size={22} color="#f99b07" />
                     </ActionIcon>
                   </Tooltip>
                   <Tooltip label="Resume Upload" withArrow>
-                    <ActionIcon size={40} color="bright-sun" variant="filled" onClick={() => { setSettingsOpened(false); navigate('/resume-upload'); }}>
+                    <ActionIcon size={40} color="accent" variant="filled" onClick={() => { setSettingsOpened(false); navigate('/resume-upload'); }}>
                       <IconUpload size={22} color="#f99b07" />
                     </ActionIcon>
                   </Tooltip>
                   <Tooltip label="Interviews" withArrow>
-                    <ActionIcon size={40} color="bright-sun" variant="filled" onClick={() => { setSettingsOpened(false); navigate('/interviews'); }}>
+                    <ActionIcon size={40} color="accent" variant="filled" onClick={() => { setSettingsOpened(false); navigate('/interviews'); }}>
                       <IconCalendarEvent size={22} color="#f99b07" />
                     </ActionIcon>
                   </Tooltip>
                 </Group>
                 <Button
                   variant="filled"
-                  color="bright-sun"
+                  color="accent"
                   fullWidth
                   size="md"
                   mt={10}
@@ -254,7 +254,7 @@ const HeaderUserSection = ({
                 </Button>
                 <Button
                   variant="filled"
-                  color="bright-sun"
+                  color="accent"
                   fullWidth
                   size="md"
                   mt={10}
@@ -294,11 +294,11 @@ const HeaderUserSection = ({
       >
         <Popover.Target>
           <button
-            className="bg-masala-900 p-2 rounded-full hover:bg-masala-800 transition relative"
+            className="bg-slate-100 dark:bg-slate-700 p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors relative"
             onClick={() => setOpened((o) => !o)}
           >
             <Indicator
-              color="bright-sun"
+              color="accent"
               offset={6}
               size={8}
               processing
@@ -307,7 +307,7 @@ const HeaderUserSection = ({
               <IconBell stroke={1.5} />
               {unreadCount > 0 && (
                 <Badge
-                  color="yellow"
+                  color="accent"
                   size="xs"
                   style={{
                     position: 'absolute',
@@ -329,7 +329,7 @@ const HeaderUserSection = ({
               <Button
                 size="xs"
                 variant="subtle"
-                color="bright-sun"
+                color="accent"
                 onClick={markAllAsRead}
                 disabled={!notifUnread || notifLoading}
                 mr={4}
@@ -360,7 +360,7 @@ const HeaderUserSection = ({
               {notifications.map((notif) => (
                 <div
                   key={notif.id}
-                  className={`p-2 rounded mb-1 flex justify-between items-start ${notif.read ? 'bg-masala-900 text-gray-400' : 'bg-masala-800 text-white font-semibold'}`}
+                  className={`p-2 rounded mb-1 flex justify-between items-start ${notif.read ? 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400' : 'bg-slate-200 dark:bg-slate-600 text-slate-900 dark:text-slate-100 font-semibold'}`}
                 >
                   <div>
                     <Text size="sm">{notif.message}</Text>
@@ -370,7 +370,7 @@ const HeaderUserSection = ({
                     <Button
                       size="xs"
                       variant="light"
-                      color="bright-sun"
+                      color="accent"
                       ml={8}
                       onClick={() => markAsRead(notif.id)}
                       compact

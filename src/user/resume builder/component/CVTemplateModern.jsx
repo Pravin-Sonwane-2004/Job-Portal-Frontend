@@ -35,7 +35,7 @@ const CVTemplateModern = forwardRef(({ cv, colorScheme, style }, ref) => {
       style={{
         minHeight: 800,
         background: theme.colors.dark[8],
-        color: theme.colors.gray[2],
+        color: theme.colors.neutral[2],
         ...style,
         overflow: 'hidden',
         border: `2px solid ${theme.colors.blue[8]}`,
@@ -73,19 +73,19 @@ const CVTemplateModern = forwardRef(({ cv, colorScheme, style }, ref) => {
         </Text>
         <Group spacing={8} mt={8}>
           <IconHome size={18} color={theme.colors.blue[2]} />
-          <Text size="sm" color={theme.colors.gray[2]}>
+          <Text size="sm" color={theme.colors.neutral[2]}>
             {cv.personalInfo.address}
           </Text>
         </Group>
         <Group spacing={8} mt={2}>
           <IconPhone size={18} color={theme.colors.blue[2]} />
-          <Text size="sm" color={theme.colors.gray[2]}>
+          <Text size="sm" color={theme.colors.neutral[2]}>
             {cv.personalInfo.phoneNumber}
           </Text>
         </Group>
         <Group spacing={8} mt={2}>
           <IconMail size={18} color={theme.colors.blue[2]} />
-          <Text size="sm" color={theme.colors.gray[2]}>
+          <Text size="sm" color={theme.colors.neutral[2]}>
             {cv.personalInfo.email}
           </Text>
         </Group>
@@ -102,7 +102,7 @@ const CVTemplateModern = forwardRef(({ cv, colorScheme, style }, ref) => {
                 Profile
               </Title>
             </Group>
-            <Text size="sm" color={theme.colors.gray[3]} mb="md" style={{ lineHeight: 1.6 }}>
+            <Text size="sm" color={theme.colors.neutral[3]} mb="md" style={{ lineHeight: 1.6 }}>
               {cv.personalInfo.description}
             </Text>
             <Divider mb="sm" />
@@ -125,7 +125,7 @@ const CVTemplateModern = forwardRef(({ cv, colorScheme, style }, ref) => {
                     <Text fw={600} color={theme.white}>{item.position}</Text>
                     <Badge color="blue" size="xs" variant="light">{item.company}</Badge>
                   </Group>
-                  <Text size="xs" color={theme.colors.gray[4]}>
+                  <Text size="xs" color={theme.colors.neutral[4]}>
                     {item.city} &middot; {item.from} - {item.to}
                   </Text>
                 </Box>
@@ -151,7 +151,7 @@ const CVTemplateModern = forwardRef(({ cv, colorScheme, style }, ref) => {
                     <Text fw={600} color={theme.white}>{item.universityName}</Text>
                     <Badge color="blue" size="xs" variant="light">{item.degree}</Badge>
                   </Group>
-                  <Text size="xs" color={theme.colors.gray[4]}>
+                  <Text size="xs" color={theme.colors.neutral[4]}>
                     {item.city} &middot; {item.subject} &middot; {item.from} - {item.to}
                   </Text>
                 </Box>

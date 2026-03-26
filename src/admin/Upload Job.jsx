@@ -1,22 +1,11 @@
 import React, { useState } from 'react';
 import { adminCreateJob } from '../all services/getJfBackendService';
 import {
-  TextInput,
-  Button,
-  Title,
-  Stack,
-  Text,
-  Container,
-  Paper,
-  Group,
-} from '@mantine/core';
-import {
   IconBriefcase,
   IconMapPin,
   IconCurrencyDollar,
   IconBuilding,
 } from '@tabler/icons-react';
-import { ADMIN_CREATE_JOB } from '../all services/getJfBackendService';
 
 const UploadJob = () => {
   const [form, setForm] = useState({
@@ -58,103 +47,106 @@ const UploadJob = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-masala-950 px-2 py-6 md:px-4 md:py-8">
-      <Container size="xl" style={{ maxWidth: '600px', width: '100%' }}>
-        <Paper
-          shadow="md"
-          radius="xl"
-          p="xl"
-          withBorder
-        >
-          <Title
-            align="center"
-            order={2}
-            className="text-bright-sun-500 font-bold mb-4"
-            style={{ fontSize: '2rem' }}
-          >
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900 px-4 py-6 md:px-4 md:py-8">
+      <div className="max-w-2xl w-full">
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8">
+          <h2 className="text-3xl font-bold text-center text-slate-900 dark:text-slate-100 mb-6">
             Upload Job
-          </Title>
+          </h2>
 
           {success && (
-            <Text align="center" color="green" className="mb-3">
+            <div className="text-green-600 dark:text-green-400 text-center mb-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
               Job uploaded successfully!
-            </Text>
+            </div>
           )}
           {error && (
-            <Text align="center" color="red" className="mb-3">
+            <div className="text-red-600 dark:text-red-400 text-center mb-4 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
               {error}
-            </Text>
+            </div>
           )}
 
-          <form onSubmit={handleSubmit}>
-            <Stack spacing="md">
-              <TextInput
-                label="Job Title"
-                icon={<IconBriefcase size={16} />}
-                value={form.title}
-                onChange={handleChange('title')}
-                placeholder="Enter job title"
-                required
-                size="md"
-                autoComplete="off"
-              />
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Job Title</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <IconBriefcase size={16} className="text-slate-400" />
+                  </div>
+                  <input
+                    type="text"
+                    value={form.title}
+                    onChange={handleChange('title')}
+                    placeholder="Enter job title"
+                    required
+                    className="w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                </div>
+              </div>
 
-              <Group grow spacing="md">
-                <TextInput
-                  label="Location"
-                  icon={<IconMapPin size={16} />}
-                  value={form.location}
-                  onChange={handleChange('location')}
-                  placeholder="Enter location"
-                  required
-                  size="md"
-                  autoComplete="off"
-                />
-                <TextInput
-                  label="Company"
-                  icon={<IconBuilding size={16} />}
-                  value={form.company}
-                  onChange={handleChange('company')}
-                  placeholder="Enter company name"
-                  required
-                  size="md"
-                  autoComplete="off"
-                />
-              </Group>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Location</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <IconMapPin size={16} className="text-slate-400" />
+                    </div>
+                    <input
+                      type="text"
+                      value={form.location}
+                      onChange={handleChange('location')}
+                      placeholder="Enter location"
+                      required
+                      className="w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    />
+                  </div>
+                </div>
 
-              <TextInput
-                label="Salary"
-                icon={<IconCurrencyDollar size={16} />}
-                value={form.salary}
-                onChange={handleChange('salary')}
-                placeholder="Enter salary"
-                required
-                size="md"
-                autoComplete="off"
-              />
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Company</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <IconBuilding size={16} className="text-slate-400" />
+                    </div>
+                    <input
+                      type="text"
+                      value={form.company}
+                      onChange={handleChange('company')}
+                      placeholder="Enter company name"
+                      required
+                      className="w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    />
+                  </div>
+                </div>
+              </div>
 
-              <Button
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Salary</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <IconCurrencyDollar size={16} className="text-slate-400" />
+                  </div>
+                  <input
+                    type="text"
+                    value={form.salary}
+                    onChange={handleChange('salary')}
+                    placeholder="Enter salary"
+                    required
+                    className="w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                </div>
+              </div>
+
+              <button
                 type="submit"
-                fullWidth
-                size="md"
-                styles={{
-                  root: {
-                    backgroundColor: '#f99b07',
-                    color: '#fff',
-                    fontWeight: 600,
-                    fontSize: '16px',
-                    paddingTop: '10px',
-                    paddingBottom: '10px',
-                    '&:hover': { backgroundColor: '#dd7302' },
-                  },
-                }}
+                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
                 Upload Job
-              </Button>
-            </Stack>
+              </button>
+            </div>
           </form>
-        </Paper>
-      </Container>
+        </div>
+      </div>
     </div>
   );
 };

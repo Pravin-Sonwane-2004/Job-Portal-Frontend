@@ -1,7 +1,4 @@
 import React, { useRef } from 'react';
-import { Card, Image, Text, Group, Container, Title } from '@mantine/core';
-import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const JobCategory = () => {
   const categories = [
@@ -11,7 +8,7 @@ const JobCategory = () => {
     { title: "Finance", openings: 40, icon: "/category/Finance.png" },
     { title: "Web Developer", openings: 50, icon: "/category/Web Developer.png" },
     { title: "Content Writing", openings: 50, icon: "/category/Content Writing.png" },
-    { title: "Content Writing", openings: 50, icon: "/category/Content Writing.png" },
+    { title: "Data Analyst", openings: 60, icon: "/category/Content Writing.png" },
   ];
 
   const scrollRef = useRef(null);
@@ -24,69 +21,52 @@ const JobCategory = () => {
     }
   };
 
-  const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: (i) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: i * 0.1,
-        duration: 0.5,
-        ease: "easeOut",
-      },
-    }),
-  };
-
   return (
-    <Container style={{ maxWidth: '1880px' }}>
+    <div className="max-w-7xl mx-auto px-4">
       {/* Section Title */}
       <div className="mt-10"></div>
-      <Title order={3} align="center" className="text-bright-sun-400 mb-20 font-bold">
+      <h3 className="text-3xl font-bold text-primary-500 mb-10 text-center">
         Explore More Opportunities
-      </Title>
+      </h3>
 
       {/* Carousel Container */}
       <div className="relative">
         {/* Left Button */}
         <button
           onClick={() => scroll('left')}
-          className="hidden md:flex absolute top-1/2 -translate-y-1/3 left-4 bg-masala-900 hover:bg-masala-600 text-white rounded-full p-2 shadow-lg z-10 transition"
+          className="hidden md:flex absolute top-1/2 -translate-y-1/2 left-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-900 dark:text-slate-100 rounded-full p-2 shadow-sm hover:shadow-md transition border border-slate-200 dark:border-slate-700"
         >
-          <ChevronLeft size={24} />
+          ‹
         </button>
 
         {/* Scrollable Cards */}
         <div
           ref={scrollRef}
-          className="overflow-x-auto whitespace-nowrap pb-6 snap-x snap-mandatory px-4 scroll-smooth no-scrollbar"
+          className="overflow-x-auto whitespace-nowrap pb-6 snap-x snap-mandatory px-4 scroll-smooth"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           <div className="flex gap-6 min-w-max">
             {categories.map((category, index) => (
-              <Card
-                key={category.title + index} // <-- Add this line for unique key
-                className="bg-bright-sun-300 hover:bg-bright-sun-400 transition duration-300 inline-block"
-                shadow="xl"
-                padding="lg"
-                radius="lg"
-                withBorder
+              <div
+                key={category.title + index}
+                className="bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition duration-300 inline-block rounded-xl shadow-sm hover:shadow-md p-6 cursor-pointer border border-slate-200 dark:border-slate-700"
                 style={{
-                  width: 200,
-                  height: 240,
+                  width: '200px',
+                  height: '240px',
                   textAlign: 'center',
-                  cursor: 'pointer',
                 }}
               >
-                <Group position="center" mb="lg">
-                  <Image src={category.icon} alt={category.title} width={40} height={40} />
-                </Group>
+                <div className="flex justify-center mb-4">
+                  <img src={category.icon} alt={category.title} className="w-10 h-10" />
+                </div>
 
-                <Text size="sm" weight={900} className="text-black mb-1">
+                <p className="font-bold text-slate-900 dark:text-slate-100 mb-2">
                   {category.title}
-                </Text>
-                <Text size="lg" className="text-masala-950 font-semibold">
+                </p>
+                <p className="text-lg text-slate-600 dark:text-slate-400 font-semibold">
                   {category.openings}+ openings
-                </Text>
-              </Card>
+                </p>
+              </div>
             ))}
           </div>
         </div>
@@ -94,12 +74,12 @@ const JobCategory = () => {
         {/* Right Button */}
         <button
           onClick={() => scroll('right')}
-          className="hidden md:flex absolute top-1/2 -translate-y-1/2 right-4 bg-masala-900 hover:bg-masala-600 text-white rounded-full p-2 shadow-lg z-10 transition"
+          className="hidden md:flex absolute top-1/2 -translate-y-1/2 right-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-900 dark:text-slate-100 rounded-full p-2 shadow-sm hover:shadow-md transition border border-slate-200 dark:border-slate-700"
         >
-          <ChevronRight size={24} />
+          ›
         </button>
       </div>
-    </Container>
+    </div>
   );
 };
 

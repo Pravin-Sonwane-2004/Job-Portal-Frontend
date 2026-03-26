@@ -1,9 +1,7 @@
 import React from 'react';
-import Marquee from 'react-fast-marquee';
 
 const Companies = () => {
   const companies = [
-
     "amazon",
     "Figma",
     "Google",
@@ -15,29 +13,30 @@ const Companies = () => {
     "Pinterest",
     "Slack",
     "Walmart"
-
   ];
 
   return (
     <div className="mt-18">
       {/* Heading */}
-      <div className="text-4xl font-semibold text-masala-100 mb-8 text-center">
-        Trusted By <span className="text-bright-sun-400">1000+</span> Companies
+      <div className="text-4xl font-semibold text-slate-900 dark:text-slate-100 mb-8 text-center">
+        Trusted By <span className="text-primary-500">1000+</span> Companies
       </div>
 
-      {/* Marquee */}
-      <Marquee pauseOnHover speed={50}>
-        {companies.map((company, index) => (
-          <div key={index} className="mx-8">
-            <img
-              src={`/public/Companies/${company}.png`} // Corrected path to reference the public folder
-              alt={company}
-              className="h-16 object-contain"
-            />
-          </div>
-        ))}
-      </Marquee>
-    </div>  
+      {/* Scrolling Container */}
+      <div className="overflow-hidden">
+        <div className="flex animate-scroll space-x-8">
+          {companies.concat(companies).map((company, index) => (
+            <div key={index} className="flex-shrink-0">
+              <img
+                src={`/public/Companies/${company}.png`}
+                alt={company}
+                className="h-16 object-contain"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 };
 

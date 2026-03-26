@@ -1,19 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Container,
-  Title,
-  Input,
-  Select,
-  Button,
-  Text,
-  Box,
-  Group,
-  Modal,
-  SimpleGrid,
-  Divider,
-  Center,
-  Paper,
-} from '@mantine/core';
 import { IconTrash, IconPlus, IconEdit, IconUser, IconMail, IconShield, IconSearch } from '@tabler/icons-react';
 import { adminGetAllUsers, adminDeleteUser, adminCreateAdminUser, adminUpdateUser } from '../all services/getJfBackendService';
 import { RingLoader } from '../loader/RingLoader';
@@ -117,194 +102,293 @@ const AllUsers = () => {
 
   if (loading) {
     return (
-      <Center p="md">
-        <RingLoader size="48px" color="#228be6" />
-      </Center>
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900">
+        <RingLoader size="48px" />
+      </div>
     );
   }
 
   return (
-    <div className="min-h-[150vh] bg-masala-950 font-poppins py-8">
-      <Container size="100vw">
-        <Paper shadow="xl" radius="lg" p="md" mb="md">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 font-poppins py-8">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 mb-6">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 flex-wrap">
             {/* Left: Search */}
             <div className="flex items-center gap-2">
-              <Input
-                icon={<IconSearch size={16} />}
-                placeholder="Search by username or email..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                style={{ width: 250 }}
-              />
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <IconSearch size={16} className="text-slate-400" />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Search by username or email..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 pr-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 w-64"
+                />
+              </div>
             </div>
             {/* Right: Sort and Create */}
             <div className="flex items-center gap-2 ml-auto">
-              <label htmlFor="sort-select" className="text-sm font-medium text-gray-700 flex items-center gap-1">
+              <label htmlFor="sort-select" className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1">
                 <IconShield size={16} /> Sort by role:
               </label>
-              <Select
+              <select
                 id="sort-select"
-                data={[
-                  { value: 'All', label: 'All' },
-                  { value: 'ADMIN', label: 'Admin' },
-                  { value: 'USER', label: 'User' },
-                  { value: 'RECRUITER', label: 'Recruiter' },
-                ]}
                 value={roleFilter}
-                onChange={setRoleFilter}
-                placeholder="Filter by role"
-                style={{ width: 180 }}
-                icon={<IconShield size={16} />}
-              />
-              <Button leftIcon={<IconPlus size={16} />} color="green" onClick={() => setCreateModalOpen(true)}>
+                onChange={(e) => setRoleFilter(e.target.value)}
+                className="px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 w-40"
+              >
+                <option value="All">All</option>
+                <option value="ADMIN">Admin</option>
+                <option value="USER">User</option>
+                <option value="RECRUITER">Recruiter</option>
+              </select>
+              <button
+                onClick={() => setCreateModalOpen(true)}
+                className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-green-500 focus:ring-offset-2 flex items-center gap-2"
+              >
+                <IconPlus size={16} />
                 Create User
-              </Button>
+              </button>
             </div>
           </div>
-        </Paper>
+        </div>
 
-        <Divider mb="md" />
+        <div className="border-t border-slate-200 dark:border-slate-700 mb-6"></div>
 
         {/* Modal for Create */}
-        <Modal opened={createModalOpen} onClose={() => setCreateModalOpen(false)} title={<Group><IconPlus size={18} />Create New User</Group>} centered>
-          <Input
-            icon={<IconUser size={16} />}
-            placeholder="Username"
-            value={newUser.userName}
-            onChange={(e) => setNewUser({ ...newUser, userName: e.target.value })}
-            mb="sm"
-          />
-          <Input
-            icon={<IconMail size={16} />}
-            placeholder="Email"
-            value={newUser.email}
-            onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
-            mb="sm"
-          />
-          <Input
-            placeholder="Password"
-            type="password"
-            value={newUser.password}
-            onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
-            mb="sm"
-          />
-          <Select
-            data={[
-              { value: 'ADMIN', label: 'Admin' },
-              { value: 'USER', label: 'User' },
-              { value: 'RECRUITER', label: 'Recruiter' },
-            ]}
-            placeholder="Select role"
-            value={newUser.roles}
-            onChange={(role) => setNewUser({ ...newUser, roles: role })}
-            mb="sm"
-            icon={<IconShield size={16} />}
-          />
-          {createError && <Text color="red" size="sm" mb="sm">{createError}</Text>}
-          <Group mt="md" position="right">
-            <Button variant="default" onClick={() => setCreateModalOpen(false)}>Cancel</Button>
-            <Button color="green" loading={creating} onClick={handleCreateUser}>Create</Button>
-          </Group>
-        </Modal>
+        {createModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-xl max-w-md w-full mx-4 p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <IconPlus size={18} className="text-indigo-600 dark:text-indigo-400" />
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Create New User</h3>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Username</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <IconUser size={16} className="text-slate-400" />
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Username"
+                      value={newUser.userName}
+                      onChange={(e) => setNewUser({ ...newUser, userName: e.target.value })}
+                      className="w-full pl-10 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Email</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <IconMail size={16} className="text-slate-400" />
+                    </div>
+                    <input
+                      type="email"
+                      placeholder="Email"
+                      value={newUser.email}
+                      onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                      className="w-full pl-10 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Password</label>
+                  <input
+                    type="password"
+                    placeholder="Password"
+                    value={newUser.password}
+                    onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Role</label>
+                  <select
+                    value={newUser.roles}
+                    onChange={(e) => setNewUser({ ...newUser, roles: e.target.value })}
+                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  >
+                    <option value="">Select role</option>
+                    <option value="ADMIN">Admin</option>
+                    <option value="USER">User</option>
+                    <option value="RECRUITER">Recruiter</option>
+                  </select>
+                </div>
+
+                {createError && (
+                  <div className="text-red-600 dark:text-red-400 text-sm">{createError}</div>
+                )}
+
+                <div className="flex justify-end gap-3 mt-6">
+                  <button
+                    onClick={() => setCreateModalOpen(false)}
+                    className="px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleCreateUser}
+                    disabled={creating}
+                    className="bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white font-medium py-2 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:cursor-not-allowed"
+                  >
+                    {creating ? 'Creating...' : 'Create'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Modal for Edit */}
-        <Modal opened={editModalOpen} onClose={() => setEditModalOpen(false)} title={<Group><IconEdit size={18} />Update User</Group>} centered>
-          <Input
-            icon={<IconUser size={16} />}
-            placeholder="Username"
-            value={editUser?.userName || ''}
-            disabled
-            mb="sm"
-          />
-          <Input
-            icon={<IconMail size={16} />}
-            placeholder="Email"
-            value={editUser?.email || ''}
-            onChange={(e) => setEditUser({ ...editUser, email: e.target.value })}
-            mb="sm"
-          />
-          <Input
-            placeholder="Password (leave blank to keep unchanged)"
-            type="password"
-            value={editUser?.password || ''}
-            onChange={(e) => setEditUser({ ...editUser, password: e.target.value })}
-            mb="sm"
-          />
-          <Select
-            data={[
-              { value: 'ADMIN', label: 'Admin' },
-              { value: 'USER', label: 'User' },
-              { value: 'RECRUITER', label: 'Recruiter' },
-            ]}
-            placeholder="Select role"
-            value={editUser?.roles || ''}
-            onChange={(role) => setEditUser({ ...editUser, roles: role })}
-            mb="sm"
-            icon={<IconShield size={16} />}
-          />
-          {editError && <Text color="red" size="sm" mb="sm">{editError}</Text>}
-          <Group mt="md" position="right">
-            <Button variant="default" onClick={() => setEditModalOpen(false)}>Cancel</Button>
-            <Button color="blue" loading={updating} onClick={handleUpdateUser}>Update</Button>
-          </Group>
-        </Modal>
+        {editModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-xl max-w-md w-full mx-4 p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <IconEdit size={18} className="text-indigo-600 dark:text-indigo-400" />
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Update User</h3>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Username</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <IconUser size={16} className="text-slate-400" />
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Username"
+                      value={editUser?.userName || ''}
+                      disabled
+                      className="w-full pl-10 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-slate-100 dark:bg-slate-600 text-slate-500 dark:text-slate-400 cursor-not-allowed"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Email</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <IconMail size={16} className="text-slate-400" />
+                    </div>
+                    <input
+                      type="email"
+                      placeholder="Email"
+                      value={editUser?.email || ''}
+                      onChange={(e) => setEditUser({ ...editUser, email: e.target.value })}
+                      className="w-full pl-10 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Password (leave blank to keep unchanged)</label>
+                  <input
+                    type="password"
+                    placeholder="Password (leave blank to keep unchanged)"
+                    value={editUser?.password || ''}
+                    onChange={(e) => setEditUser({ ...editUser, password: e.target.value })}
+                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Role</label>
+                  <select
+                    value={editUser?.roles || ''}
+                    onChange={(e) => setEditUser({ ...editUser, roles: e.target.value })}
+                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  >
+                    <option value="">Select role</option>
+                    <option value="ADMIN">Admin</option>
+                    <option value="USER">User</option>
+                    <option value="RECRUITER">Recruiter</option>
+                  </select>
+                </div>
+
+                {editError && (
+                  <div className="text-red-600 dark:text-red-400 text-sm">{editError}</div>
+                )}
+
+                <div className="flex justify-end gap-3 mt-6">
+                  <button
+                    onClick={() => setEditModalOpen(false)}
+                    className="px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleUpdateUser}
+                    disabled={updating}
+                    className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-medium py-2 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed"
+                  >
+                    {updating ? 'Updating...' : 'Update'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* User Cards */}
         {filteredUsers.length === 0 ? (
-          <Center className="h-60 flex flex-col">
-            <Text size="xl" color="dimmed">😕 No users match your filters!</Text>
-            <Text size="sm" color="gray">Try adjusting your search or role filter.</Text>
-          </Center>
+          <div className="flex flex-col items-center justify-center h-60">
+            <div className="text-2xl text-slate-400 dark:text-slate-500 mb-2">😕 No users match your filters!</div>
+            <div className="text-sm text-slate-500 dark:text-slate-400">Try adjusting your search or role filter.</div>
+          </div>
         ) : (
-          <SimpleGrid cols={3} spacing="lg" breakpoints={[{ maxWidth: 'lg', cols: 2 }, { maxWidth: 'sm', cols: 1 }]}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredUsers.map((user) => (
-              <Box
+              <div
                 key={user.id}
-                p="md"
-                sx={(theme) => ({
-                  border: `1px solid ${theme.colors.gray[3]}`,
-                  borderRadius: theme.radius.md,
-                  boxShadow: theme.shadows.xs,
-                })}
-                className="hover:shadow-md transition"
+                className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-6 hover:shadow-md transition-shadow"
               >
-                <Group spacing={6} mb={4}>
-                  <IconUser size={18} />
-                  <Text weight={600}>{user.userName || user.email}</Text>
-                </Group>
-                <Group spacing={6} mb={2}>
-                  <IconMail size={16} />
-                  <Text color="dimmed" size="sm">{user.email}</Text>
-                </Group>
-                <Group spacing={6} mb={2}>
-                  <IconShield size={16} />
-                  <Text size="sm">Role: {user.role || 'None'}</Text>
-                </Group>
-                <Group mt="md" position="right">
-                  <Button
-                    size="xs"
-                    color="blue"
-                    leftIcon={<IconEdit size={16} />}
-                    variant="outline"
+                <div className="flex items-center gap-2 mb-4">
+                  <IconUser size={18} className="text-indigo-600 dark:text-indigo-400" />
+                  <h3 className="font-semibold text-slate-900 dark:text-slate-100">{user.userName || user.email}</h3>
+                </div>
+
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                    <IconMail size={16} />
+                    <span>{user.email}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                    <IconShield size={16} />
+                    <span>Role: {user.role || 'None'}</span>
+                  </div>
+                </div>
+
+                <div className="flex justify-end gap-2">
+                  <button
                     onClick={() => handleEditUser(user)}
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium py-1.5 px-3 rounded transition-colors focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 flex items-center gap-1"
                   >
+                    <IconEdit size={14} />
                     Update
-                  </Button>
-                  <Button
-                    size="xs"
-                    color="red"
-                    leftIcon={<IconTrash size={16} />}
+                  </button>
+                  <button
                     onClick={() => handleDelete(user.userName)}
+                    className="bg-red-600 hover:bg-red-700 text-white text-sm font-medium py-1.5 px-3 rounded transition-colors focus:ring-2 focus:ring-red-500 focus:ring-offset-2 flex items-center gap-1"
                   >
+                    <IconTrash size={14} />
                     Delete
-                  </Button>
-                </Group>
-              </Box>
+                  </button>
+                </div>
+              </div>
             ))}
-          </SimpleGrid>
+          </div>
         )}
-      </Container>
+      </div>
     </div>
   );
 };
