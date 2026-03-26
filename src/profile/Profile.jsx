@@ -1,18 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Container,
-  Group,
-  Avatar,
-  Text,
-  Button,
-  Divider,
-  Card,
-  Loader,
-  Tooltip,
-  Badge,
-  Notification,
-} from '@mantine/core';
-import {
   IconEdit,
   IconShieldCheck,
   IconShieldX,
@@ -27,6 +14,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GET_PROFILE } from '../all services/getJfBackendService';
+import { RingLoader } from '../loader/RingLoader';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -88,174 +76,173 @@ const Profile = () => {
 
   if (loading) {
     return (
-      <Container fluid className="min-h-screen flex items-center justify-center bg-neutral-950">
-        <Loader size="lg" color="accent" />
-      </Container>
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900 px-4 py-6 md:px-4 md:py-8">
+        <RingLoader />
+      </div>
     );
   }
 
   if (!userData) {
     return (
-      <Container fluid className="min-h-screen flex items-center justify-center bg-neutral-950">
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900 px-4 py-6 md:px-4 md:py-8">
         <div className="flex flex-col items-center">
-          <Text color="red" className="mb-4">Failed to load profile data.</Text>
-          <Button
-            color="accent"
-            variant="outline"
+          <div className="text-red-600 dark:text-red-400 text-center mb-4 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+            Failed to load profile data.
+          </div>
+          <button
             onClick={() => navigate('/edit-profile')}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >
             Create/Edit Profile
-          </Button>
+          </button>
         </div>
-      </Container>
+      </div>
     );
   }
 
   return (
-    <Container
-      size="md"
-      fluid
-      className="min-h-screen py-10 bg-neutral-950 font-poppins flex items-center justify-center"
-      style={{ maxWidth: '100vw' }}
-    >
-      <Card
-        shadow="xl"
-        radius="lg"
-        padding="xl"
-        className="bg-neutral-950 border border-neutral-700 w-full max-w-2xl mx-auto hover:shadow-2xl transition-all duration-300"
-        style={{ width: '100%', minWidth: 0 }}
-      >
-        <Group position="center" className="relative mb-3">
-          <Avatar
+    <div className="min-h-screen py-10 bg-slate-50 dark:bg-slate-900 px-4 py-6 md:px-4 md:py-8 flex items-center justify-center">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8 w-full max-w-2xl mx-auto hover:shadow-2xl transition-all duration-300 border border-slate-200 dark:border-slate-700">
+        <div className="flex flex-col items-center relative mb-6">
+          <img
             src={userData.avatarUrl || '/avatars/default.png'}
-            size={100}
-            radius="xl"
             alt={`${userData.name}'s profile picture`}
-            className="border-4 border-accent-400 shadow-xl transition-transform hover:scale-105"
+            className="w-24 h-24 rounded-full border-4 border-indigo-400 shadow-xl transition-transform hover:scale-105 mb-4"
           />
-          <Text align="right" size="xl" weight={700} className="text-accent-400 mb-1">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">
             {userData.name}
-          </Text> 
-        </Group>
-
-        
-        
-
-        <Group position="center" mt="xs" mb="xs">
-          <Badge
-            variant="light"
-            color={userData.verified ? 'teal' : 'neutral'}
-            leftSection={
-              userData.verified ? <IconShieldCheck size={14} /> : <IconShieldX size={14} />
-            }
-          >
-            {userData.verified ? 'Verified' : 'Not Verified'}
-          </Badge>
-        </Group>
-
-        <Divider my="lg" />
-
-        {/* Profile fields with icons */}
-        <div className="p-0 text-sm text-neutral-300 space-y-2">
-          <p>
-            <IconUser size={16} className="inline mr-2 text-accent-400" />
-            <span className="font-medium text-neutral-400">Name:</span> {userData.name}
-          </p>
-          <p>
-            <IconMail size={16} className="inline mr-2 text-accent-400" />
-            <span className="font-medium text-neutral-400">Email:</span> {userData.email}
-          </p>
-          <p>
-            <IconMapPin size={16} className="inline mr-2 text-accent-400" />
-            <span className="font-medium text-neutral-400">Location:</span> {userData.location || 'N/A'}
-          </p>
-          <p>
-            <IconInfoCircle size={16} className="inline mr-2 text-accent-400" />
-            <span className="font-medium text-neutral-400">Bio:</span> {userData.bio || 'No bio added yet.'}
-          </p>
-          <p>
-            <IconPhone size={16} className="inline mr-2 text-accent-400" />
-            <span className="font-medium text-neutral-400">Phone:</span> {userData.phone || 'N/A'}
-          </p>
-          <p>
-            <IconBrandLinkedin size={16} className="inline mr-2 text-accent-400" />
-            <span className="font-medium text-neutral-400">LinkedIn:</span>{' '}
-            {userData.linkedin ? (
-              <a
-                href={userData.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-accent-400 underline"
-              >
-                {userData.linkedin}
-              </a>
-            ) : (
-              'N/A'
-            )}
-          </p>
-          <p>
-            <IconListCheck size={16} className="inline mr-2 text-accent-400" />
-            <span className="font-medium text-neutral-400">Skills:</span>{' '}
-            {userData.skills && userData.skills.length
-              ? Array.isArray(userData.skills)
-                ? userData.skills.join(', ')
-                : userData.skills
-              : 'N/A'}
-          </p>
+          </h1>
         </div>
 
-        <Group position="center" mt="xl" spacing="md">
-          <Tooltip label="Edit your profile">
-            <Button
-              variant="light"
-              leftSection={<IconEdit size={18} />}
-              color="accent"
-              onClick={() => navigate('/edit-profile')}
-              disabled={loading}
-            >
-              Edit Profile
-            </Button>
-          </Tooltip>
+        
+        
+
+        <div className="flex justify-center mb-6">
+          <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
+            userData.verified
+              ? 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400'
+              : 'bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-300'
+          }`}>
+            {userData.verified ? <IconShieldCheck size={14} /> : <IconShieldX size={14} />}
+            {userData.verified ? 'Verified' : 'Not Verified'}
+          </span>
+        </div>
+
+        <hr className="border-slate-200 dark:border-slate-600 my-6" />
+
+        {/* Profile fields with icons */}
+        <div className="space-y-4 text-sm">
+          <div className="flex items-start gap-3">
+            <IconUser size={16} className="text-indigo-500 mt-0.5 flex-shrink-0" />
+            <div>
+              <span className="font-medium text-slate-600 dark:text-slate-400">Name:</span>
+              <span className="ml-2 text-slate-900 dark:text-slate-100">{userData.name}</span>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <IconMail size={16} className="text-indigo-500 mt-0.5 flex-shrink-0" />
+            <div>
+              <span className="font-medium text-slate-600 dark:text-slate-400">Email:</span>
+              <span className="ml-2 text-slate-900 dark:text-slate-100">{userData.email}</span>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <IconMapPin size={16} className="text-indigo-500 mt-0.5 flex-shrink-0" />
+            <div>
+              <span className="font-medium text-slate-600 dark:text-slate-400">Location:</span>
+              <span className="ml-2 text-slate-900 dark:text-slate-100">{userData.location || 'N/A'}</span>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <IconInfoCircle size={16} className="text-indigo-500 mt-0.5 flex-shrink-0" />
+            <div>
+              <span className="font-medium text-slate-600 dark:text-slate-400">Bio:</span>
+              <span className="ml-2 text-slate-900 dark:text-slate-100">{userData.bio || 'No bio added yet.'}</span>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <IconPhone size={16} className="text-indigo-500 mt-0.5 flex-shrink-0" />
+            <div>
+              <span className="font-medium text-slate-600 dark:text-slate-400">Phone:</span>
+              <span className="ml-2 text-slate-900 dark:text-slate-100">{userData.phone || 'N/A'}</span>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <IconBrandLinkedin size={16} className="text-indigo-500 mt-0.5 flex-shrink-0" />
+            <div>
+              <span className="font-medium text-slate-600 dark:text-slate-400">LinkedIn:</span>
+              {userData.linkedin ? (
+                <a
+                  href={userData.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ml-2 text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 underline"
+                >
+                  {userData.linkedin}
+                </a>
+              ) : (
+                <span className="ml-2 text-slate-900 dark:text-slate-100">N/A</span>
+              )}
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <IconListCheck size={16} className="text-indigo-500 mt-0.5 flex-shrink-0" />
+            <div>
+              <span className="font-medium text-slate-600 dark:text-slate-400">Skills:</span>
+              <span className="ml-2 text-slate-900 dark:text-slate-100">
+                {userData.skills && userData.skills.length
+                  ? Array.isArray(userData.skills)
+                    ? userData.skills.join(', ')
+                    : userData.skills
+                  : 'N/A'}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex justify-center gap-4 mt-8">
+          <button
+            onClick={() => navigate('/edit-profile')}
+            disabled={loading}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            title="Edit your profile"
+          >
+            <IconEdit size={18} />
+            Edit Profile
+          </button>
           {!userData.verified && (
-            <Tooltip label="Request verification for your profile">
-              <Button
-                variant="outline"
-                color="teal"
-                leftSection={<IconShieldCheck size={18} />}
-                loading={verifying}
-                onClick={handleVerify}
-                disabled={verifying}
-              >
-                Get Verified
-              </Button>
-            </Tooltip>
+            <button
+              onClick={handleVerify}
+              disabled={verifying}
+              className="bg-transparent hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600 font-semibold py-2 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Request verification for your profile"
+            >
+              <IconShieldCheck size={18} />
+              {verifying ? 'Requesting...' : 'Get Verified'}
+            </button>
           )}
-        </Group>
+        </div>
 
         {verifySuccess && (
-          <Notification
-            color="teal"
-            title="Verification Requested"
-            mt="lg"
-            withCloseButton
-            onClose={() => setVerifySuccess(false)}
-          >
-            Verification request sent! You are now verified.
-          </Notification>
+          <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+            <div className="flex items-center gap-2">
+              <IconShieldCheck size={18} className="text-green-600 dark:text-green-400" />
+              <span className="font-medium text-green-800 dark:text-green-400">Verification Requested</span>
+            </div>
+            <p className="text-green-700 dark:text-green-300 mt-1">Verification request sent! You are now verified.</p>
+          </div>
         )}
         {verifyError && (
-          <Notification
-            color="red"
-            title="Verification Error"
-            mt="lg"
-            withCloseButton
-            onClose={() => setVerifyError('')}
-          >
-            {verifyError}
-          </Notification>
+          <div className="mt-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+            <div className="flex items-center gap-2">
+              <IconShieldX size={18} className="text-red-600 dark:text-red-400" />
+              <span className="font-medium text-red-800 dark:text-red-400">Verification Error</span>
+            </div>
+            <p className="text-red-700 dark:text-red-300 mt-1">{verifyError}</p>
+          </div>
         )}
-      </Card>
-    </Container>
+      </div>
+    </div>
   );
 };
 

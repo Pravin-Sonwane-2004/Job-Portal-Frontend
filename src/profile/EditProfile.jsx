@@ -1,18 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Container,
-  TextInput,
-  Textarea,
-  Button,
-  Avatar,
-  Group,
-  Loader,
-  Notification,
-  Card,
-  Title,
-  Text,
-} from '@mantine/core';
-import {
   IconCheck,
   IconX,
   IconDeviceFloppy,
@@ -27,6 +14,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GET_PROFILE, UPDATE_PROFILE } from '../all services/getJfBackendService';
+import { RingLoader } from '../loader/RingLoader';
 
 const EditProfile = () => {
   const navigate = useNavigate();
@@ -52,8 +40,6 @@ const EditProfile = () => {
     const fetchUser = async () => {
       try {
         const res = await axios.get(GET_PROFILE, { withCredentials: true });
-        // Optionally, check if the returned user matches the logged-in user (if you store username/email in localStorage)
-        // If not, redirect or show error
         setFormData({
           name: res.data.fullName || '',
           email: res.data.email || '',
@@ -77,8 +63,6 @@ const EditProfile = () => {
           linkedin: '',
           skills: '',
         });
-        // Optionally, redirect to login or show error
-        // navigate('/login');
       } finally {
         setLoading(false);
       }
@@ -104,7 +88,6 @@ const EditProfile = () => {
     setSuccess(false);
     setError('');
 
-    // Prepare data for backend (convert skills to array)
     const payload = {
       name: formData.name,
       email: formData.email,
@@ -118,13 +101,12 @@ const EditProfile = () => {
       avatarUrl: formData.avatarUrl,
       designation: formData.designation,
     };
-    // Only allow admins to update 'verified'
+
     const userRole = sessionStorage.getItem('role') || localStorage.getItem('role');
     if (userRole === 'ADMIN') {
       payload.verified = formData.verified;
     }
 
-    // If you want to support avatar upload, you need to handle it separately (not shown here)
     try {
       const token = sessionStorage.getItem('jwt');
       await axios.put(UPDATE_PROFILE, payload, {
@@ -134,16 +116,13 @@ const EditProfile = () => {
         },
       });
       setSuccess(true);
-      // Notify other components (like Header) that profile was updated
       window.dispatchEvent(new Event('profileUpdated'));
       setTimeout(() => navigate('/profile'), 1500);
     } catch (err) {
       if (err.response) {
-        // Backend returned an error response
         console.error('Backend error:', err.response.data);
         setError(`Failed to update profile: ${err.response.data}`);
       } else {
-        // Network or other error
         console.error(err);
         setError('Failed to update profile. Please try again.');
       }
@@ -154,163 +133,214 @@ const EditProfile = () => {
 
   if (loading) {
     return (
-      <Container fluid className="min-h-screen flex items-center justify-center bg-neutral-950">
-        <Loader size="lg" color="accent" />
-      </Container>
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900 px-4 py-6 md:px-4 md:py-8">
+        <RingLoader />
+      </div>
     );
   }
 
   return (
-    <Container size="xl" className="min-h-screen py-2 bg-neutral-950 font-poppins flex items-center justify-center">
-      <Card
-        shadow="xl"
-        radius="lg"
-        padding="xl"
-        className="bg-neutral-950 border border-neutral-700 w-full max-w-4xl mx-auto"
-        style={{ width: '100%', minWidth: 0 }}
-      >
-        <Title order={2} align="center" className="text-accent-400 mb-4">
+    <div className="min-h-screen py-2 bg-slate-50 dark:bg-slate-900 px-4 py-6 md:px-4 md:py-8 flex items-center justify-center">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8 w-full max-w-4xl mx-auto border border-slate-200 dark:border-slate-700">
+        <h2 className="text-3xl font-bold text-center text-slate-900 dark:text-slate-100 mb-4">
           Edit Profile
-        </Title>
-        <Text align="center" color="white" className="mb-6">
+        </h2>
+        <p className="text-center text-slate-600 dark:text-slate-400 mb-6">
           Update your profile information
-        </Text>
+        </p>
+
+        <div className="flex justify-start mb-6">
+          <img
+            src={formData.avatarUrl || '/avatars/default.png'}
+            alt="Profile avatar"
+            className="w-24 h-24 rounded-full border-4 border-indigo-400 shadow-lg"
+          />
+        </div>
+
+        <div className="mb-6 text-center text-sm text-slate-600 dark:text-slate-400">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleAvatarChange}
+            className="cursor-pointer file:mr-2 file:px-3 file:py-1 file:rounded-md file:border-none file:bg-indigo-600 file:text-white hover:file:bg-indigo-700"
+          />
+        </div>
 
         <form onSubmit={handleSubmit}>
-          <Group justify="left" className="mb-6">
-            <Avatar
-              src={formData.avatarUrl || '/avatars/default.png'}
-              size={100}
-              radius={100}
-              className="border-4 border-accent-400 shadow-lg"
-            />
-          </Group>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Full Name</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <IconUser size={18} className="text-slate-400" />
+                  </div>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Email</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <IconMail size={18} className="text-slate-400" />
+                  </div>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Location</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <IconMapPin size={18} className="text-slate-400" />
+                  </div>
+                  <input
+                    type="text"
+                    name="location"
+                    value={formData.location}
+                    onChange={handleInputChange}
+                    className="w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Bio</label>
+                <div className="relative">
+                  <div className="absolute top-3 left-3 pointer-events-none">
+                    <IconInfoCircle size={18} className="text-slate-400" />
+                  </div>
+                  <textarea
+                    name="bio"
+                    value={formData.bio}
+                    onChange={handleInputChange}
+                    rows={3}
+                    className="w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Phone Number</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <IconPhone size={18} className="text-slate-400" />
+                  </div>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    placeholder="e.g. +1 234 567 8901"
+                    className="w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">LinkedIn</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <IconBrandLinkedin size={18} className="text-slate-400" />
+                  </div>
+                  <input
+                    type="url"
+                    name="linkedin"
+                    value={formData.linkedin}
+                    onChange={handleInputChange}
+                    placeholder="LinkedIn profile URL"
+                    className="w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Skills</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <IconListCheck size={18} className="text-slate-400" />
+                  </div>
+                  <input
+                    type="text"
+                    name="skills"
+                    value={formData.skills}
+                    onChange={handleInputChange}
+                    placeholder="Comma separated (e.g. React, Node.js, SQL)"
+                    className="w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
 
-          <div className="mb-6 text-center text-sm text-neutral-300">
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Designation</label>
             <input
-              type="file"
-              accept="image/*"
-              onChange={handleAvatarChange}
-              className="cursor-pointer file:mr-2 file:px-3 file:py-1 file:rounded-md file:border-none file:bg-accent-400 file:text-black"
+              type="text"
+              name="designation"
+              value={formData.designation}
+              onChange={handleInputChange}
+              placeholder="e.g. Software Engineer"
+              className="w-full px-3 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             />
           </div>
 
-          <Group grow align="flex-start" className="mb-6" spacing="xl">
-            <div className="w-full">
-              <TextInput
-                label="Full Name"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                className="mb-4"
-                required
-                leftSection={<IconUser size={18} />}
-              />
-              <TextInput
-                label="Email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className="mb-4"
-                required
-                leftSection={<IconMail size={18} />}
-              />
-              <TextInput
-                label="Location"
-                name="location"
-                value={formData.location}
-                onChange={handleInputChange}
-                className="mb-4"
-                leftSection={<IconMapPin size={18} />}
-              />
-              <Textarea
-                label="Bio"
-                name="bio"
-                value={formData.bio}
-                onChange={handleInputChange}
-                minRows={3}
-                className="mb-4"
-                leftSection={<IconInfoCircle size={18} />}
-              />
-            </div>
-            <div className="w-full">
-              <TextInput
-                label="Phone Number"
-                name="phone"
-                value={formData.phone}
-                onChange={handleInputChange}
-                className="mb-4"
-                placeholder="e.g. +1 234 567 8901"
-                leftSection={<IconPhone size={18} />}
-              />
-              <TextInput
-                label="LinkedIn"
-                name="linkedin"
-                value={formData.linkedin}
-                onChange={handleInputChange}
-                className="mb-4"
-                placeholder="LinkedIn profile URL"
-                leftSection={<IconBrandLinkedin size={18} />}
-              />
-              <TextInput
-                label="Skills"
-                name="skills"
-                value={formData.skills}
-                onChange={handleInputChange}
-                className="mb-6"
-                placeholder="Comma separated (e.g. React, Node.js, SQL)"
-                leftSection={<IconListCheck size={18} />}
-              />
-            </div>
-          </Group>
-
-          <TextInput
-            label="Designation"
-            name="designation"
-            value={formData.designation}
-            onChange={handleInputChange}
-            className="mb-4"
-            placeholder="e.g. Software Engineer"
-          />
-
           <div className="mb-6">
-            <label style={{ color: '#fff', marginRight: '1em' }}>
+            <label className="flex items-center text-slate-700 dark:text-slate-300">
               <input
                 type="checkbox"
                 name="verified"
                 checked={formData.verified}
                 onChange={e => setFormData({ ...formData, verified: e.target.checked })}
-                style={{ marginRight: '0.5em' }}
+                className="mr-3 h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-slate-300 dark:border-slate-600 rounded"
               />
               Verified
             </label>
           </div>
 
-          <Group justify="left">
-            <Button
+          <div className="flex justify-start">
+            <button
               type="submit"
-              color="accent"
-              loading={saving}
-              className="px-8"
-              leftSection={<IconDeviceFloppy size={18} />}
+              disabled={saving}
+              className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-8 rounded-lg transition-colors focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 flex items-center gap-2"
             >
-              Save Changes
-            </Button>
-          </Group>
+              <IconDeviceFloppy size={18} />
+              {saving ? 'Saving...' : 'Save Changes'}
+            </button>
+          </div>
         </form>
 
         {success && (
-          <Notification icon={<IconCheck size={18} />} color="teal" title="Success" mt="lg">
-            Profile updated successfully!
-          </Notification>
+          <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+            <div className="flex items-center gap-2">
+              <IconCheck size={18} className="text-green-600 dark:text-green-400" />
+              <span className="font-medium text-green-800 dark:text-green-400">Success</span>
+            </div>
+            <p className="text-green-700 dark:text-green-300 mt-1">Profile updated successfully!</p>
+          </div>
         )}
         {error && (
-          <Notification icon={<IconX size={18} />} color="red" title="Error" mt="lg">
-            {error}
-          </Notification>
+          <div className="mt-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+            <div className="flex items-center gap-2">
+              <IconX size={18} className="text-red-600 dark:text-red-400" />
+              <span className="font-medium text-red-800 dark:text-red-400">Error</span>
+            </div>
+            <p className="text-red-700 dark:text-red-300 mt-1">{error}</p>
+          </div>
         )}
-      </Card>
-    </Container>
+      </div>
+    </div>
   );
 };
 
