@@ -8,6 +8,10 @@ import axios from 'axios';
 
 // Use parseJwt from utils for JWT payload
 import { parseJwt } from '../utils/jwtUtils';
+import {
+  isDarkThemeEnabled,
+  toggleTheme as toggleAppTheme,
+} from '../utils/themeUtils';
 
 const parseJwtPayload = (token) => {
   if (!token) return null;
@@ -69,25 +73,32 @@ const Header = () => {
   const [userId, setUserId] = useState(null);
 
   // Theme state
-  const [themeDark, setThemeDark] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    }
-    return false;
-  });
+  const [themeDark, setThemeDark] = useState(isDarkThemeEnabled());
 
   // Toggle theme
   const toggleTheme = () => {
-    const newThemeDark = !themeDark;
-    setThemeDark(newThemeDark);
-    localStorage.setItem('theme', newThemeDark ? 'dark' : 'light');
-    document.documentElement.classList.toggle('dark', newThemeDark);
+    const nextTheme = toggleAppTheme();
+    setThemeDark(nextTheme === 'dark');
   };
 
   // Apply theme on mount
   useEffect(() => {
     document.documentElement.classList.toggle('dark', themeDark);
+    document.documentElement.style.colorScheme = themeDark ? 'dark' : 'light';
   }, [themeDark]);
+
+  useEffect(() => {
+    const syncTheme = () => setThemeDark(isDarkThemeEnabled());
+
+    syncTheme();
+    window.addEventListener('storage', syncTheme);
+    window.addEventListener('themechange', syncTheme);
+
+    return () => {
+      window.removeEventListener('storage', syncTheme);
+      window.removeEventListener('themechange', syncTheme);
+    };
+  }, []);
 
   // Notification states
   const [notifications, setNotifications] = useState([]);
