@@ -1,20 +1,43 @@
 import React, { useEffect, useState } from 'react';
 import {
+  IconBrandLinkedin,
   IconEdit,
+  IconInfoCircle,
+  IconListCheck,
+  IconMail,
+  IconMapPin,
+  IconPhone,
   IconShieldCheck,
   IconShieldX,
   IconUser,
-  IconMail,
-  IconMapPin,
-  IconInfoCircle,
-  IconPhone,
-  IconBrandLinkedin,
-  IconListCheck,
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { GET_PROFILE } from '../all services/getJfBackendService';
+
+import PageWrapper from '../components/PageWrapper';
 import { RingLoader } from '../loader/RingLoader';
+import {
+  fetchUserProfile,
+  requestUserVerification,
+} from '../services/profileService';
+
+const mapProfile = (profile) => {
+  if (!profile) {
+    return null;
+  }
+
+  return {
+    name: profile.fullName || profile.name || profile.userName || '',
+    email: profile.email || '',
+    location: profile.location || '',
+    bio: profile.bio || '',
+    avatarUrl: profile.avatarUrl || '',
+    phone: profile.phoneNumber || '',
+    linkedin: profile.linkedinUrl || '',
+    skills: Array.isArray(profile.skills) ? profile.skills : [],
+    designation: profile.designation || '',
+    verified: Boolean(profile.verified),
+  };
+};
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -24,50 +47,45 @@ const Profile = () => {
   const [verifyError, setVerifyError] = useState('');
   const [verifySuccess, setVerifySuccess] = useState(false);
 
-  useEffect(() => { 
-    const fetchUserData = async () => {
-      try {
-        // Try both possible endpoints for user profile
-        let res;
-          res = await axios.get(GET_PROFILE, { withCredentials: true });
-        // Defensive: check if res.data exists and has expected fields
-        if (!res.data || (!res.data.fullName && !res.data.userName && !res.data.email)) {
-          setUserData(null);
-        } else {
-          setUserData({
-            name: res.data.fullName || res.data.name || res.data.userName || '',
-            email: res.data.email || '',
-            location: res.data.location || '',
-            bio: res.data.bio || '',
-            avatarUrl: res.data.avatarUrl || '',
-            phone: res.data.phoneNumber || '',
-            linkedin: res.data.linkedinUrl || '',
-            skills: Array.isArray(res.data.skills) ? res.data.skills : [],
-            designation: res.data.designation || '',
-            verified: res.data.verified || false,
-          });
-        }
-      } catch (err) {
-        console.error('Profile fetch error:', err);
-        setUserData(null);
-      } finally {
-        setLoading(false);
-      }
-    };
+  useEffect(() => {
+    let active = true;
 
-    fetchUserData();
-  }, [navigate]);
+    fetchUserProfile()
+      .then((response) => {
+        if (!active) {
+          return;
+        }
+
+        setUserData(mapProfile(response.data));
+      })
+      .catch(() => {
+        if (active) {
+          setUserData(null);
+        }
+      })
+      .finally(() => {
+        if (active) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const handleVerify = async () => {
     setVerifying(true);
     setVerifyError('');
     setVerifySuccess(false);
+
     try {
-      // If you have a verification endpoint, update it here as well
-      await axios.post('http://127.0.0.1:8080/api/user/verify', {}, { withCredentials: true });
+      await requestUserVerification();
       setVerifySuccess(true);
-      setUserData({ ...userData, verified: true });
-    } catch (err) {
+      setUserData((currentUser) =>
+        currentUser ? { ...currentUser, verified: true } : currentUser
+      );
+    } catch {
       setVerifyError('Verification request failed. Try again later.');
     } finally {
       setVerifying(false);
@@ -76,173 +94,179 @@ const Profile = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900 px-4 py-6 md:px-4 md:py-8">
-        <RingLoader />
-      </div>
+      <PageWrapper>
+        <div className="flex min-h-72 items-center justify-center rounded-3xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800">
+          <RingLoader color="#4f46e5" size="48px" />
+        </div>
+      </PageWrapper>
     );
   }
 
   if (!userData) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900 px-4 py-6 md:px-4 md:py-8">
-        <div className="flex flex-col items-center">
-          <div className="text-red-600 dark:text-red-400 text-center mb-4 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+      <PageWrapper>
+        <div className="mx-auto max-w-3xl rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <p className="text-sm text-red-700 dark:text-red-300">
             Failed to load profile data.
-          </div>
+          </p>
           <button
+            type="button"
             onClick={() => navigate('/edit-profile')}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            className="mt-4 rounded-2xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500"
           >
-            Create/Edit Profile
+            Create or Edit Profile
           </button>
         </div>
-      </div>
+      </PageWrapper>
     );
   }
 
+  const details = [
+    { label: 'Name', value: userData.name, icon: IconUser },
+    { label: 'Email', value: userData.email, icon: IconMail },
+    { label: 'Location', value: userData.location || 'N/A', icon: IconMapPin },
+    { label: 'Phone', value: userData.phone || 'N/A', icon: IconPhone },
+    {
+      label: 'LinkedIn',
+      value: userData.linkedin || 'N/A',
+      icon: IconBrandLinkedin,
+      isLink: Boolean(userData.linkedin),
+    },
+    {
+      label: 'Skills',
+      value: userData.skills.length ? userData.skills.join(', ') : 'N/A',
+      icon: IconListCheck,
+    },
+  ];
+
   return (
-    <div className="min-h-screen py-10 bg-slate-50 dark:bg-slate-900 px-4 py-6 md:px-4 md:py-8 flex items-center justify-center">
-      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8 w-full max-w-2xl mx-auto hover:shadow-2xl transition-all duration-300 border border-slate-200 dark:border-slate-700">
-        <div className="flex flex-col items-center relative mb-6">
-          <img
-            src={userData.avatarUrl || '/avatars/default.png'}
-            alt={`${userData.name}'s profile picture`}
-            className="w-24 h-24 rounded-full border-4 border-indigo-400 shadow-xl transition-transform hover:scale-105 mb-4"
-          />
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">
-            {userData.name}
-          </h1>
-        </div>
+    <PageWrapper>
+      <section className="mx-auto max-w-4xl space-y-6">
+        <header className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-4">
+              <img
+                src={userData.avatarUrl || '/avatars/default.png'}
+                alt={`${userData.name}'s profile`}
+                className="h-20 w-20 rounded-full border border-slate-200 object-cover dark:border-slate-700"
+              />
+              <div>
+                <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">
+                  {userData.name || 'User'}
+                </h1>
+                {userData.designation && (
+                  <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                    {userData.designation}
+                  </p>
+                )}
+                <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 dark:bg-slate-700 dark:text-slate-200">
+                  {userData.verified ? (
+                    <>
+                      <IconShieldCheck size={14} />
+                      Verified
+                    </>
+                  ) : (
+                    <>
+                      <IconShieldX size={14} />
+                      Not Verified
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
 
-        
-        
-
-        <div className="flex justify-center mb-6">
-          <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
-            userData.verified
-              ? 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400'
-              : 'bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-300'
-          }`}>
-            {userData.verified ? <IconShieldCheck size={14} /> : <IconShieldX size={14} />}
-            {userData.verified ? 'Verified' : 'Not Verified'}
-          </span>
-        </div>
-
-        <hr className="border-slate-200 dark:border-slate-600 my-6" />
-
-        {/* Profile fields with icons */}
-        <div className="space-y-4 text-sm">
-          <div className="flex items-start gap-3">
-            <IconUser size={16} className="text-indigo-500 mt-0.5 flex-shrink-0" />
-            <div>
-              <span className="font-medium text-slate-600 dark:text-slate-400">Name:</span>
-              <span className="ml-2 text-slate-900 dark:text-slate-100">{userData.name}</span>
-            </div>
-          </div>
-          <div className="flex items-start gap-3">
-            <IconMail size={16} className="text-indigo-500 mt-0.5 flex-shrink-0" />
-            <div>
-              <span className="font-medium text-slate-600 dark:text-slate-400">Email:</span>
-              <span className="ml-2 text-slate-900 dark:text-slate-100">{userData.email}</span>
-            </div>
-          </div>
-          <div className="flex items-start gap-3">
-            <IconMapPin size={16} className="text-indigo-500 mt-0.5 flex-shrink-0" />
-            <div>
-              <span className="font-medium text-slate-600 dark:text-slate-400">Location:</span>
-              <span className="ml-2 text-slate-900 dark:text-slate-100">{userData.location || 'N/A'}</span>
-            </div>
-          </div>
-          <div className="flex items-start gap-3">
-            <IconInfoCircle size={16} className="text-indigo-500 mt-0.5 flex-shrink-0" />
-            <div>
-              <span className="font-medium text-slate-600 dark:text-slate-400">Bio:</span>
-              <span className="ml-2 text-slate-900 dark:text-slate-100">{userData.bio || 'No bio added yet.'}</span>
-            </div>
-          </div>
-          <div className="flex items-start gap-3">
-            <IconPhone size={16} className="text-indigo-500 mt-0.5 flex-shrink-0" />
-            <div>
-              <span className="font-medium text-slate-600 dark:text-slate-400">Phone:</span>
-              <span className="ml-2 text-slate-900 dark:text-slate-100">{userData.phone || 'N/A'}</span>
-            </div>
-          </div>
-          <div className="flex items-start gap-3">
-            <IconBrandLinkedin size={16} className="text-indigo-500 mt-0.5 flex-shrink-0" />
-            <div>
-              <span className="font-medium text-slate-600 dark:text-slate-400">LinkedIn:</span>
-              {userData.linkedin ? (
-                <a
-                  href={userData.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="ml-2 text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 underline"
+            <div className="flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={() => navigate('/edit-profile')}
+                className="inline-flex items-center gap-2 rounded-2xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500"
+              >
+                <IconEdit size={18} />
+                Edit Profile
+              </button>
+              {!userData.verified && (
+                <button
+                  type="button"
+                  onClick={handleVerify}
+                  disabled={verifying}
+                  className="rounded-2xl border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:text-slate-100 dark:hover:bg-slate-700"
                 >
-                  {userData.linkedin}
-                </a>
-              ) : (
-                <span className="ml-2 text-slate-900 dark:text-slate-100">N/A</span>
+                  {verifying ? 'Requesting...' : 'Get Verified'}
+                </button>
               )}
             </div>
           </div>
-          <div className="flex items-start gap-3">
-            <IconListCheck size={16} className="text-indigo-500 mt-0.5 flex-shrink-0" />
-            <div>
-              <span className="font-medium text-slate-600 dark:text-slate-400">Skills:</span>
-              <span className="ml-2 text-slate-900 dark:text-slate-100">
-                {userData.skills && userData.skills.length
-                  ? Array.isArray(userData.skills)
-                    ? userData.skills.join(', ')
-                    : userData.skills
-                  : 'N/A'}
-              </span>
-            </div>
-          </div>
-        </div>
+        </header>
 
-        <div className="flex justify-center gap-4 mt-8">
-          <button
-            onClick={() => navigate('/edit-profile')}
-            disabled={loading}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-            title="Edit your profile"
-          >
-            <IconEdit size={18} />
-            Edit Profile
-          </button>
-          {!userData.verified && (
-            <button
-              onClick={handleVerify}
-              disabled={verifying}
-              className="bg-transparent hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600 font-semibold py-2 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-              title="Request verification for your profile"
-            >
-              <IconShieldCheck size={18} />
-              {verifying ? 'Requesting...' : 'Get Verified'}
-            </button>
-          )}
-        </div>
+        <section className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+            About
+          </h2>
+          <div className="mt-4 flex gap-3 rounded-2xl bg-slate-50 p-4 dark:bg-slate-900/70">
+            <IconInfoCircle size={18} className="mt-0.5 text-indigo-600 dark:text-indigo-400" />
+            <p className="text-sm leading-6 text-slate-600 dark:text-slate-300">
+              {userData.bio || 'No bio added yet.'}
+            </p>
+          </div>
+        </section>
+
+        <section className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+            Details
+          </h2>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+            {details.map((detail) => {
+              const DetailIcon = detail.icon;
+
+              return (
+                <div
+                  key={detail.label}
+                  className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-900/70"
+                >
+                  <div className="flex items-start gap-3">
+                    <DetailIcon
+                      size={18}
+                      className="mt-0.5 text-indigo-600 dark:text-indigo-400"
+                    />
+                    <div>
+                      <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
+                        {detail.label}
+                      </p>
+                      {detail.isLink ? (
+                        <a
+                          href={detail.value}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-1 block break-all text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-300 dark:hover:text-indigo-200"
+                        >
+                          {detail.value}
+                        </a>
+                      ) : (
+                        <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
+                          {detail.value}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
 
         {verifySuccess && (
-          <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-            <div className="flex items-center gap-2">
-              <IconShieldCheck size={18} className="text-green-600 dark:text-green-400" />
-              <span className="font-medium text-green-800 dark:text-green-400">Verification Requested</span>
-            </div>
-            <p className="text-green-700 dark:text-green-300 mt-1">Verification request sent! You are now verified.</p>
+          <div className="rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700 dark:border-green-500/30 dark:bg-green-500/10 dark:text-green-300">
+            Verification request sent successfully.
           </div>
         )}
+
         {verifyError && (
-          <div className="mt-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-            <div className="flex items-center gap-2">
-              <IconShieldX size={18} className="text-red-600 dark:text-red-400" />
-              <span className="font-medium text-red-800 dark:text-red-400">Verification Error</span>
-            </div>
-            <p className="text-red-700 dark:text-red-300 mt-1">{verifyError}</p>
+          <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300">
+            {verifyError}
           </div>
         )}
-      </div>
-    </div>
+      </section>
+    </PageWrapper>
   );
 };
 

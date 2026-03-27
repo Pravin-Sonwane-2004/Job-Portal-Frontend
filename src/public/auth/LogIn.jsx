@@ -1,7 +1,8 @@
 import { IconLock, IconUser } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LOGIN_URL } from "../../all services/getJfBackendService";
+import { loginUser } from "../../services/authService";
+import { getSessionToken, setSessionToken } from "../../services/sessionService";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -12,7 +13,7 @@ const SignIn = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (sessionStorage.getItem("jwt")) {
+    if (getSessionToken()) {
       navigate("/", { replace: true });
     }
   }, [navigate]);
@@ -23,47 +24,39 @@ const SignIn = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(LOGIN_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, role }),
-      });
+      const response = await loginUser({ email, password, role });
+      const data = response.data;
 
-      const text = await response.text();
-      let data;
-      try {
-        data = JSON.parse(text);
-      } catch {
-        data = null;
-      }
-
-      if (response.ok && data && data.token) {
-        sessionStorage.setItem("jwt", data.token);
+      if (data?.token) {
+        setSessionToken(data.token);
 
         switch (role) {
           case "ADMIN":
             navigate("/admin");
             break;
           case "RECRUITER":
-            navigate("/recruiter");
+            navigate("/find-jobs");
             break;
           default:
-            navigate("/user");
+            navigate("/dashboard");
             break;
         }
       } else {
-        // If not JSON or no token, treat as error message
-        const message = (data && data.message) || text;
-        if (message.toLowerCase().includes("email does not exist")) {
-          setError("Email does not exist.");
-        } else if (message.toLowerCase().includes("incorrect password")) {
-          setError("Incorrect password.");
-        } else {
-          setError(message || "Login failed.");
-        }
+        setError("Login failed.");
       }
-    } catch {
-      setError("Error connecting to server.");
+    } catch (error) {
+      const message =
+        error?.response?.data?.message ||
+        error?.response?.data ||
+        "Error connecting to server.";
+
+      if (typeof message === "string" && message.toLowerCase().includes("email does not exist")) {
+        setError("Email does not exist.");
+      } else if (typeof message === "string" && message.toLowerCase().includes("incorrect password")) {
+        setError("Incorrect password.");
+      } else {
+        setError(typeof message === "string" ? message : "Login failed.");
+      }
     } finally {
       setLoading(false);
     }
@@ -77,7 +70,7 @@ const SignIn = () => {
         </h2>
 
         {error && (
-          <p className="text-error text-center mb-4 p-2 bg-red-50 dark:bg-red-900/20 rounded-lg">
+          <p className="mb-4 rounded-lg bg-red-50 p-2 text-center text-red-700 dark:bg-red-900/20 dark:text-red-300">
             {error}
           </p>
         )}
@@ -93,7 +86,7 @@ const SignIn = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-10 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full rounded-lg border border-slate-300 bg-white py-2 pl-10 pr-3 text-slate-900 outline-none transition-colors focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder-slate-400"
                 placeholder="Enter your email"
                 required
               />
@@ -110,7 +103,7 @@ const SignIn = () => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full rounded-lg border border-slate-300 bg-white py-2 pl-10 pr-3 text-slate-900 outline-none transition-colors focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:placeholder-slate-400"
                 placeholder="Enter your password"
                 required
               />
@@ -124,7 +117,7 @@ const SignIn = () => {
             <select
               value={role}
               onChange={(e) => setRole(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none transition-colors focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100"
             >
               <option value="USER">User</option>
               <option value="ADMIN">Admin</option>
@@ -135,7 +128,7 @@ const SignIn = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full rounded-lg bg-indigo-600 px-4 py-2 font-semibold text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? "Logging In..." : "Log In"}
           </button>
@@ -159,3 +152,4 @@ const SignIn = () => {
 };
 
 export default SignIn;
+

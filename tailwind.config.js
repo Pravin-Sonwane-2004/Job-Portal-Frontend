@@ -1,63 +1,41 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ],
+  content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
   darkMode: 'class',
   theme: {
+    container: {
+      center: true,
+      padding: {
+        DEFAULT: '1rem',
+        sm: '1.5rem',
+        lg: '2rem',
+      },
+    },
     extend: {
-      fontFamily: {
-        sans: ['Inter', 'sans-serif'],
+      borderRadius: {
+        '4xl': '2rem',
+      },
+      boxShadow: {
+        soft: '0 24px 60px -28px rgba(15, 23, 42, 0.35)',
       },
       colors: {
-        primary: {
-          50: '#eef2ff',
-          100: '#e0e7ff',
-          200: '#c7d2fe',
-          300: '#a5b4fc',
-          400: '#818cf8',
-          500: '#4f46e5',
-          600: '#4338ca',
-          700: '#3730a3',
-          800: '#312e81',
-          900: '#232155',
+        brand: {
+          50: '#eef4ff',
+          100: '#d9e6ff',
+          200: '#bcd0ff',
+          300: '#93b2ff',
+          400: '#6790ff',
+          500: '#416cff',
+          600: '#2c4fe3',
+          700: '#263fb7',
+          800: '#25388f',
+          900: '#233270',
         },
-        background: {
-          light: '#f8fafc',
-          dark: '#0f172a',
-        },
-        surface: {
-          light: '#ffffff',
-          dark: '#1e293b',
-        },
-        text: {
-          high: {
-            light: '#0f172a',
-            dark: '#e2e8f0',
-          },
-          muted: {
-            light: '#64748b',
-            dark: '#94a3b8',
-          },
-        },
-        border: {
-          light: '#e2e8f0',
-          dark: '#334155',
-        },
-        success: '#22c55e',
-        error: '#ef4444',
       },
-      animation: {
-        'scroll': 'scroll 20s linear infinite',
-      },
-      keyframes: {
-        scroll: {
-          '0%': { transform: 'translateX(0)' },
-          '100%': { transform: 'translateX(-50%)' },
-        },
+      fontFamily: {
+        sans: ['"IBM Plex Sans"', '"Segoe UI"', 'ui-sans-serif', 'sans-serif'],
       },
     },
   },
   plugins: [],
-}
+};

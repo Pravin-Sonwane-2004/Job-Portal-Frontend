@@ -1,89 +1,118 @@
 import React, { useEffect, useState } from 'react';
-import { getMyAppliedJobs } from '../all services/getJfBackendService';
-import { getUserIdFromJwt } from '../utils/jwtUtils';
+
+import PageWrapper from '../components/PageWrapper';
+import { RingLoader } from '../loader/RingLoader';
+import {
+  deleteApplicationById,
+  getMyAppliedJobs,
+  updateApplicationById,
+} from '../services/jobPortalApi';
 import AppliedJobCard from './MyApplications/AppliedJobCard';
 
 const MyApplication = () => {
-  console.log("MyApplication component mounted");
   const [appliedJobs, setAppliedJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [loadingJobId, setLoadingJobId] = useState(null);
 
-  // getUserIdFromJwt is now imported from utils
-
   useEffect(() => {
-    console.log("MyApplication useEffect running");
-    const jwt = sessionStorage.getItem('jwt');
-    if (!jwt) {
-      console.error("No JWT found in sessionStorage");
-      setLoading(false);
-      return;
-    }
     getMyAppliedJobs()
-      .then((res) => {
-        setAppliedJobs(res.data);
-        setLoading(false);
+      .then((response) => {
+        setAppliedJobs(Array.isArray(response.data) ? response.data : []);
       })
-      .catch((err) => {
-        console.error("Failed to fetch applied jobs:", err);
+      .catch(() => {
+        setError('Unable to load your applications right now.');
+      })
+      .finally(() => {
         setLoading(false);
       });
   }, []);
 
-  // Cancel application handler
   const handleCancel = async (job) => {
-    if (!window.confirm(`Are you sure you want to cancel your application for '${job.jobTitle}'?`)) return;
+    if (!window.confirm(`Cancel your application for "${job.jobTitle}"?`)) {
+      return;
+    }
+
     setLoadingJobId(job.applicationId);
+
     try {
-      const { deleteApplicationById } = await import('../all services/getJfBackendService');
       await deleteApplicationById(job.applicationId);
-      setAppliedJobs((prev) => prev.filter((j) => j.applicationId !== job.applicationId));
-    } catch (err) {
-      alert('Failed to cancel application.');
+      setAppliedJobs((currentJobs) =>
+        currentJobs.filter((currentJob) => currentJob.applicationId !== job.applicationId)
+      );
+    } catch {
+      setError('Failed to cancel the application.');
     } finally {
       setLoadingJobId(null);
     }
   };
 
-  // Update application handler
-  const handleUpdate = async (job, navigate) => {
-    // Example: prompt for a new status (replace with a modal for production)
+  const handleUpdate = async (job) => {
     const newStatus = window.prompt('Enter new status for this application:', '');
-    if (newStatus === null) return;
+
+    if (newStatus === null || !newStatus.trim()) {
+      return;
+    }
+
     setLoadingJobId(job.applicationId);
+
     try {
-      const { updateApplicationById } = await import('../all services/getJfBackendService');
-      await updateApplicationById(job.applicationId, { status: newStatus });
-      alert('Application updated successfully.');
-      // Optionally, refresh the list or update the UI
-    } catch (err) {
-      alert('Failed to update application.');
+      await updateApplicationById(job.applicationId, { status: newStatus.trim() });
+      setAppliedJobs((currentJobs) =>
+        currentJobs.map((currentJob) =>
+          currentJob.applicationId === job.applicationId
+            ? { ...currentJob, status: newStatus.trim() }
+            : currentJob
+        )
+      );
+    } catch {
+      setError('Failed to update the application.');
     } finally {
       setLoadingJobId(null);
     }
   };
-
-  if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="px-2 py-4 sm:p-8">
-      <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">My Applied Jobs</h2>
-      {appliedJobs.length === 0 ? (
-        <div>No jobs applied yet.</div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {appliedJobs.map((job) => (
-            <AppliedJobCard
-              key={job.applicationId}
-              job={job}
-              onCancel={handleCancel}
-              onUpdate={handleUpdate}
-              loading={loadingJobId === job.applicationId}
-            />
-          ))}
-        </div>
-      )}
-    </div>
+    <PageWrapper>
+      <section className="space-y-6">
+        <header className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">
+            My Applications
+          </h1>
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+            Review active applications, update a status, or cancel one if needed.
+          </p>
+        </header>
+
+        {error && (
+          <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300">
+            {error}
+          </div>
+        )}
+
+        {loading ? (
+          <div className="flex min-h-56 items-center justify-center rounded-3xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800">
+            <RingLoader color="#4f46e5" size="48px" />
+          </div>
+        ) : appliedJobs.length === 0 ? (
+          <div className="rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-6 py-12 text-center text-sm text-slate-600 dark:border-slate-600 dark:bg-slate-800/60 dark:text-slate-400">
+            You have not applied to any jobs yet.
+          </div>
+        ) : (
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {appliedJobs.map((job) => (
+              <AppliedJobCard
+                key={job.applicationId}
+                job={job}
+                onCancel={handleCancel}
+                onUpdate={handleUpdate}
+                loading={loadingJobId === job.applicationId}
+              />
+            ))}
+          </div>
+        )}
+      </section>
+    </PageWrapper>
   );
 };
 

@@ -7,7 +7,6 @@ import AllUser from "./admin/pages/AllUser";
 import UploadJobs from "./admin/pages/UploadJobs";
 import SignIn from "./public/auth/LogIn";
 import SignUp from "./public/auth/Register";
-import HomePage from "./public/landing page/HomePage";
 import FindJobs from "./public/pages/FindJobsPage";
 import MyApplication from "./user/MyApplication";
 // import AllApplications from './admin/AllApplications';
@@ -25,6 +24,7 @@ import InterviewSchedulePage from "./user/InterviewSchedulePage";
 import JobAlertsPage from "./user/JobAlertsPage";
 import MessagesPage from "./user/MessagesPage";
 import SavedJobsPage from "./user/SavedJobsPage";
+import HomePage from "./pages/home/HomePage";
 
 export default function Router() {
   return (

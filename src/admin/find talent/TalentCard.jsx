@@ -1,105 +1,48 @@
-import React, { useState } from 'react';
-import { Card, Image, Text, Badge, Group, ActionIcon, Button, Avatar } from '@/components/ui/system';
-import { IconHeart, IconMessageCircle, IconUserCircle } from '@tabler/icons-react';
+import React from 'react';
 
-const TalentCard = ({ talent, onViewProfile }) => {
-  const [isLiked, setIsLiked] = useState(false);
-  const [expanded, setExpanded] = useState(false);
+const TalentCard = ({ talent }) => {
+  const skills = Array.isArray(talent.topSkills) ? talent.topSkills : [];
+  const aboutText = talent.about || 'No summary provided yet.';
 
   return (
-    <Card
-      shadow="md"
-      p="lg"
-      radius="md"
-      withBorder
-      className="bg-neutral-800 text-white hover:shadow-xl hover:scale-[1.02] transition-all duration-300 cursor-pointer"
-    >
-      {/* Header Section */}
-      <Card.Section className="p-4 border-b border-neutral-700">
-        <Group position="apart">
-          <Group>
-            <Avatar
-              src={`/avatars/${talent.image}.png`}
-              size="lg"
-              radius="xl"
-              alt={talent.name}
-            />
-            <div>
-              <Text weight={600} size="lg" className="text-accent-400">
-                {talent.name}
-              </Text>
-              <Text size="sm" color="dimmed">{talent.role}</Text>
-              <Text size="xs" color="dimmed">{talent.company}</Text>
-            </div>
-          </Group>
-          <ActionIcon
-            variant="subtle"
-            color={isLiked ? "red" : "neutral"}
-            onClick={() => setIsLiked(!isLiked)}
-            className="transition-all hover:scale-110"
-          >
-            <IconHeart size={22} fill={isLiked ? "red" : "none"} />
-          </ActionIcon>
-        </Group>
-      </Card.Section>
+    <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100">
+      <header className="border-b border-slate-200 pb-4 dark:border-slate-700">
+        <div className="flex items-center gap-3">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 text-sm font-semibold text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-300">
+            {talent.name?.charAt(0)?.toUpperCase() || 'T'}
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+              {talent.name || 'Unnamed Candidate'}
+            </h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              {talent.role || 'Role not specified'}
+            </p>
+            {talent.company && (
+              <p className="text-xs text-slate-500 dark:text-slate-400">{talent.company}</p>
+            )}
+          </div>
+        </div>
+      </header>
 
-      {/* About Section */}
-      <Text size="sm" mt="md" color="neutral.3">
-        {expanded ? talent.about : talent.about.slice(0, 100) + (talent.about.length > 100 ? "..." : "")}
-      </Text>
-      {talent.about.length > 100 && (
-        <Text
-          size="xs"
-          color="accent"
-          className="cursor-pointer mt-1"
-          onClick={() => setExpanded(!expanded)}
-        >
-          {expanded ? "Show Less" : "Read More"}
-        </Text>
+      <p className="mt-4 text-sm leading-6 text-slate-600 dark:text-slate-300">
+        {aboutText}
+      </p>
+
+      {skills.length > 0 && (
+        <div className="mt-5 flex flex-wrap gap-2">
+          {skills.slice(0, 6).map((skill) => (
+            <span
+              key={skill}
+              className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 dark:bg-slate-700 dark:text-slate-100"
+            >
+              {skill}
+            </span>
+          ))}
+        </div>
       )}
-
-      {/* Skills Section */}
-      <Group spacing={7} mt="md" mb="md" wrap="wrap">
-        {talent.topSkills?.slice(0, 4).map((skill, idx) => (
-          <Badge key={idx} color="accent" variant="light">
-            {skill}
-          </Badge>
-        ))}
-        {talent.topSkills.length > 4 && (
-          <Badge variant="outline" color="neutral">
-            +{talent.topSkills.length - 4} more
-          </Badge>
-        )}
-      </Group>
-
-      {/* Buttons Section */}
-      <Group mt="md" position="apart">
-        <Button
-          variant="filled"
-          color="accent"
-          leftIcon={<IconMessageCircle size={18} />}
-          fullWidth
-          radius="md"
-          size="sm"
-        >
-          Message
-        </Button>
-        <Button
-          variant="outline"
-          color="neutral"
-          leftIcon={<IconUserCircle size={18} />}
-          fullWidth
-          radius="md"
-          size="sm"
-          onClick={onViewProfile}
-        >
-          View Profile
-        </Button>
-      </Group>
-    </Card>
+    </article>
   );
 };
 
 export default TalentCard;
-
-

@@ -1,12 +1,11 @@
 import React from 'react';
-import { Container } from '@/components/ui/system';
 import SearchBar from './SearchBar';
 
 const FindJobs = () => {
   return (
-    <Container size="1200px" py="md">
+    <div className="space-y-6">
       <SearchBar />
-    </Container>
+    </div>
   );
 };
 

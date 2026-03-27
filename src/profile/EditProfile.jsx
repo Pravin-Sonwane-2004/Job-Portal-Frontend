@@ -1,89 +1,107 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
+  IconBrandLinkedin,
   IconCheck,
-  IconX,
   IconDeviceFloppy,
-  IconUser,
+  IconInfoCircle,
+  IconListCheck,
   IconMail,
   IconMapPin,
-  IconInfoCircle,
   IconPhone,
-  IconBrandLinkedin,
-  IconListCheck,
+  IconUser,
+  IconX,
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { GET_PROFILE, UPDATE_PROFILE } from '../all services/getJfBackendService';
+
+import PageWrapper from '../components/PageWrapper';
 import { RingLoader } from '../loader/RingLoader';
+import {
+  fetchUserProfile,
+  updateUserProfile,
+} from '../services/profileService';
+import { getSessionToken } from '../services/sessionService';
+import { parseJwt } from '../utils/jwtUtils';
+
+const emptyProfile = {
+  name: '',
+  email: '',
+  location: '',
+  bio: '',
+  avatarUrl: '',
+  phone: '',
+  linkedin: '',
+  skills: '',
+  designation: '',
+  verified: false,
+};
+
+const mapProfileToForm = (profile) => ({
+  name: profile?.fullName || profile?.name || '',
+  email: profile?.email || '',
+  location: profile?.location || '',
+  bio: profile?.bio || '',
+  avatarUrl: profile?.avatarUrl || '',
+  phone: profile?.phoneNumber || '',
+  linkedin: profile?.linkedinUrl || '',
+  skills: Array.isArray(profile?.skills) ? profile.skills.join(', ') : profile?.skills || '',
+  designation: profile?.designation || '',
+  verified: Boolean(profile?.verified),
+});
+
+const inputClass =
+  'w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition-colors focus:border-indigo-500 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100';
 
 const EditProfile = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    location: '',
-    bio: '',
-    avatarUrl: '',
-    phone: '',
-    linkedin: '',
-    skills: '',
-    designation: '',
-    verified: false,
-  });
-  const [avatarFile, setAvatarFile] = useState(null);
+  const [formData, setFormData] = useState(emptyProfile);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
 
+  const isAdmin = useMemo(() => {
+    const payload = parseJwt(getSessionToken());
+    const roles = payload?.roles || payload?.role || payload?.authorities || [];
+    const roleList = Array.isArray(roles) ? roles : [roles];
+
+    return roleList.some((role) => role === 'ADMIN' || role === 'ROLE_ADMIN');
+  }, []);
+
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await axios.get(GET_PROFILE, { withCredentials: true });
-        setFormData({
-          name: res.data.fullName || '',
-          email: res.data.email || '',
-          location: res.data.location || '',
-          bio: res.data.bio || '',
-          avatarUrl: res.data.avatarUrl || '',
-          phone: res.data.phoneNumber || '',
-          linkedin: res.data.linkedinUrl || '',
-          skills: Array.isArray(res.data.skills) ? res.data.skills.join(', ') : res.data.skills || '',
-          designation: res.data.designation || '',
-          verified: res.data.verified || false,
-        });
-      } catch (err) {
-        setFormData({
-          name: '',
-          email: '',
-          location: '',
-          bio: '',
-          avatarUrl: '',
-          phone: '',
-          linkedin: '',
-          skills: '',
-        });
-      } finally {
-        setLoading(false);
-      }
+    let active = true;
+
+    fetchUserProfile()
+      .then((response) => {
+        if (active) {
+          setFormData(mapProfileToForm(response.data));
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setFormData(emptyProfile);
+        }
+      })
+      .finally(() => {
+        if (active) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      active = false;
     };
-    fetchUser();
-  }, [navigate]);
+  }, []);
 
-  const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleInputChange = (event) => {
+    const { name, value, type, checked } = event.target;
+    setFormData((currentForm) => ({
+      ...currentForm,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
   };
 
-  const handleAvatarChange = (e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setAvatarFile(file);
-      setFormData({ ...formData, avatarUrl: URL.createObjectURL(file) });
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setSaving(true);
     setSuccess(false);
     setError('');
@@ -96,36 +114,25 @@ const EditProfile = () => {
       phoneNumber: formData.phone,
       linkedinUrl: formData.linkedin,
       skills: formData.skills
-        ? formData.skills.split(',').map(s => s.trim()).filter(Boolean)
+        ? formData.skills.split(',').map((skill) => skill.trim()).filter(Boolean)
         : [],
       avatarUrl: formData.avatarUrl,
       designation: formData.designation,
+      ...(isAdmin ? { verified: formData.verified } : {}),
     };
 
-    const userRole = sessionStorage.getItem('role') || localStorage.getItem('role');
-    if (userRole === 'ADMIN') {
-      payload.verified = formData.verified;
-    }
-
     try {
-      const token = sessionStorage.getItem('jwt');
-      await axios.put(UPDATE_PROFILE, payload, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
+      await updateUserProfile(payload);
       setSuccess(true);
       window.dispatchEvent(new Event('profileUpdated'));
-      setTimeout(() => navigate('/profile'), 1500);
-    } catch (err) {
-      if (err.response) {
-        console.error('Backend error:', err.response.data);
-        setError(`Failed to update profile: ${err.response.data}`);
-      } else {
-        console.error(err);
-        setError('Failed to update profile. Please try again.');
-      }
+      window.setTimeout(() => navigate('/profile'), 1000);
+    } catch (requestError) {
+      const message =
+        requestError?.response?.data?.message ||
+        requestError?.response?.data ||
+        'Failed to update profile. Please try again.';
+
+      setError(typeof message === 'string' ? message : 'Failed to update profile.');
     } finally {
       setSaving(false);
     }
@@ -133,187 +140,135 @@ const EditProfile = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900 px-4 py-6 md:px-4 md:py-8">
-        <RingLoader />
-      </div>
+      <PageWrapper>
+        <div className="flex min-h-72 items-center justify-center rounded-3xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800">
+          <RingLoader color="#4f46e5" size="48px" />
+        </div>
+      </PageWrapper>
     );
   }
 
+  const fields = [
+    { name: 'name', label: 'Full Name', icon: IconUser, type: 'text', required: true },
+    { name: 'email', label: 'Email', icon: IconMail, type: 'email', required: true },
+    { name: 'location', label: 'Location', icon: IconMapPin, type: 'text' },
+    { name: 'phone', label: 'Phone Number', icon: IconPhone, type: 'tel' },
+    {
+      name: 'linkedin',
+      label: 'LinkedIn URL',
+      icon: IconBrandLinkedin,
+      type: 'url',
+    },
+    {
+      name: 'designation',
+      label: 'Designation',
+      icon: IconUser,
+      type: 'text',
+    },
+    {
+      name: 'avatarUrl',
+      label: 'Avatar URL',
+      icon: IconUser,
+      type: 'url',
+    },
+    {
+      name: 'skills',
+      label: 'Skills',
+      icon: IconListCheck,
+      type: 'text',
+      placeholder: 'React, Node.js, SQL',
+    },
+  ];
+
   return (
-    <div className="min-h-screen py-2 bg-slate-50 dark:bg-slate-900 px-4 py-6 md:px-4 md:py-8 flex items-center justify-center">
-      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8 w-full max-w-4xl mx-auto border border-slate-200 dark:border-slate-700">
-        <h2 className="text-3xl font-bold text-center text-slate-900 dark:text-slate-100 mb-4">
-          Edit Profile
-        </h2>
-        <p className="text-center text-slate-600 dark:text-slate-400 mb-6">
-          Update your profile information
-        </p>
+    <PageWrapper>
+      <section className="mx-auto max-w-4xl space-y-6">
+        <header className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+          <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">
+            Edit Profile
+          </h1>
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+            Update profile fields with a single straightforward form.
+          </p>
+        </header>
 
-        <div className="flex justify-start mb-6">
-          <img
-            src={formData.avatarUrl || '/avatars/default.png'}
-            alt="Profile avatar"
-            className="w-24 h-24 rounded-full border-4 border-indigo-400 shadow-lg"
-          />
-        </div>
-
-        <div className="mb-6 text-center text-sm text-slate-600 dark:text-slate-400">
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleAvatarChange}
-            className="cursor-pointer file:mr-2 file:px-3 file:py-1 file:rounded-md file:border-none file:bg-indigo-600 file:text-white hover:file:bg-indigo-700"
-          />
-        </div>
-
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Full Name</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <IconUser size={18} className="text-slate-400" />
-                  </div>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Email</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <IconMail size={18} className="text-slate-400" />
-                  </div>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Location</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <IconMapPin size={18} className="text-slate-400" />
-                  </div>
-                  <input
-                    type="text"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleInputChange}
-                    className="w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Bio</label>
-                <div className="relative">
-                  <div className="absolute top-3 left-3 pointer-events-none">
-                    <IconInfoCircle size={18} className="text-slate-400" />
-                  </div>
-                  <textarea
-                    name="bio"
-                    value={formData.bio}
-                    onChange={handleInputChange}
-                    rows={3}
-                    className="w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Phone Number</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <IconPhone size={18} className="text-slate-400" />
-                  </div>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    placeholder="e.g. +1 234 567 8901"
-                    className="w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">LinkedIn</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <IconBrandLinkedin size={18} className="text-slate-400" />
-                  </div>
-                  <input
-                    type="url"
-                    name="linkedin"
-                    value={formData.linkedin}
-                    onChange={handleInputChange}
-                    placeholder="LinkedIn profile URL"
-                    className="w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Skills</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <IconListCheck size={18} className="text-slate-400" />
-                  </div>
-                  <input
-                    type="text"
-                    name="skills"
-                    value={formData.skills}
-                    onChange={handleInputChange}
-                    placeholder="Comma separated (e.g. React, Node.js, SQL)"
-                    className="w-full pl-10 pr-3 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Designation</label>
-            <input
-              type="text"
-              name="designation"
-              value={formData.designation}
-              onChange={handleInputChange}
-              placeholder="e.g. Software Engineer"
-              className="w-full px-3 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+        <form
+          onSubmit={handleSubmit}
+          className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-700 dark:bg-slate-800"
+        >
+          <div className="mb-8 flex items-center gap-4">
+            <img
+              src={formData.avatarUrl || '/avatars/default.png'}
+              alt="Profile preview"
+              className="h-20 w-20 rounded-full border border-slate-200 object-cover dark:border-slate-700"
             />
+            <p className="text-sm text-slate-600 dark:text-slate-400">
+              Use an image URL for the avatar field to keep this screen backend-friendly.
+            </p>
           </div>
 
-          <div className="mb-6">
-            <label className="flex items-center text-slate-700 dark:text-slate-300">
+          <div className="grid gap-4 sm:grid-cols-2">
+            {fields.map((field) => {
+              const FieldIcon = field.icon;
+
+              return (
+                <label key={field.name} className="block text-sm font-medium text-slate-700 dark:text-slate-200">
+                  <span>{field.label}</span>
+                  <div className="relative mt-2">
+                    <FieldIcon
+                      size={18}
+                      className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                    />
+                    <input
+                      type={field.type}
+                      name={field.name}
+                      value={formData[field.name]}
+                      onChange={handleInputChange}
+                      required={field.required}
+                      placeholder={field.placeholder}
+                      className={`${inputClass} pl-11`}
+                    />
+                  </div>
+                </label>
+              );
+            })}
+          </div>
+
+          <label className="mt-6 block text-sm font-medium text-slate-700 dark:text-slate-200">
+            <span>Bio</span>
+            <div className="relative mt-2">
+              <IconInfoCircle
+                size={18}
+                className="pointer-events-none absolute left-4 top-4 text-slate-400"
+              />
+              <textarea
+                name="bio"
+                value={formData.bio}
+                onChange={handleInputChange}
+                rows={5}
+                className={`${inputClass} resize-y pl-11`}
+              />
+            </div>
+          </label>
+
+          {isAdmin && (
+            <label className="mt-6 inline-flex items-center gap-3 text-sm font-medium text-slate-700 dark:text-slate-200">
               <input
                 type="checkbox"
                 name="verified"
                 checked={formData.verified}
-                onChange={e => setFormData({ ...formData, verified: e.target.checked })}
-                className="mr-3 h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-slate-300 dark:border-slate-600 rounded"
+                onChange={handleInputChange}
+                className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 dark:border-slate-600"
               />
               Verified
             </label>
-          </div>
+          )}
 
-          <div className="flex justify-start">
+          <div className="mt-8">
             <button
               type="submit"
               disabled={saving}
-              className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-8 rounded-lg transition-colors focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 flex items-center gap-2"
+              className="inline-flex items-center gap-2 rounded-2xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
             >
               <IconDeviceFloppy size={18} />
               {saving ? 'Saving...' : 'Save Changes'}
@@ -322,25 +277,24 @@ const EditProfile = () => {
         </form>
 
         {success && (
-          <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-            <div className="flex items-center gap-2">
-              <IconCheck size={18} className="text-green-600 dark:text-green-400" />
-              <span className="font-medium text-green-800 dark:text-green-400">Success</span>
-            </div>
-            <p className="text-green-700 dark:text-green-300 mt-1">Profile updated successfully!</p>
+          <div className="rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700 dark:border-green-500/30 dark:bg-green-500/10 dark:text-green-300">
+            <span className="inline-flex items-center gap-2">
+              <IconCheck size={16} />
+              Profile updated successfully.
+            </span>
           </div>
         )}
+
         {error && (
-          <div className="mt-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-            <div className="flex items-center gap-2">
-              <IconX size={18} className="text-red-600 dark:text-red-400" />
-              <span className="font-medium text-red-800 dark:text-red-400">Error</span>
-            </div>
-            <p className="text-red-700 dark:text-red-300 mt-1">{error}</p>
+          <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300">
+            <span className="inline-flex items-center gap-2">
+              <IconX size={16} />
+              {error}
+            </span>
           </div>
         )}
-      </div>
-    </div>
+      </section>
+    </PageWrapper>
   );
 };
 

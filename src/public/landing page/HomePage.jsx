@@ -1,15 +1,19 @@
 import React from 'react';
-import DreamJob from './DreamJob';
+
+import PageWrapper from '../../components/PageWrapper';
 import Companies from './Companies';
+import DreamJob from './DreamJob';
 import JobCategory from './JobCategory';
 
 const HomePage = () => {
   return (
-    <div className="min-h-[90vh] bg-slate-50 dark:bg-slate-900 font-poppins py-8">
-      <DreamJob />
-      <Companies />
-      <JobCategory />
-    </div>
+    <PageWrapper>
+      <div className="space-y-12 py-6">
+        <DreamJob />
+        <Companies />
+        <JobCategory />
+      </div>
+    </PageWrapper>
   );
 };
 

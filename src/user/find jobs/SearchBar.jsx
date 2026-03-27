@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { IconSearch, IconMapPin, IconSortAscending2, IconAlertCircle } from '@tabler/icons-react';
-import { RangeSlider, Select, Paper, Alert, Pagination } from '@/components/ui/system';
 import JobCard from './JobCard';
-import { getJobs } from '../../all services/getJfBackendService';
+import { getJobs } from '../../services/jobPortalApi';
 import { RingLoader } from '../../loader/RingLoader';
 
 // Debounce hook
@@ -25,8 +24,51 @@ const sortOptions = [
   { value: 'jobSalary', label: 'Salary' },
 ];
 
+const AlertBanner = ({ title, children, tone = 'default' }) => {
+  const toneClass =
+    tone === 'error'
+      ? 'border-red-200 bg-red-50 text-red-700 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300'
+      : 'border-slate-200 bg-slate-50 text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100';
+
+  return (
+    <div className={`rounded-2xl border p-4 ${toneClass}`}>
+      <div className="flex gap-3">
+        <IconAlertCircle size={22} className="shrink-0" />
+        <div>
+          <p className="font-semibold">{title}</p>
+          <p className="mt-1 text-sm">{children}</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const PaginationControls = ({ totalPages, page, onChange }) => {
+  if (totalPages <= 1) {
+    return null;
+  }
+
+  return (
+    <nav className="flex flex-wrap items-center justify-center gap-2" aria-label="Job results pages">
+      {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
+        <button
+          key={pageNumber}
+          type="button"
+          className={`h-10 min-w-10 rounded-full px-3 text-sm font-medium transition-colors ${
+            pageNumber === page
+              ? 'bg-indigo-600 text-white'
+              : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700'
+          }`}
+          onClick={() => onChange(pageNumber)}
+        >
+          {pageNumber}
+        </button>
+      ))}
+    </nav>
+  );
+};
+
 const SearchBar = () => {
-  // Job fetching and filter state
   const [jobList, setJobList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState('postedDate');
@@ -34,31 +76,20 @@ const SearchBar = () => {
   const [size] = useState(6);
   const [totalPages, setTotalPages] = useState(1);
   const [filters, setFilters] = useState({});
-  const [realJobTitle, setRealJobTitle] = useState('');
   const [error, setError] = useState(null);
 
-  // SearchBar UI state
   const [searchTerms, setSearchTerms] = useState({});
   const [suggestions, setSuggestions] = useState({});
   const [loadingSuggest, setLoadingSuggest] = useState({});
   const containerRef = useRef(null);
 
-  // Dropdown data for search fields
   const dropdownData = [
-    {
-      title: 'Job Title',
-      options: [...new Set(jobList.map((job) => job.jobTitle).filter(Boolean))],
-    },
-    {
-      title: 'Location',
-      options: [...new Set(jobList.map((job) => job.jobLocation).filter(Boolean))],
-    },
+    { title: 'Job Title' },
+    { title: 'Location' },
   ];
 
-  // Debounce search terms for suggestions
   const debouncedTerms = useDebounce(searchTerms, 300);
 
-  // Fetch jobs from backend
   useEffect(() => {
     const fetchJobs = async () => {
       setLoading(true);
@@ -71,10 +102,6 @@ const SearchBar = () => {
         sortDir: 'desc',
         ...(filters['Job Title']?.length && { jobTitle: filters['Job Title'][0] }),
         ...(filters['Location']?.length && { jobLocation: filters['Location'][0] }),
-        // ...(filters.salaryRange && {
-        //   minSalary: filters.salaryRange[0],
-        //   maxSalary: filters.salaryRange[1],
-        // }),
       };
 
       try {
@@ -83,7 +110,7 @@ const SearchBar = () => {
         setJobList(jobs);
         const total = res.data?.totalPages || Math.ceil((res.data?.totalElements || 0) / size);
         setTotalPages(total);
-      } catch (err) {
+      } catch {
         setJobList([]);
         setTotalPages(1);
         setError('Unexpected response from server. Please try again later.');
@@ -95,12 +122,10 @@ const SearchBar = () => {
     fetchJobs();
   }, [page, size, sortBy, filters]);
 
-  // Reset to first page on sort change
   useEffect(() => {
     setPage(1);
   }, [sortBy]);
 
-  // Suggestion fetching
   useEffect(() => {
     Object.entries(debouncedTerms).forEach(([key, value]) => {
       if (value.trim().length >= 2) fetchSuggestions(key, value);
@@ -118,7 +143,7 @@ const SearchBar = () => {
       const res = await fetch(`${endpoint}?suggest=${encodeURIComponent(value)}`);
       const data = await res.json();
       setSuggestions((prev) => ({ ...prev, [key]: data }));
-    } catch (error) {
+    } catch {
       setSuggestions((prev) => ({ ...prev, [key]: [] }));
     } finally {
       setLoadingSuggest((prev) => ({ ...prev, [key]: false }));
@@ -132,13 +157,11 @@ const SearchBar = () => {
     };
     setFilters(newFilters);
     setSuggestions((prev) => ({ ...prev, [key]: [] }));
-    if (key === 'Job Title') setRealJobTitle(value);
     setPage(1);
   };
 
   const handleInputChange = (key, value) => {
     setSearchTerms((prev) => ({ ...prev, [key]: value }));
-    if (key === 'Job Title') setRealJobTitle(value);
   };
 
   const handleInputKeyDown = (key, e) => {
@@ -168,7 +191,7 @@ const SearchBar = () => {
     const parts = text.split(regex);
     return parts.map((part, index) =>
       regex.test(part) ? (
-        <span key={index} className="font-semibold bg-accent-100">
+        <span key={index} className="rounded-sm bg-amber-100 font-semibold dark:bg-amber-500/20">
           {part}
         </span>
       ) : (
@@ -190,37 +213,39 @@ const SearchBar = () => {
     setPage(1);
   };
 
-  // Handler for sort change
   const handleSortChange = (value) => {
     if (value) setSortBy(value);
   };
 
   return (
     <div>
-      <Paper shadow="xl" radius="lg" p="md">
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 flex-wrap">
+      <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+        <div className="flex flex-col flex-wrap items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div className="flex items-center gap-2">
-            <label htmlFor="sort-select" className="">
+            <label htmlFor="sort-select" className="text-sm font-medium text-slate-700 dark:text-slate-200">
               Sort by:
             </label>
-            <Select
+            <div className="relative">
+              <IconSortAscending2 size={18} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <select
               id="sort-select"
-              data={sortOptions}
               value={sortBy}
-              onChange={handleSortChange}
-              leftSection={<IconSortAscending2 size={18} />}
-              placeholder="Sort by"
-              size="md"
-              radius="md"
-              className="w-[200px]"
-            />
+              onChange={(event) => handleSortChange(event.target.value)}
+              className="w-[200px] rounded-xl border border-slate-300 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-900 outline-none transition-colors focus:border-indigo-500 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+            >
+              {sortOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+              </select>
+            </div>
           </div>
           <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto md:max-w-[700px]">
             <div
               ref={containerRef}
-              className="flex flex-row items-center justify-end bg-neutral-950 p-4 gap-4 w-full"
+              className="flex w-full flex-col gap-4 rounded-2xl bg-slate-50 p-4 dark:bg-slate-900 md:flex-row md:items-center"
             >
-              {/* Search fields */}
               {dropdownData.map((item, idx) => {
                 const key = item.title;
                 const value = searchTerms[key] ?? '';
@@ -250,7 +275,7 @@ const SearchBar = () => {
                       style={{ minWidth: 0 }}
                     />
                     {loadingSuggest[key] && (
-                      <div className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-neutral-100 italic animate-pulse">
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 text-xs italic text-slate-400">
                         Loading...
                       </div>
                     )}
@@ -258,13 +283,13 @@ const SearchBar = () => {
                       <ul
                         id={`suggestions-${key}`}
                         role="listbox"
-                        className="absolute z-10 bg-white border rounded shadow-lg w-full max-h-40 overflow-y-auto mt-1"
+                        className="absolute z-10 mt-1 max-h-40 w-full overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900"
                       >
                         {suggestions[key].map((suggestion, i) => (
                           <li
                             key={i}
                             role="option"
-                            className="px-3 py-2 hover:bg-indigo-100 cursor-pointer text-xs"
+                            className="cursor-pointer px-3 py-2 text-xs text-slate-700 hover:bg-indigo-50 dark:text-slate-100 dark:hover:bg-slate-800"
                             onClick={() => applyFilter(key, suggestion)}
                           >
                             {highlightMatch(suggestion, searchTerms[key] || '')}
@@ -275,42 +300,9 @@ const SearchBar = () => {
                   </div>
                 );
               })}
-              {/* Salary Range Slider (actual size, inline) */}
-              {/* 
-              <div className="flex flex-col items-center min-w-[160px] max-w-[220px] px-2">
-                <span className="text-xs text-neutral-200 mb-1">Salary (₹)</span>
-                <RangeSlider
-                  min={0}
-                  max={200000}
-                  step={1000}
-                  value={filters.salaryRange || [0, 200000]}
-                  onChange={handleSalaryChange}
-                  size="md"
-                  color="accent"
-                  thumbSize={18}
-                  style={{ width: 140 }}
-                  label={null}
-                />
-                <div className="flex justify-between w-full text-xs text-neutral-300 mt-1">
-                  <span>
-                    Salary: ₹
-                    {filters.salaryRange?.[0]
-                      ? filters.salaryRange[0].toLocaleString()
-                      : '0'}
-                  </span>
-                  <span>
-                    Salary: ₹
-                    {filters.salaryRange?.[1]
-                      ? filters.salaryRange[1].toLocaleString()
-                      : '200,000'}
-                  </span>
-                </div>
-              </div>
-              */}
-              {/* Search button */}
               <button
                 type="button"
-                className="h-10 w-12 flex items-center justify-center bg-white hover:bg-indigo-100 text-neutral-700 hover:text-indigo-800 rounded transition-colors"
+                className="flex h-11 w-full items-center justify-center rounded-xl bg-indigo-600 text-white transition-colors hover:bg-indigo-500 md:w-12"
                 aria-label="Search"
                 onClick={handleSearchClick}
               >
@@ -319,53 +311,36 @@ const SearchBar = () => {
             </div>
           </div>
         </div>
-      </Paper>
+      </div>
 
-      {/* Job list and pagination */}
       <div style={{ marginTop: '-18px' }}>
         {loading ? (
           <div className="flex justify-center items-center min-h-[200px]">
             <RingLoader color="#facc15" size="48px" />
           </div>
         ) : error ? (
-          <Alert
-            icon={<IconAlertCircle size={24} />}
-            title="Error"
-            color="red"
-            radius="md"
-            className="my-10"
-          >
+          <div className="my-10">
+            <AlertBanner title="Error" tone="error">
             {error}
-          </Alert>
+            </AlertBanner>
+          </div>
         ) : jobList.length === 0 ? (
-          <Alert
-            icon={<IconAlertCircle size={24} />}
-            title="No jobs found"
-            color="accent"
-            radius="md"
-            className="my-10"
-          >
+          <div className="my-10">
+            <AlertBanner title="No jobs found">
             Try adjusting your filters or search criteria.
-          </Alert>
+            </AlertBanner>
+          </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 bg-neutral-950/40 p-4 rounded-xl">
+            <div className="grid grid-cols-1 gap-8 rounded-3xl bg-slate-100 p-4 dark:bg-slate-950/40 md:grid-cols-2 lg:grid-cols-3">
               {jobList.map((job, index) => (
-                <Paper key={index} >
+                <div key={index}>
                   <JobCard job={job} />
-                </Paper>
+                </div>
               ))}
             </div>
             <div className="flex justify-center mt-8">
-              <Pagination
-                total={totalPages}
-                value={page}
-                onChange={setPage}
-                color="accent"
-                size="md"
-                radius="md"
-                disabled={totalPages <= 1}
-              />
+              <PaginationControls totalPages={totalPages} page={page} onChange={setPage} />
             </div>
           </>
         )}
@@ -375,5 +350,6 @@ const SearchBar = () => {
 };
 
 export default SearchBar;
+
 
 

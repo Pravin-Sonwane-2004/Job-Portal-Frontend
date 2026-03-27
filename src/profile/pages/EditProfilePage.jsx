@@ -1,11 +1,11 @@
 import React from 'react';
-import PageWrapper from '../../header and footer/PageWrapper';
+import PageWrapper from '../../components/PageWrapper';
 import EditProfile from '../EditProfile';
 
-const FindProfilePage = () => (
+const EditProfilePage = () => (
   <PageWrapper>
     <EditProfile />
   </PageWrapper>
 );
 
-export default FindProfilePage;
+export default EditProfilePage;

@@ -1,13 +1,19 @@
 import React from 'react';
 
-const InterviewSchedulePage = () => {
-  return (
-    <div className="container mx-auto mt-8">
-      <h2 className="text-2xl font-bold mb-4">Interview Scheduling</h2>
-      {/* TODO: Show scheduled interviews and allow scheduling/rescheduling */}
-      <p>This is where you can view and manage your interviews.</p>
-    </div>
-  );
-};
+import PageWrapper from '../components/PageWrapper';
+
+const InterviewSchedulePage = () => (
+  <PageWrapper>
+    <section className="mx-auto max-w-4xl rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+      <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">
+        Interview Schedule
+      </h1>
+      <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+        Scheduled interviews and rescheduling actions will appear here when that
+        workflow is connected.
+      </p>
+    </section>
+  </PageWrapper>
+);
 
 export default InterviewSchedulePage;

@@ -1,57 +1,57 @@
-import React from 'react'
-import { TextInput, Button, Group, Stack } from '@/components/ui/system'
-import { IconPlus, IconTrash } from '@tabler/icons-react'
+const inputClass =
+  'w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition-colors focus:border-indigo-500 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100';
 
 const ExperienceForm = ({ experience, onChange, onAdd, onDelete }) => (
-  <Stack>
-    {experience.map((item, idx) => (
-      <Group key={item.id} align="flex-end" spacing="xs">
-        <TextInput
-          label="Position"
-          name="position"
-          value={item.position}
-          onChange={e => onChange(e, item.id)}
-          placeholder="Position"
-        />
-        <TextInput
-          label="Company"
-          name="company"
-          value={item.company}
-          onChange={e => onChange(e, item.id)}
-          placeholder="Company"
-        />
-        <TextInput
-          label="City"
-          name="city"
-          value={item.city}
-          onChange={e => onChange(e, item.id)}
-          placeholder="City"
-        />
-        <TextInput
-          label="From"
-          name="from"
-          value={item.from}
-          onChange={e => onChange(e, item.id)}
-          placeholder="From"
-        />
-        <TextInput
-          label="To"
-          name="to"
-          value={item.to}
-          onChange={e => onChange(e, item.id)}
-          placeholder="To"
-        />
-        <Button color="red" variant="light" onClick={() => onDelete(item.id)} leftIcon={<IconTrash size={16} />}>
-          Delete
-        </Button>
-      </Group>
+  <div className="space-y-4">
+    {experience.map((item, index) => (
+      <section
+        key={item.id}
+        className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-900/70"
+      >
+        <div className="mb-4 flex items-center justify-between gap-4">
+          <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+            Experience {index + 1}
+          </h3>
+          <button
+            type="button"
+            className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs font-medium text-red-700 transition-colors hover:bg-red-100 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300 dark:hover:bg-red-500/15"
+            onClick={() => onDelete(item.id)}
+          >
+            Delete
+          </button>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          {[
+            ['position', 'Position'],
+            ['company', 'Company'],
+            ['city', 'City'],
+            ['from', 'From'],
+            ['to', 'To'],
+          ].map(([name, label]) => (
+            <label key={name} className="block text-sm font-medium text-slate-700 dark:text-slate-200">
+              {label}
+              <input
+                className={`${inputClass} mt-2`}
+                name={name}
+                value={item[name]}
+                onChange={(event) => onChange(event, item.id)}
+                placeholder={label}
+              />
+            </label>
+          ))}
+        </div>
+      </section>
     ))}
-    <Button leftIcon={<IconPlus size={16} />} onClick={onAdd} variant="outline">
+
+    <button
+      type="button"
+      className="rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-600 dark:text-slate-100 dark:hover:bg-slate-800"
+      onClick={onAdd}
+    >
       Add Experience
-    </Button>
-  </Stack>
-)
+    </button>
+  </div>
+);
 
-export default ExperienceForm
-
-
+export default ExperienceForm;

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { REGISTER_URL } from "../../all services/getJfBackendService";
+import { registerUserAccount } from "../../services/authService";
+import { getSessionToken } from "../../services/sessionService";
 
 export default function SignUp() {
   const [form, setForm] = useState({
@@ -17,7 +18,7 @@ export default function SignUp() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (sessionStorage.getItem("jwt")) {
+    if (getSessionToken()) {
       navigate("/signin", { replace: true });
     }
   }, [navigate]);
@@ -44,31 +45,25 @@ export default function SignUp() {
       setLoading(true);
 
       try {
-        const response = await fetch(REGISTER_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: form.name.trim(),
-            email: form.email.trim(),
-            password: form.password,
-            role: form.role,
-          }),
+        await registerUserAccount({
+          name: form.name.trim(),
+          email: form.email.trim(),
+          password: form.password,
+          role: form.role,
         });
+        setSuccess("Account created successfully! Redirecting to sign-in...");
+        setTimeout(() => navigate("/signin"), 1500);
+      } catch (error) {
+        const message =
+          error?.response?.data?.message ||
+          error?.response?.data ||
+          "Error creating account.";
 
-        const message = await response.text();
-
-        if (response.ok) {
-          setSuccess("Account created successfully! Redirecting to sign-in...");
-          setTimeout(() => navigate("/signin"), 1500);
+        if (typeof message === "string" && message.toLowerCase().includes("email already exists")) {
+          setError("Email already exists.");
         } else {
-          if (message.toLowerCase().includes("email already exists")) {
-            setError("Email already exists.");
-          } else {
-            setError(message || "Error creating account.");
-          }
+          setError(typeof message === "string" ? message : "Error creating account.");
         }
-      } catch {
-        setError("Error connecting to server.");
       } finally {
         setLoading(false);
       }
@@ -239,3 +234,4 @@ export default function SignUp() {
     </div>
   );
 }
+

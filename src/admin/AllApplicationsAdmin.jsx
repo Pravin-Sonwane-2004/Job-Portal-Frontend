@@ -1,5 +1,5 @@
 // import React, { useEffect, useState } from 'react';
-// import { adminGetAllApplicationsWithProfiles } from '../all services/getJfBackendService';
+// import { adminGetAllApplicationsWithProfiles } from '../services/jobPortalApi';
 
 // const AllApplicationsAdmin = () => {
 //   const [applications, setApplications] = useState([]);
@@ -43,3 +43,4 @@
 // };
 
 // export default AllApplicationsAdmin;
+

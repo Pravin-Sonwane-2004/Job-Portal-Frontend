@@ -10,17 +10,15 @@ import {
   IconSunHigh,
   IconUserCircle,
 } from '@tabler/icons-react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 import SurfaceCard from '@/components/ui/SurfaceCard';
 import ToggleSwitch from '@/components/ui/ToggleSwitch';
-import { GET_NAME } from '@/all services/getJfBackendService';
+import useSessionToken from '@/hooks/useSessionToken';
+import useThemeMode from '@/hooks/useThemeMode';
+import { clearSessionToken } from '@/services/sessionService';
+import { fetchCurrentUserName } from '@/services/userService';
 import { parseJwt } from '@/utils/jwtUtils';
-import {
-  isDarkThemeEnabled,
-  toggleTheme as toggleAppTheme,
-} from '@/utils/themeUtils';
 
 const getStoredBoolean = (key, fallback) => {
   if (typeof window === 'undefined') {
@@ -121,7 +119,8 @@ const PreferenceRow = ({
 
 const SettingsView = () => {
   const navigate = useNavigate();
-  const jwt = sessionStorage.getItem('jwt');
+  const jwt = useSessionToken();
+  const { isDarkMode, toggleTheme } = useThemeMode();
   const payload = parseJwt(jwt);
   const roles = getRoles(payload);
   const isAdmin = roles.some((role) => role === 'ADMIN' || role === 'ROLE_ADMIN');
@@ -131,7 +130,6 @@ const SettingsView = () => {
   const [userName, setUserName] = useState(
     payload?.name || payload?.username || payload?.email || 'User'
   );
-  const [darkMode, setDarkMode] = useState(isDarkThemeEnabled());
   const [emailNotif, setEmailNotif] = useState(() =>
     getStoredBoolean('settings:emailNotif', true)
   );
@@ -149,10 +147,7 @@ const SettingsView = () => {
 
     const fetchUserName = async () => {
       try {
-        const response = await axios.get(GET_NAME, {
-          withCredentials: true,
-          headers: { Authorization: `Bearer ${jwt}` },
-        });
+        const response = await fetchCurrentUserName();
         setUserName(response.data || 'User');
       } catch {
         setUserName(payload?.name || payload?.username || payload?.email || 'User');
@@ -174,30 +169,13 @@ const SettingsView = () => {
     localStorage.setItem('settings:language', language);
   }, [language]);
 
-  useEffect(() => {
-    const syncTheme = () => setDarkMode(isDarkThemeEnabled());
-
-    window.addEventListener('storage', syncTheme);
-    window.addEventListener('themechange', syncTheme);
-
-    return () => {
-      window.removeEventListener('storage', syncTheme);
-      window.removeEventListener('themechange', syncTheme);
-    };
-  }, []);
-
-  const handleThemeToggle = () => {
-    const nextTheme = toggleAppTheme();
-    setDarkMode(nextTheme === 'dark');
-  };
-
   const handleLogout = () => {
-    sessionStorage.removeItem('jwt');
+    clearSessionToken();
     navigate('/signin');
   };
 
-  const themeLabel = darkMode ? 'Dark mode' : 'Light mode';
-  const ThemeIcon = darkMode ? IconMoonStars : IconSunHigh;
+  const themeLabel = isDarkMode ? 'Dark mode' : 'Light mode';
+  const ThemeIcon = isDarkMode ? IconMoonStars : IconSunHigh;
   const languageLabelMap = {
     en: 'English',
     hi: 'Hindi',
@@ -279,8 +257,8 @@ const SettingsView = () => {
                 title={themeLabel}
                 description="Switches the application between light and dark mode."
                 tone="bg-indigo-50 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-300"
-                checked={darkMode}
-                onToggle={handleThemeToggle}
+                checked={isDarkMode}
+                onToggle={toggleTheme}
                 ariaLabel="Toggle theme"
               />
 
@@ -406,3 +384,4 @@ const SettingsView = () => {
 };
 
 export default SettingsView;
+

@@ -1,57 +1,62 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+
+import { RingLoader } from '../../loader/RingLoader';
+import { fetchTalents } from '../../services/talentService';
 import TalentCard from './TalentCard';
 
 const FindTalent = () => {
-  const navigate = useNavigate();
   const [allTalents, setAllTalents] = useState([]);
-  const [filteredTalents, setFilteredTalents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  // ✅ Fetch talent data from backend
   useEffect(() => {
-    fetch('http://localhost:8080/api/talents') // Update the URL as per your backend
-      .then((res) => res.json())
-      .then((data) => {
-        setAllTalents(data);
-        setFilteredTalents(data);
-        setLoading(false);
+    fetchTalents()
+      .then((response) => {
+        setAllTalents(Array.isArray(response.data) ? response.data : []);
       })
-      .catch((err) => {
-        console.error('Error fetching talents:', err);
+      .catch(() => {
+        setError('Unable to load talent profiles right now.');
+      })
+      .finally(() => {
         setLoading(false);
       });
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 font-poppins py-8">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-          {/* <SearchBar onFilterChange={handleFilterChange} /> */}
+    <section className="space-y-6">
+      <header className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+        <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">
+          Find Talent
+        </h1>
+        <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+          Browse candidate profiles without extra UI noise or unnecessary controls.
+        </p>
+      </header>
+
+      {error && (
+        <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300">
+          {error}
         </div>
+      )}
 
-        <div className="border-t border-slate-200 dark:border-slate-700 mb-6"></div>
-
-        {/* Loading State */}
+      <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
         {loading ? (
-          <div className="flex items-center justify-center h-60">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+          <div className="flex min-h-56 items-center justify-center">
+            <RingLoader color="#4f46e5" size="48px" />
           </div>
-        ) : filteredTalents.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredTalents.map((talent, index) => (
-              <div key={index} className="hover:scale-105 transition-transform">
-                <TalentCard talent={talent} onViewProfile={() => handleViewProfile(talent)} />
-              </div>
+        ) : allTalents.length > 0 ? (
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {allTalents.map((talent, index) => (
+              <TalentCard key={talent.id || `${talent.name}-${index}`} talent={talent} />
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center h-60">
-            <div className="text-2xl text-slate-400 dark:text-slate-500 mb-2">😕 No talents match your filters!</div>
-            <div className="text-sm text-slate-500 dark:text-slate-400">Try adjusting your search criteria.</div>
+          <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 py-12 text-center text-sm text-slate-600 dark:border-slate-600 dark:bg-slate-900/60 dark:text-slate-400">
+            No talent profiles are available yet.
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 };
 

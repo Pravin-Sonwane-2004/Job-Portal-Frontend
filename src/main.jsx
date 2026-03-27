@@ -1,20 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
-import './index.css' // Import Tailwind CSS
-import axios from 'axios'
+import './index.css'
+import './services/http'
+import { applyTheme, getStoredTheme } from './utils/themeUtils'
 
-// Axios interceptor to add JWT token to every request
-axios.interceptors.request.use(
-  (config) => {
-    const token = sessionStorage.getItem('jwt');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+applyTheme(getStoredTheme())
 
 const rootElement = document.getElementById('root');
 const root = ReactDOM.createRoot(rootElement);

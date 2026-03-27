@@ -1,28 +1,42 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --bg-primary: #f8fafc;
-  --bg-surface: #ffffff;
-  --text-high: #0f172a;
-  --text-muted: #64748b;
-  --border: #e2e8f0;
-}
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
 
-.dark {
-  --bg-primary: #0f172a;
-  --bg-surface: #1e293b;
-  --text-high: #e2e8f0;
-  --text-muted: #94a3b8;
-  --border: #334155;
-}
+  body {
+    @apply min-h-screen bg-slate-50 font-sans text-slate-900 antialiased;
+    background-image:
+      radial-gradient(circle at top left, rgba(65, 108, 255, 0.12), transparent 24rem),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.98));
+  }
 
-body {
-  font-family: 'Inter', sans-serif;
-  background-color: var(--bg-primary);
-  color: var(--text-high);
-}
+  .dark body {
+    @apply bg-slate-950 text-slate-100;
+    background-image:
+      radial-gradient(circle at top left, rgba(65, 108, 255, 0.16), transparent 28rem),
+      linear-gradient(180deg, rgba(2, 6, 23, 0.98), rgba(15, 23, 42, 0.98));
+  }
 
+  #root {
+    min-height: 100vh;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+
+  ::selection {
+    @apply bg-brand-200 text-slate-950;
+  }
+
+  .dark ::selection {
+    @apply bg-brand-500/40 text-white;
+  }
+}

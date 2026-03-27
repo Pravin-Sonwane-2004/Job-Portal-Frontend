@@ -1,9 +1,9 @@
 import React from 'react';
 
 const PageWrapper = ({ children }) => (
-  <div className="min-h-[100vh] bg-neutral-950 font-['poppins'] px-2 sm:px-4 md:px-8">
+  <section className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
     {children}
-  </div>
+  </section>
 );
 
 export default PageWrapper;

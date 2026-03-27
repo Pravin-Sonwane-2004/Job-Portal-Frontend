@@ -1,4 +1,4 @@
-import axios from "axios";
+import http from './http';
 
 // --- AUTH ENDPOINTS ---
 export const LOGIN_URL = "http://localhost:8080/public/login";
@@ -134,7 +134,7 @@ const getAuthHeaders = () => {
 
 // Example: Public jobs
 export const getJobs = (params = {}) => {
-  return axios.get(GET_JOBS_PUBLIC, {
+  return http.get(GET_JOBS_PUBLIC, {
     params,
     headers: getAuthHeaders(),
   });
@@ -142,223 +142,228 @@ export const getJobs = (params = {}) => {
 
 // --- ADMIN ---
 export const adminGetAllUsers = () =>
-  axios.get(ADMIN_GET_ALL_USERS, { headers: getAuthHeaders() });
+  http.get(ADMIN_GET_ALL_USERS, { headers: getAuthHeaders() });
 export const adminDeleteUser = (username) =>
-  axios.delete(`${ADMIN_DELETE_USER}/${username}`, {
+  http.delete(`${ADMIN_DELETE_USER}/${username}`, {
     headers: getAuthHeaders(),
   });
 export const adminUpdateUser = (username, data) =>
-  axios.put(`${ADMIN_UPDATE_USER}/${username}`, data, {
+  http.put(`${ADMIN_UPDATE_USER}/${username}`, data, {
     headers: getAuthHeaders(),
   });
 export const adminCreateJob = (data) =>
-  axios.post(ADMIN_CREATE_JOB, data, { headers: getAuthHeaders() });
+  http.post(ADMIN_CREATE_JOB, data, { headers: getAuthHeaders() });
 export const adminBulkCreateJobs = (data) =>
-  axios.post(ADMIN_BULK_CREATE_JOBS, data, { headers: getAuthHeaders() });
+  http.post(ADMIN_BULK_CREATE_JOBS, data, { headers: getAuthHeaders() });
 export const adminDeleteJob = (jobId) =>
-  axios.delete(`${ADMIN_DELETE_JOB}/${jobId}`, { headers: getAuthHeaders() });
+  http.delete(`${ADMIN_DELETE_JOB}/${jobId}`, { headers: getAuthHeaders() });
 export const adminUpdateJob = (jobId, data) =>
-  axios.put(`${ADMIN_UPDATE_JOB}/${jobId}`, data, {
+  http.put(`${ADMIN_UPDATE_JOB}/${jobId}`, data, {
     headers: getAuthHeaders(),
   });
 export const adminDeleteAllJobs = () =>
-  axios.delete(ADMIN_DELETE_ALL_JOBS, { headers: getAuthHeaders() });
+  http.delete(ADMIN_DELETE_ALL_JOBS, { headers: getAuthHeaders() });
 export const adminGetAllApplications = () =>
-  axios.get(ADMIN_GET_ALL_APPLICATIONS, { headers: getAuthHeaders() });
+  http.get(ADMIN_GET_ALL_APPLICATIONS, { headers: getAuthHeaders() });
 export const adminGetAllApplicationsWithProfiles = () =>
-  axios.get(ADMIN_GET_ALL_APPLICATIONS_WITH_PROFILES, {
+  http.get(ADMIN_GET_ALL_APPLICATIONS_WITH_PROFILES, {
     headers: getAuthHeaders(),
   });
 export const adminGetAllAppliers = () =>
-  axios.get(ADMIN_GET_ALL_APPLIERS, { headers: getAuthHeaders() });
+  http.get(ADMIN_GET_ALL_APPLIERS, { headers: getAuthHeaders() });
 export const adminGetApplicationsForJob = (jobId) =>
-  axios.get(`${ADMIN_GET_APPLICATIONS_FOR_JOB}/${jobId}`, {
+  http.get(`${ADMIN_GET_APPLICATIONS_FOR_JOB}/${jobId}`, {
     headers: getAuthHeaders(),
   });
 export const adminGetApplicationsByUser = (userId) =>
-  axios.get(`${ADMIN_GET_APPLICATIONS_BY_USER}/${userId}`, {
+  http.get(`${ADMIN_GET_APPLICATIONS_BY_USER}/${userId}`, {
     headers: getAuthHeaders(),
   });
 export const adminCreateAdminUser = (data) =>
-  axios.post(ADMIN_CREATE_ADMIN_USER, data, { headers: getAuthHeaders() });
+  http.post(ADMIN_CREATE_ADMIN_USER, data, { headers: getAuthHeaders() });
 
 // --- USER ---
 export const userGetPaginatedJobs = (params = {}) =>
-  axios.get(USER_PAGINATION_URL, { params, headers: getAuthHeaders() });
+  http.get(USER_PAGINATION_URL, { params, headers: getAuthHeaders() });
 export const userUploadJobs = (data) =>
-  axios.post(USER_UPLOAD_JOBS, data, { headers: getAuthHeaders() });
+  http.post(USER_UPLOAD_JOBS, data, { headers: getAuthHeaders() });
 export const userGetJobs = () =>
-  axios.get(USER_GET_JOBS, { headers: getAuthHeaders() });
+  http.get(USER_GET_JOBS, { headers: getAuthHeaders() });
 export const userGetJobById = (id) =>
-  axios.get(`${USER_GET_JOB_BY_ID}/${id}`, { headers: getAuthHeaders() });
+  http.get(`${USER_GET_JOB_BY_ID}/${id}`, { headers: getAuthHeaders() });
 export const userGetJobsSorted = () =>
-  axios.get(USER_GET_JOBS_SORTED, { headers: getAuthHeaders() });
+  http.get(USER_GET_JOBS_SORTED, { headers: getAuthHeaders() });
 
 // --- JOB APPLICATIONS ---
 export const applyToJob = (jobId) =>
-  axios.post(APPLY_JOB, null, { params: { jobId }, headers: getAuthHeaders() });
+  http.post(APPLY_JOB, null, { params: { jobId }, headers: getAuthHeaders() });
+export const applyToJobByUser = (userId, jobId) =>
+  http.post(APPLY_JOB, null, {
+    params: { userId, jobId },
+    headers: getAuthHeaders(),
+  });
 export const getMyAppliedJobs = () =>
-  axios.get(GET_MY_APPLIED_JOBS_DTO, { headers: getAuthHeaders() });
+  http.get(GET_MY_APPLIED_JOBS_DTO, { headers: getAuthHeaders() });
 export const getMyAppliedJobsDTO = () =>
-  axios.get(GET_MY_APPLIED_JOBS_DTO, { headers: getAuthHeaders() });
+  http.get(GET_MY_APPLIED_JOBS_DTO, { headers: getAuthHeaders() });
 export const cancelApplication = (jobId) =>
-  axios.delete(CANCEL_APPLICATION, {
+  http.delete(CANCEL_APPLICATION, {
     params: { jobId },
     headers: getAuthHeaders(),
   });
 export const deleteApplicationById = (applicationId) =>
-  axios.delete(`http://localhost:8080/apply/applications/${applicationId}`, {
+  http.delete(`http://localhost:8080/apply/applications/${applicationId}`, {
     headers: getAuthHeaders(),
   });
 export const updateApplicationById = (applicationId, updates) =>
-  axios.put(
+  http.put(
     `http://localhost:8080/apply/applications/${applicationId}`,
     updates,
     { headers: getAuthHeaders() }
   );
 export const adminGetAllApplicationsApply = () =>
-  axios.get(ADMIN_GET_ALL_APPLICATIONS_APPLY, { headers: getAuthHeaders() });
+  http.get(ADMIN_GET_ALL_APPLICATIONS_APPLY, { headers: getAuthHeaders() });
 
 // --- RECRUITER ---
 export const recruiterGet = (endpoint, params = {}) =>
-  axios.get(`${RECRUITER_BASE}${endpoint}`, {
+  http.get(`${RECRUITER_BASE}${endpoint}`, {
     params,
     headers: getAuthHeaders(),
   });
 export const recruiterPost = (endpoint, data) =>
-  axios.post(`${RECRUITER_BASE}${endpoint}`, data, {
+  http.post(`${RECRUITER_BASE}${endpoint}`, data, {
     headers: getAuthHeaders(),
   });
 export const recruiterPut = (endpoint, data) =>
-  axios.put(`${RECRUITER_BASE}${endpoint}`, data, {
+  http.put(`${RECRUITER_BASE}${endpoint}`, data, {
     headers: getAuthHeaders(),
   });
 export const recruiterDelete = (endpoint) =>
-  axios.delete(`${RECRUITER_BASE}${endpoint}`, { headers: getAuthHeaders() });
+  http.delete(`${RECRUITER_BASE}${endpoint}`, { headers: getAuthHeaders() });
 
 // --- SAVED JOBS ---
 export const getSavedJobsByUser = (userId) =>
-  axios.get(`${GET_SAVED_JOBS_BY_USER}/${userId}`, {
+  http.get(`${GET_SAVED_JOBS_BY_USER}/${userId}`, {
     headers: getAuthHeaders(),
   });
 export const saveJobApi = (userId, jobId) =>
-  axios.post(`${SAVE_JOB}`, null, {
+  http.post(`${SAVE_JOB}`, null, {
     params: { userId, jobId },
     headers: getAuthHeaders(),
   });
 export const unsaveJobApi = (userId, jobId) =>
-  axios.delete(`${UNSAVE_JOB}`, {
+  http.delete(`${UNSAVE_JOB}`, {
     params: { userId, jobId },
     headers: getAuthHeaders(),
   });
 
 // --- USER REGISTRATION ---
-export const registerUser = (data) => axios.post(USER_REGISTER_BASE, data);
+export const registerUser = (data) => http.post(USER_REGISTER_BASE, data);
 
 // --- USER MANAGEMENT ---
 export const getUsers = () =>
-  axios.get(USERS_BASE, { headers: getAuthHeaders() });
+  http.get(USERS_BASE, { headers: getAuthHeaders() });
 export const getUserById = (id) =>
-  axios.get(`${GET_USER_BY_ID}/${id}`, { headers: getAuthHeaders() });
+  http.get(`${GET_USER_BY_ID}/${id}`, { headers: getAuthHeaders() });
 export const updateUser = (userId, data) =>
-  axios.put(`${USERS_BASE}/${userId}`, data, { headers: getAuthHeaders() });
+  http.put(`${USERS_BASE}/${userId}`, data, { headers: getAuthHeaders() });
 export const deleteUser = (userId) =>
-  axios.delete(`${USERS_BASE}/${userId}`, { headers: getAuthHeaders() });
+  http.delete(`${USERS_BASE}/${userId}`, { headers: getAuthHeaders() });
 
 // --- EMAIL ---
 export const sendEmail = (data) =>
-  axios.post(EMAIL_SEND, data, { headers: getAuthHeaders() });
+  http.post(EMAIL_SEND, data, { headers: getAuthHeaders() });
 
 // --- ROLE PROFILE ---
 export const updateProfile = (data) =>
-  axios.put(UPDATE_PROFILE, data, { headers: getAuthHeaders() });
+  http.put(UPDATE_PROFILE, data, { headers: getAuthHeaders() });
 export const getProfile = () =>
-  axios.get(GET_PROFILE, { headers: getAuthHeaders() });
+  http.get(GET_PROFILE, { headers: getAuthHeaders() });
 export const getUsersName = () =>
-  axios.get(GET_USERS_NAME, { headers: getAuthHeaders() });
+  http.get(GET_USERS_NAME, { headers: getAuthHeaders() });
 export const getFullName = () =>
-  axios.get(GET_NAME, { headers: getAuthHeaders() });
+  http.get(GET_NAME, { headers: getAuthHeaders() });
 
 // --- JOB ALERTS ---
 export const getJobAlertsByUser = (userId) =>
-  axios.get(`${GET_JOB_ALERTS_BY_USER}/${userId}`, {
+  http.get(`${GET_JOB_ALERTS_BY_USER}/${userId}`, {
     headers: getAuthHeaders(),
   });
 export const createJobAlertApi = (userId, criteria) =>
-  axios.post(CREATE_JOB_ALERT, null, {
+  http.post(CREATE_JOB_ALERT, null, {
     params: { userId, criteria },
     headers: getAuthHeaders(),
   });
 export const deleteJobAlertApi = (alertId) =>
-  axios.delete(`${DELETE_JOB_ALERT}/${alertId}`, { headers: getAuthHeaders() });
+  http.delete(`${DELETE_JOB_ALERT}/${alertId}`, { headers: getAuthHeaders() });
 
 // --- RESUMES ---
 export const getResumesByUser = (userId) =>
-  axios.get(`${GET_RESUMES_BY_USER}/${userId}`, { headers: getAuthHeaders() });
+  http.get(`${GET_RESUMES_BY_USER}/${userId}`, { headers: getAuthHeaders() });
 export const uploadResumeApi = (userId, filePath) =>
-  axios.post(UPLOAD_RESUME, null, {
+  http.post(UPLOAD_RESUME, null, {
     params: { userId, filePath },
     headers: getAuthHeaders(),
   });
 export const deleteResumeApi = (resumeId) =>
-  axios.delete(`${DELETE_RESUME}/${resumeId}`, { headers: getAuthHeaders() });
+  http.delete(`${DELETE_RESUME}/${resumeId}`, { headers: getAuthHeaders() });
 
 // --- MESSAGES ---
 export const getSentMessages = (userId) =>
-  axios.get(`${GET_SENT_MESSAGES}/${userId}`, { headers: getAuthHeaders() });
+  http.get(`${GET_SENT_MESSAGES}/${userId}`, { headers: getAuthHeaders() });
 export const getReceivedMessages = (userId) =>
-  axios.get(`${GET_RECEIVED_MESSAGES}/${userId}`, {
+  http.get(`${GET_RECEIVED_MESSAGES}/${userId}`, {
     headers: getAuthHeaders(),
   });
 export const getConversation = (senderId, receiverId) =>
-  axios.get(GET_CONVERSATION, {
+  http.get(GET_CONVERSATION, {
     params: { senderId, receiverId },
     headers: getAuthHeaders(),
   });
 export const sendMessageApi = (senderId, receiverId, content) =>
-  axios.post(SEND_MESSAGE, null, {
+  http.post(SEND_MESSAGE, null, {
     params: { senderId, receiverId, content },
     headers: getAuthHeaders(),
   });
 export const deleteMessageApi = (messageId) =>
-  axios.delete(`${DELETE_MESSAGE}/${messageId}`, { headers: getAuthHeaders() });
+  http.delete(`${DELETE_MESSAGE}/${messageId}`, { headers: getAuthHeaders() });
 
 // --- COMPANIES ---
 export const getCompanies = () =>
-  axios.get(COMPANIES_BASE, { headers: getAuthHeaders() });
+  http.get(COMPANIES_BASE, { headers: getAuthHeaders() });
 export const createCompanyApi = (company) =>
-  axios.post(CREATE_COMPANY, company, { headers: getAuthHeaders() });
+  http.post(CREATE_COMPANY, company, { headers: getAuthHeaders() });
 export const deleteCompanyApi = (id) =>
-  axios.delete(`${DELETE_COMPANY}/${id}`, { headers: getAuthHeaders() });
+  http.delete(`${DELETE_COMPANY}/${id}`, { headers: getAuthHeaders() });
 export const getCompanyById = (id) =>
-  axios.get(`${GET_COMPANY_BY_ID}/${id}`, { headers: getAuthHeaders() });
+  http.get(`${GET_COMPANY_BY_ID}/${id}`, { headers: getAuthHeaders() });
 
 // --- COMPANY REVIEWS ---
 export const getCompanyReviewsApi = (companyId) =>
-  axios.get(`${GET_COMPANY_REVIEWS}/${companyId}`, {
+  http.get(`${GET_COMPANY_REVIEWS}/${companyId}`, {
     headers: getAuthHeaders(),
   });
 export const addCompanyReviewApi = (companyId, userId, content, rating) =>
-  axios.post(ADD_COMPANY_REVIEW, null, {
+  http.post(ADD_COMPANY_REVIEW, null, {
     params: { companyId, userId, content, rating },
     headers: getAuthHeaders(),
   });
 export const deleteCompanyReviewApi = (reviewId) =>
-  axios.delete(`${DELETE_COMPANY_REVIEW}/${reviewId}`, {
+  http.delete(`${DELETE_COMPANY_REVIEW}/${reviewId}`, {
     headers: getAuthHeaders(),
   });
 
 // --- INTERVIEWS ---
 export const getInterviewsByUser = (userId) =>
-  axios.get(`${GET_INTERVIEWS_BY_USER}/${userId}`, {
+  http.get(`${GET_INTERVIEWS_BY_USER}/${userId}`, {
     headers: getAuthHeaders(),
   });
 export const getInterviewsByEmployer = (employerId) =>
-  axios.get(`${GET_INTERVIEWS_BY_EMPLOYER}/${employerId}`, {
+  http.get(`${GET_INTERVIEWS_BY_EMPLOYER}/${employerId}`, {
     headers: getAuthHeaders(),
   });
 export const getInterviewsByApplication = (applicationId) =>
-  axios.get(`${GET_INTERVIEWS_BY_APPLICATION}/${applicationId}`, {
+  http.get(`${GET_INTERVIEWS_BY_APPLICATION}/${applicationId}`, {
     headers: getAuthHeaders(),
   });
 export const scheduleInterviewApi = (
@@ -367,16 +372,17 @@ export const scheduleInterviewApi = (
   applicationId,
   dateTime
 ) =>
-  axios.post(SCHEDULE_INTERVIEW, null, {
+  http.post(SCHEDULE_INTERVIEW, null, {
     params: { userId, employerId, applicationId, dateTime },
     headers: getAuthHeaders(),
   });
 export const updateInterviewStatusApi = (interviewId, status) =>
-  axios.put(`${UPDATE_INTERVIEW_STATUS}/${interviewId}`, null, {
+  http.put(`${UPDATE_INTERVIEW_STATUS}/${interviewId}`, null, {
     params: { status },
     headers: getAuthHeaders(),
   });
 export const deleteInterviewApi = (interviewId) =>
-  axios.delete(`${DELETE_INTERVIEW}/${interviewId}`, {
+  http.delete(`${DELETE_INTERVIEW}/${interviewId}`, {
     headers: getAuthHeaders(),
   });
+

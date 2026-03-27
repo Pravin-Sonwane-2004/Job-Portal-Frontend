@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { adminCreateJob } from '../all services/getJfBackendService';
+import { adminCreateJob } from '../services/jobPortalApi';
 import {
   IconBriefcase,
   IconMapPin,
@@ -152,3 +152,4 @@ const UploadJob = () => {
 };
 
 export default UploadJob;
+

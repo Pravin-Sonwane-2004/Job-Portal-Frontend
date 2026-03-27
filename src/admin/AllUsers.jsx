@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { IconTrash, IconPlus, IconEdit, IconUser, IconMail, IconShield, IconSearch } from '@tabler/icons-react';
-import { adminGetAllUsers, adminDeleteUser, adminCreateAdminUser, adminUpdateUser } from '../all services/getJfBackendService';
+import { adminGetAllUsers, adminDeleteUser, adminCreateAdminUser, adminUpdateUser } from '../services/jobPortalApi';
 import { RingLoader } from '../loader/RingLoader';
 
 const AllUsers = () => {
@@ -23,7 +23,6 @@ const AllUsers = () => {
     setLoading(true);
     adminGetAllUsers()
       .then((res) => {
-        console.log('Fetched users:', res.data); // Debug: check user structure
         setUsers(res.data);
         setFilteredUsers(res.data);
         setLoading(false);
@@ -109,7 +108,7 @@ const AllUsers = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 font-poppins py-8">
+    <div className="min-h-screen bg-slate-50 py-8 dark:bg-slate-900">
       <div className="max-w-7xl mx-auto px-4">
         <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 mb-6">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 flex-wrap">
@@ -364,7 +363,7 @@ const AllUsers = () => {
                   </div>
                   <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
                     <IconShield size={16} />
-                    <span>Role: {user.role || 'None'}</span>
+                    <span>Role: {user.role || user.roles?.join(', ') || 'None'}</span>
                   </div>
                 </div>
 
@@ -394,3 +393,4 @@ const AllUsers = () => {
 };
 
 export default AllUsers;
+
