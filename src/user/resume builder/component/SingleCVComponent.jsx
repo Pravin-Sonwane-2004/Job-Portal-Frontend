@@ -13,12 +13,12 @@ import {
   Tooltip,
   Avatar,
   ScrollArea,
-  useMantineTheme,
+  useUiTheme,
   ActionIcon,
   Text,
   SegmentedControl,
   Modal,
-} from '@mantine/core'
+} from '@/components/ui/system'
 import {
   IconPlus,
   IconTrash,
@@ -85,7 +85,7 @@ const SingleCVComponent = () => {
   const [previewOpen, setPreviewOpen] = useState(false)
   const colorScheme = 'dark'
   const componentRef = useRef()
-  const theme = useMantineTheme()
+  const theme = useUiTheme()
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
     onAfterPrint: () =>
@@ -489,3 +489,6 @@ const SingleCVComponent = () => {
 }
 
 export default SingleCVComponent
+
+
+

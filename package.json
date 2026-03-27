@@ -10,9 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@mantine/carousel": "^7.17.5",
-    "@mantine/core": "^7.17.5",
-    "@mantine/hooks": "^7.17.5",
     "@tabler/icons": "^3.31.0",
     "@tabler/icons-react": "^3.31.0",
     "@tailwindcss/vite": "^4.1.4",

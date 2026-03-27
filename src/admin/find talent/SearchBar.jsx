@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Divider, Select, MultiSelect } from '@mantine/core';
+import { Divider, Select, MultiSelect } from '@/components/ui/system';
 // import { searchFields as dropdownData } from '../../../public/Data/TalentData'; // [TEMP] Commented due to missing file error
 
 const salaryOptions = [
@@ -58,3 +58,5 @@ const SearchBar = ({ onFilterChange }) => {
 };
 
 export default SearchBar;
+
+

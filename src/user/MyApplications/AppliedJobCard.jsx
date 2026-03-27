@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, Text } from '@mantine/core';
+import { Paper, Text } from '@/components/ui/system';
 import {
   IconBriefcase,
   IconBuilding,
@@ -74,3 +74,5 @@ const AppliedJobCard = ({ job, onCancel, onUpdate, loading }) => {
 };
 
 export default AppliedJobCard;
+
+

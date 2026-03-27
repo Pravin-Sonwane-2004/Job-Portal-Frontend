@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LOGIN_URL } from "../../all services/getJfBackendService";
 
-const SignIn = ({ onToggle }) => {
+const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("USER");
@@ -145,7 +145,8 @@ const SignIn = ({ onToggle }) => {
           <p className="text-slate-600 dark:text-slate-400">
             Don't have an account?{" "}
             <button
-              onClick={onToggle}
+              type="button"
+              onClick={() => navigate("/register")}
               className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 font-medium transition-colors"
             >
               Sign Up

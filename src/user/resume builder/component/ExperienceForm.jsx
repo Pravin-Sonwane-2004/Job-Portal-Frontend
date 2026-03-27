@@ -1,5 +1,5 @@
 import React from 'react'
-import { TextInput, Button, Group, Stack } from '@mantine/core'
+import { TextInput, Button, Group, Stack } from '@/components/ui/system'
 import { IconPlus, IconTrash } from '@tabler/icons-react'
 
 const ExperienceForm = ({ experience, onChange, onAdd, onDelete }) => (
@@ -53,3 +53,5 @@ const ExperienceForm = ({ experience, onChange, onAdd, onDelete }) => (
 )
 
 export default ExperienceForm
+
+

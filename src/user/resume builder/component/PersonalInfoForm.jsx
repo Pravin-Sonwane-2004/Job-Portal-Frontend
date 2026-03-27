@@ -1,5 +1,5 @@
 import React from 'react'
-import { TextInput, Textarea, FileInput, Stack } from '@mantine/core'
+import { TextInput, Textarea, FileInput, Stack } from '@/components/ui/system'
 
 const PersonalInfoForm = ({ personalInfo, onChange }) => (
   <Stack>
@@ -64,3 +64,5 @@ const PersonalInfoForm = ({ personalInfo, onChange }) => (
 )
 
 export default PersonalInfoForm
+
+

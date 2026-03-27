@@ -1,5 +1,5 @@
 import React from 'react'
-import { TextInput, Button, Group, Stack } from '@mantine/core'
+import { TextInput, Button, Group, Stack } from '@/components/ui/system'
 import { IconPlus, IconTrash } from '@tabler/icons-react'
 
 const ListForm = ({ label, items, onChange, onAdd, onDelete }) => (
@@ -24,3 +24,5 @@ const ListForm = ({ label, items, onChange, onAdd, onDelete }) => (
 )
 
 export default ListForm
+
+

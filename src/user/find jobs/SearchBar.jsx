@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { IconSearch, IconMapPin, IconSortAscending2, IconAlertCircle } from '@tabler/icons-react';
-import { RangeSlider, Select, Paper, Alert, Pagination } from '@mantine/core';
+import { RangeSlider, Select, Paper, Alert, Pagination } from '@/components/ui/system';
 import JobCard from './JobCard';
 import { getJobs } from '../../all services/getJfBackendService';
 import { RingLoader } from '../../loader/RingLoader';
@@ -375,3 +375,5 @@ const SearchBar = () => {
 };
 
 export default SearchBar;
+
+

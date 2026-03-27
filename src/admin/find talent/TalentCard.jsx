@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Image, Text, Badge, Group, ActionIcon, Button, Avatar } from '@mantine/core';
+import { Card, Image, Text, Badge, Group, ActionIcon, Button, Avatar } from '@/components/ui/system';
 import { IconHeart, IconMessageCircle, IconUserCircle } from '@tabler/icons-react';
 
 const TalentCard = ({ talent, onViewProfile }) => {
@@ -101,3 +101,5 @@ const TalentCard = ({ talent, onViewProfile }) => {
 };
 
 export default TalentCard;
+
+

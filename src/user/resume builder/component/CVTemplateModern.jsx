@@ -9,8 +9,8 @@ import {
   Group,
   Box,
   Badge,
-  useMantineTheme,
-} from '@mantine/core'
+  useUiTheme,
+} from '@/components/ui/system'
 import {
   IconUser,
   IconBriefcase,
@@ -25,7 +25,7 @@ import {
 } from '@tabler/icons-react'
 
 const CVTemplateModern = forwardRef(({ cv, colorScheme, style }, ref) => {
-  const theme = useMantineTheme()
+  const theme = useUiTheme()
   return (
     <Paper
       ref={ref}
@@ -225,3 +225,6 @@ const CVTemplateModern = forwardRef(({ cv, colorScheme, style }, ref) => {
 })
 
 export default CVTemplateModern
+
+
+

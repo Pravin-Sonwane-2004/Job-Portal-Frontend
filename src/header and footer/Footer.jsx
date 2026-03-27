@@ -1,10 +1,9 @@
 import React from 'react';
-import { Container } from '@mantine/core';
 
 const Footer = () => {
   return (
     <footer className="bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 pt-8 pb-8 relative">
-      <Container style={{ maxWidth: '1800px' }}>
+      <div className="mx-auto w-full max-w-[1800px] px-4 sm:px-6 lg:px-8">
         {/* Footer Bottom */}
         <div className="border-t border-slate-300 dark:border-slate-700 mt-16 pt-10 text-sm text-slate-600 dark:text-slate-400">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-7xl mx-auto px-4">
@@ -74,7 +73,7 @@ const Footer = () => {
             </div>
           </div>
         </div>
-      </Container>
+      </div>
     </footer>
   );
 };

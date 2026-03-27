@@ -1,14 +1,14 @@
 import React, { forwardRef } from 'react'
 import {
-  Paper, Avatar, Stack, Title, Text, Divider, Group, Box, Badge, useMantineTheme,
-} from '@mantine/core'
+  Paper, Avatar, Stack, Title, Text, Divider, Group, Box, Badge, useUiTheme,
+} from '@/components/ui/system'
 import {
   IconUser, IconBriefcase, IconBook, IconDeviceFloppy, IconLanguage, IconHeart,
   IconHome, IconPhone, IconMail, IconInfoCircle,
 } from '@tabler/icons-react'
 
 const CVTemplateClassic = forwardRef(({ cv, colorScheme, style }, ref) => {
-  const theme = useMantineTheme()
+  const theme = useUiTheme()
   return (
     <Paper
       ref={ref}
@@ -122,3 +122,6 @@ const CVTemplateClassic = forwardRef(({ cv, colorScheme, style }, ref) => {
 })
 
 export default CVTemplateClassic
+
+
+
