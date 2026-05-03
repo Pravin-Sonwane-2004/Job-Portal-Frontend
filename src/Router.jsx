@@ -1,58 +1,49 @@
-import { lazy, Suspense } from "react";
-import { Route, Routes } from "react-router-dom";
+import { lazy, Suspense } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Layout from './components/Layout';
+import Loader from './components/Loader';
 
-import Container from "@/components/ui/Container";
-
-const SettingsPage = lazy(() => import("./settings/SettingsPage"));
-const AdminPage = lazy(() => import("./admin/pages/AdminPage"));
-const AllUser = lazy(() => import("./admin/pages/AllUser"));
-const UploadJobs = lazy(() => import("./admin/pages/UploadJobs"));
-const SignIn = lazy(() => import("./public/auth/LogIn"));
-const SignUp = lazy(() => import("./public/auth/Register"));
-const HomePage = lazy(() => import("./pages/home/HomePage"));
-const FindJobs = lazy(() => import("./public/pages/FindJobsPage"));
-const MyApplication = lazy(() => import("./user/MyApplication"));
-const FindTalentPage = lazy(() => import("./admin/pages/FindTalentPage"));
-const EditProfile = lazy(() => import("./profile/EditProfile"));
-const ProfilePage = lazy(() => import("./public/pages/ProfilePage"));
-const ResumeBuild = lazy(() => import("./public/pages/ResumeBuild"));
-const Apply = lazy(() => import("./user/apply jobs/Apply"));
-const Dashboard = lazy(() =>
-  import("./user/find jobs/Dashboard").then((module) => ({ default: module.Dashboard }))
-);
-const SavedJobsPage = lazy(() => import("./user/SavedJobsPage"));
-
-function RouteFallback() {
-  return (
-    <Container className="py-20">
-      <div className="flex min-h-[30vh] items-center justify-center rounded-lg border border-slate-200 bg-white">
-        <div className="text-sm font-medium text-slate-600">Loading page</div>
-      </div>
-    </Container>
-  );
-}
+const Home = lazy(() => import('./pages/Home'));
+const Login = lazy(() => import('./pages/Login'));
+const Register = lazy(() => import('./pages/Register'));
+const FindJobs = lazy(() => import('./pages/FindJobs'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const ApplyJob = lazy(() => import('./pages/ApplyJob'));
+const MyApplications = lazy(() => import('./pages/MyApplications'));
+const SavedJobs = lazy(() => import('./pages/SavedJobs'));
+const Profile = lazy(() => import('./pages/Profile'));
+const EditProfile = lazy(() => import('./pages/EditProfile'));
+const Settings = lazy(() => import('./pages/Settings'));
+const ResumeBuilder = lazy(() => import('./pages/ResumeBuilder'));
+const Admin = lazy(() => import('./pages/Admin'));
+const AdminUsers = lazy(() => import('./pages/AdminUsers'));
+const AdminJobs = lazy(() => import('./pages/AdminJobs'));
+const AdminApplications = lazy(() => import('./pages/AdminApplications'));
 
 export default function Router() {
   return (
-    <Suspense fallback={<RouteFallback />}>
-      <Routes>
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/register" element={<SignUp />} />
-        <Route path="/find-jobs" element={<FindJobs />} />
-        <Route path="/resume-builder" element={<ResumeBuild />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/edit-profile" element={<EditProfile />} />
-        <Route path="/my-applications" element={<MyApplication />} />
-        <Route path="/apply/:jobId" element={<Apply />} />
-        <Route path="/admin" element={<AdminPage />} />
-        <Route path="/upload-jobs" element={<UploadJobs />} />
-        <Route path="/all-users" element={<AllUser />} />
-        <Route path="/find-talent" element={<FindTalentPage />} />
-        <Route path="/settings" element={<SettingsPage />} />
-        <Route path="/saved-jobs" element={<SavedJobsPage />} />
-        <Route path="*" element={<HomePage />} />
-      </Routes>
-    </Suspense>
+    <Layout>
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/signin" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/find-jobs" element={<FindJobs />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/apply/:jobId" element={<ApplyJob />} />
+          <Route path="/my-applications" element={<MyApplications />} />
+          <Route path="/saved-jobs" element={<SavedJobs />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/edit-profile" element={<EditProfile />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/resume-builder" element={<ResumeBuilder />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin-users" element={<AdminUsers />} />
+          <Route path="/admin-jobs" element={<AdminJobs />} />
+          <Route path="/admin-applications" element={<AdminApplications />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
+    </Layout>
   );
 }
