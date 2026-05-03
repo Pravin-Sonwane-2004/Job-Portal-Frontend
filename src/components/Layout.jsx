@@ -1,96 +1,78 @@
 import { useState, useEffect } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { getCurrentUser, clearCurrentUser, isAdmin, isUser, getDisplayName, getRoleLabel, onSessionChange } from '../auth';
+import { Link, NavLink, useNavigate, Outlet } from 'react-router-dom';
+import { getCurrentUser, clearCurrentUser, isAdmin, getDisplayName, getRoleLabel, onSessionChange } from '../auth';
 
 const navLinks = (user) => {
-  const links = [
-    { to: '/find-jobs', label: 'Find Jobs' },
-  ];
+  const links = [{ to: '/find-jobs', label: 'Find Jobs' }];
+  
+  // Only add these if user is logged in
   if (user) {
     links.push({ to: '/dashboard', label: 'Dashboard' });
     links.push({ to: '/my-applications', label: 'Applications' });
-    links.push({ to: '/saved-jobs', label: 'Saved Jobs' });
   }
-  if (isAdmin(user)) {
+  
+  // Null-safe check for Admin
+  if (user && isAdmin(user)) {
     links.push({ to: '/admin', label: 'Admin' });
-    links.push({ to: '/admin-jobs', label: 'Manage Jobs' });
-    links.push({ to: '/admin-users', label: 'Users' });
-    links.push({ to: '/admin-applications', label: 'Applications' });
   }
   return links;
 };
 
-export default function Layout({ children }) {
-  const [user, setUser] = useState(getCurrentUser);
+export default function Layout() {
+  // Fix: Execute the function to get the initial state
+  const [user, setUser] = useState(() => getCurrentUser()); 
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => onSessionChange(() => setUser(getCurrentUser())), []);
+  useEffect(() => {
+    // Listen for login/logout events
+    const unsubscribe = onSessionChange(() => setUser(getCurrentUser()));
+    return () => unsubscribe && unsubscribe(); 
+  }, []);
 
   const handleLogout = () => {
     clearCurrentUser();
+    setUser(null);
     navigate('/signin');
   };
 
   const links = navLinks(user);
 
   return (
-    <>
+    <div className="layout-wrapper">
       <header className="header">
         <div className="container header-inner">
-          <Link to="/" className="brand">
-            <span className="brand-icon">JP</span>
-            Job Portal
-          </Link>
-
+          <Link to="/" className="brand">Job Portal</Link>
+          
           <nav className="nav">
             {links.map(l => (
-              <NavLink key={l.to} to={l.to}>{l.label}</NavLink>
+              <NavLink key={l.to} to={l.to} className={({ isActive }) => isActive ? 'active' : ''}>
+                {l.label}
+              </NavLink>
             ))}
           </nav>
 
           <div className="header-actions">
             {user ? (
-              <div className="user-menu" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
-                  {getDisplayName(user)} ({getRoleLabel(user)})
-                </span>
-                <button className="btn btn-outline btn-sm" onClick={handleLogout}>Sign Out</button>
+              <div className="user-info">
+                <span>{getDisplayName(user)}</span>
+                <button onClick={handleLogout} className="btn-sm">Sign Out</button>
               </div>
             ) : (
-              <Link to="/signin" className="btn btn-primary btn-sm">Sign In</Link>
+              <Link to="/signin" className="btn-primary">Sign In</Link>
             )}
-            <button className="mobile-toggle" onClick={() => setMobileOpen(!mobileOpen)}>
-              {mobileOpen ? '✕' : '☰'}
-            </button>
           </div>
         </div>
-
-        {mobileOpen && (
-          <div className="mobile-nav">
-            {links.map(l => (
-              <NavLink key={l.to} to={l.to} onClick={() => setMobileOpen(false)}>{l.label}</NavLink>
-            ))}
-            {user ? (
-              <a href="#" onClick={(e) => { e.preventDefault(); handleLogout(); setMobileOpen(false); }}>Sign Out</a>
-            ) : (
-              <NavLink to="/signin" onClick={() => setMobileOpen(false)}>Sign In</NavLink>
-            )}
-          </div>
-        )}
       </header>
 
-      <main style={{ flex: 1 }}>{children}</main>
+      <main className="main-content">
+        {/* This is the magic part: it renders the current page */}
+        <Outlet /> 
+      </main>
 
       <footer className="footer">
-        <div className="container footer-inner">
-          <p>Job Portal</p>
-          <div className="footer-links">
-            <Link to="/find-jobs">Find Jobs</Link>
-            <Link to="/settings">Settings</Link>
-          </div>
-        </div>
+        <p>© {new Date().getFullYear()} Job Portal</p>
       </footer>
-    </>
+    </div>
   );
 }
