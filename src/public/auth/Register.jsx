@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUserAccount } from "../../services/authService";
-import { getSessionToken } from "../../services/sessionService";
+import { getCurrentUser } from "../../services/sessionService";
 
 export default function SignUp() {
   const [form, setForm] = useState({
@@ -18,7 +18,7 @@ export default function SignUp() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (getSessionToken()) {
+    if (getCurrentUser()) {
       navigate("/signin", { replace: true });
     }
   }, [navigate]);

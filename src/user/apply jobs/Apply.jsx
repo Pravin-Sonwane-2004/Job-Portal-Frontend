@@ -3,13 +3,14 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import PageWrapper from '../../components/PageWrapper';
 import { applyToJobByUser, getMyAppliedJobsDTO } from '../../services/jobPortalApi';
-import { getUserIdFromJwt } from '../../utils/jwtUtils';
+import { getCurrentUser } from '../../services/sessionService';
 
 const Apply = () => {
   const { jobId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const job = location.state?.job;
+  const userId = getCurrentUser()?.id;
 
   const [status, setStatus] = useState('');
   const [loading, setLoading] = useState(false);
@@ -19,11 +20,16 @@ const Apply = () => {
 
   useEffect(() => {
     const fetchAppliedJobs = async () => {
+      if (!userId) {
+        setFetchingApplied(false);
+        return;
+      }
+
       setFetchingApplied(true);
       setFetchError('');
 
       try {
-        const response = await getMyAppliedJobsDTO();
+        const response = await getMyAppliedJobsDTO(userId);
         setAppliedJobs(Array.isArray(response.data) ? response.data : []);
       } catch {
         setFetchError('Could not fetch applied jobs.');
@@ -33,13 +39,11 @@ const Apply = () => {
     };
 
     fetchAppliedJobs();
-  }, []);
+  }, [userId]);
 
   const handleApply = async () => {
-    const userId = getUserIdFromJwt();
-
     if (!userId) {
-      setStatus('Could not determine your user ID. Please log out and sign in again.');
+      setStatus('Please sign in before applying.');
       return;
     }
 
@@ -54,7 +58,7 @@ const Apply = () => {
       setStatus(message);
 
       if (message.toLowerCase().includes('successfully')) {
-        const jobsResponse = await getMyAppliedJobsDTO();
+        const jobsResponse = await getMyAppliedJobsDTO(userId);
         setAppliedJobs(Array.isArray(jobsResponse.data) ? jobsResponse.data : []);
       }
     } catch {

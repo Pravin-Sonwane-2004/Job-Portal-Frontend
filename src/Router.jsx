@@ -2,7 +2,6 @@ import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 
 import Container from "@/components/ui/Container";
-import ProtectedRoute from "./ProtectedRoute";
 
 const SettingsPage = lazy(() => import("./settings/SettingsPage"));
 const AdminPage = lazy(() => import("./admin/pages/AdminPage"));
@@ -27,9 +26,7 @@ function RouteFallback() {
   return (
     <Container className="py-20">
       <div className="flex min-h-[30vh] items-center justify-center rounded-lg border border-slate-200 bg-white">
-        <div className="text-sm font-medium text-slate-600">
-          Loading page
-        </div>
+        <div className="text-sm font-medium text-slate-600">Loading page</div>
       </div>
     </Container>
   );
@@ -39,107 +36,22 @@ export default function Router() {
   return (
     <Suspense fallback={<RouteFallback />}>
       <Routes>
-        {/* Public Routes */}
         <Route path="/signin" element={<SignIn />} />
         <Route path="/register" element={<SignUp />} />
-        <Route path="*" element={<HomePage />} />
         <Route path="/find-jobs" element={<FindJobs />} />
         <Route path="/resume-builder" element={<ResumeBuild />} />
-
-        {/* Protected for USER */}
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute requiredRole="USER">
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute requiredRoles={["USER", "ADMIN"]}>
-              <ProfilePage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/edit-profile"
-          element={
-            <ProtectedRoute requiredRoles={["USER", "ADMIN"]}>
-              <EditProfile />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/my-applications"
-          element={
-            <ProtectedRoute requiredRole="USER">
-              <MyApplication />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/apply/:jobId"
-          element={
-            <ProtectedRoute requiredRole="USER">
-              <Apply />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Protected for ADMIN */}
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute requiredRole="ADMIN">
-              <AdminPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/upload-jobs"
-          element={
-            <ProtectedRoute requiredRole="ADMIN">
-              <UploadJobs />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/all-users"
-          element={
-            <ProtectedRoute requiredRole="ADMIN">
-              <AllUser />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/find-talent"
-          element={
-            <ProtectedRoute requiredRole="ADMIN">
-              <FindTalentPage />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Settings Page (protected for logged-in users) */}
-        <Route
-          path="/settings"
-          element={
-            <ProtectedRoute requiredRoles={["USER", "ADMIN"]}>
-              <SettingsPage />
-            </ProtectedRoute>
-          }
-        />
-        {/* Saved Jobs */}
-        <Route
-          path="/saved-jobs"
-          element={
-            <ProtectedRoute requiredRole="USER">
-              <SavedJobsPage />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/edit-profile" element={<EditProfile />} />
+        <Route path="/my-applications" element={<MyApplication />} />
+        <Route path="/apply/:jobId" element={<Apply />} />
+        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/upload-jobs" element={<UploadJobs />} />
+        <Route path="/all-users" element={<AllUser />} />
+        <Route path="/find-talent" element={<FindTalentPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/saved-jobs" element={<SavedJobsPage />} />
+        <Route path="*" element={<HomePage />} />
       </Routes>
     </Suspense>
   );

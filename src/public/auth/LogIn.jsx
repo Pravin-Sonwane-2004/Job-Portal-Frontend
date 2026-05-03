@@ -2,7 +2,7 @@ import { IconLock, IconUser } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../services/authService";
-import { getSessionToken, setSessionToken } from "../../services/sessionService";
+import { getCurrentUser, setCurrentUser } from "../../services/sessionService";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -13,7 +13,7 @@ const SignIn = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (getSessionToken()) {
+    if (getCurrentUser()) {
       navigate("/", { replace: true });
     }
   }, [navigate]);
@@ -27,10 +27,10 @@ const SignIn = () => {
       const response = await loginUser({ email, password, role });
       const data = response.data;
 
-      if (data?.token) {
-        setSessionToken(data.token);
+      if (data?.id) {
+        setCurrentUser(data);
 
-        switch (role) {
+        switch (data.role || role) {
           case "ADMIN":
             navigate("/admin");
             break;

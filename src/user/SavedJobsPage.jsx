@@ -6,13 +6,13 @@ import {
   unsaveJobApi,
   userGetJobById,
 } from '../services/jobPortalApi';
-import { getUserIdFromJwt } from '../utils/jwtUtils';
+import { getCurrentUser } from '../services/sessionService';
 
 export default function SavedJobsPage() {
   const [savedJobs, setSavedJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const userId = getUserIdFromJwt();
+  const userId = getCurrentUser()?.id;
 
   const loadSavedJobs = async () => {
     if (!userId || Number.isNaN(Number(userId))) {

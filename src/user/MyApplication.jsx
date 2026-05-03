@@ -7,6 +7,7 @@ import {
   getMyAppliedJobs,
   updateApplicationById,
 } from '../services/jobPortalApi';
+import { getCurrentUser } from '../services/sessionService';
 import AppliedJobCard from './MyApplications/AppliedJobCard';
 
 const MyApplication = () => {
@@ -14,9 +15,16 @@ const MyApplication = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [loadingJobId, setLoadingJobId] = useState(null);
+  const userId = getCurrentUser()?.id;
 
   useEffect(() => {
-    getMyAppliedJobs()
+    if (!userId) {
+      setError('Please sign in to view your applications.');
+      setLoading(false);
+      return;
+    }
+
+    getMyAppliedJobs(userId)
       .then((response) => {
         setAppliedJobs(Array.isArray(response.data) ? response.data : []);
       })
@@ -26,7 +34,7 @@ const MyApplication = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [userId]);
 
   const handleCancel = async (job) => {
     if (!window.confirm(`Cancel your application for "${job.jobTitle}"?`)) {

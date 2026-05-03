@@ -19,6 +19,7 @@ import {
   fetchUserProfile,
   requestUserVerification,
 } from '../services/profileService';
+import { getCurrentUser } from '../services/sessionService';
 
 const mapProfile = (profile) => {
   if (!profile) {
@@ -46,11 +47,17 @@ const Profile = () => {
   const [verifying, setVerifying] = useState(false);
   const [verifyError, setVerifyError] = useState('');
   const [verifySuccess, setVerifySuccess] = useState(false);
+  const currentUser = getCurrentUser();
 
   useEffect(() => {
     let active = true;
 
-    fetchUserProfile()
+    if (!currentUser?.id) {
+      setLoading(false);
+      return undefined;
+    }
+
+    fetchUserProfile(currentUser.id)
       .then((response) => {
         if (!active) {
           return;
@@ -72,7 +79,7 @@ const Profile = () => {
     return () => {
       active = false;
     };
-  }, []);
+  }, [currentUser?.id]);
 
   const handleVerify = async () => {
     setVerifying(true);

@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { ChevronDownIcon } from '@/components/icons/AppIcons';
 import { getAccountNavigation } from '@/constants/navigation';
-import { clearSessionToken } from '@/services/sessionService';
+import { clearCurrentUser } from '@/services/sessionService';
 
 function Avatar({ displayName }) {
   const initials = displayName.trim().charAt(0).toUpperCase() || 'U';
@@ -32,7 +32,7 @@ export default function UserMenu({ identity, mobile = false, onNavigate }) {
   const accountLinks = getAccountNavigation(identity);
 
   const handleLogout = () => {
-    clearSessionToken();
+    clearCurrentUser();
     onNavigate?.();
     navigate('/signin');
   };

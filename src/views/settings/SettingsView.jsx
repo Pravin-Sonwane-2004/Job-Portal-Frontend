@@ -3,11 +3,9 @@ import { useNavigate } from 'react-router-dom';
 
 import SurfaceCard from '@/components/ui/SurfaceCard';
 import ToggleSwitch from '@/components/ui/ToggleSwitch';
-import useSessionToken from '@/hooks/useSessionToken';
 import useThemeMode from '@/hooks/useThemeMode';
-import { clearSessionToken } from '@/services/sessionService';
+import { clearCurrentUser, getCurrentUser } from '@/services/sessionService';
 import { fetchCurrentUserName } from '@/services/userService';
-import { parseJwt } from '@/utils/jwtUtils';
 
 const getStoredBoolean = (key, fallback) => {
   const value = localStorage.getItem(key);
@@ -16,10 +14,9 @@ const getStoredBoolean = (key, fallback) => {
 
 export default function SettingsView() {
   const navigate = useNavigate();
-  const jwt = useSessionToken();
-  const payload = parseJwt(jwt);
+  const user = getCurrentUser();
   const { isDarkMode, toggleTheme } = useThemeMode();
-  const [userName, setUserName] = useState(payload?.email || 'User');
+  const [userName, setUserName] = useState(user?.name || user?.email || 'User');
   const [emailNotif, setEmailNotif] = useState(() =>
     getStoredBoolean('settings:emailNotif', true)
   );
@@ -28,14 +25,14 @@ export default function SettingsView() {
   );
 
   useEffect(() => {
-    if (!jwt) {
+    if (!user?.id) {
       return;
     }
 
-    fetchCurrentUserName()
-      .then((response) => setUserName(response.data || payload?.email || 'User'))
-      .catch(() => setUserName(payload?.email || 'User'));
-  }, [jwt, payload?.email]);
+    fetchCurrentUserName(user.id)
+      .then((response) => setUserName(response.data || user?.email || 'User'))
+      .catch(() => setUserName(user?.email || 'User'));
+  }, [user?.email, user?.id]);
 
   useEffect(() => {
     localStorage.setItem('settings:emailNotif', String(emailNotif));
@@ -46,7 +43,7 @@ export default function SettingsView() {
   }, [profilePublic]);
 
   const handleLogout = () => {
-    clearSessionToken();
+    clearCurrentUser();
     navigate('/signin');
   };
 

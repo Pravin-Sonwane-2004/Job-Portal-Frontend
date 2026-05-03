@@ -81,8 +81,7 @@ export const DELETE_RESUME = "http://localhost:8080/api/resumes/delete"; // + /{
 
 // --- GENERIC AXIOS CALLS ---
 const getAuthHeaders = () => {
-  const token = sessionStorage.getItem("jwt");
-  return token ? { Authorization: `Bearer ${token}` } : {};
+  return {};
 };
 
 // Example: Public jobs
@@ -155,13 +154,13 @@ export const applyToJobByUser = (userId, jobId) =>
     params: { userId, jobId },
     headers: getAuthHeaders(),
   });
-export const getMyAppliedJobs = () =>
-  http.get(GET_MY_APPLIED_JOBS_DTO, { headers: getAuthHeaders() });
-export const getMyAppliedJobsDTO = () =>
-  http.get(GET_MY_APPLIED_JOBS_DTO, { headers: getAuthHeaders() });
-export const cancelApplication = (jobId) =>
+export const getMyAppliedJobs = (userId) =>
+  http.get(GET_MY_APPLIED_JOBS_DTO, { params: { userId }, headers: getAuthHeaders() });
+export const getMyAppliedJobsDTO = (userId) =>
+  http.get(GET_MY_APPLIED_JOBS_DTO, { params: { userId }, headers: getAuthHeaders() });
+export const cancelApplication = (userId, jobId) =>
   http.delete(CANCEL_APPLICATION, {
-    params: { jobId },
+    params: { userId, jobId },
     headers: getAuthHeaders(),
   });
 export const deleteApplicationById = (applicationId) =>

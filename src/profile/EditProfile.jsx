@@ -19,8 +19,7 @@ import {
   fetchUserProfile,
   updateUserProfile,
 } from '../services/profileService';
-import { getSessionToken } from '../services/sessionService';
-import { parseJwt } from '../utils/jwtUtils';
+import { getCurrentUser, setCurrentUser } from '../services/sessionService';
 
 const emptyProfile = {
   name: '',
@@ -58,19 +57,22 @@ const EditProfile = () => {
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const currentUser = getCurrentUser();
 
   const isAdmin = useMemo(() => {
-    const payload = parseJwt(getSessionToken());
-    const roles = payload?.roles || payload?.role || payload?.authorities || [];
-    const roleList = Array.isArray(roles) ? roles : [roles];
-
-    return roleList.some((role) => role === 'ADMIN' || role === 'ROLE_ADMIN');
-  }, []);
+    return currentUser?.role === 'ADMIN';
+  }, [currentUser?.role]);
 
   useEffect(() => {
     let active = true;
 
-    fetchUserProfile()
+    if (!currentUser?.id) {
+      setLoading(false);
+      setError('Please sign in before editing your profile.');
+      return undefined;
+    }
+
+    fetchUserProfile(currentUser.id)
       .then((response) => {
         if (active) {
           setFormData(mapProfileToForm(response.data));
@@ -90,7 +92,7 @@ const EditProfile = () => {
     return () => {
       active = false;
     };
-  }, []);
+  }, [currentUser?.id]);
 
   const handleInputChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -122,7 +124,8 @@ const EditProfile = () => {
     };
 
     try {
-      await updateUserProfile(payload);
+      await updateUserProfile(currentUser.id, payload);
+      setCurrentUser({ ...currentUser, ...payload });
       setSuccess(true);
       window.dispatchEvent(new Event('profileUpdated'));
       window.setTimeout(() => navigate('/profile'), 1000);

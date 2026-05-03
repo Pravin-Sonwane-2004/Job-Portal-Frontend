@@ -1,17 +1,27 @@
 const SESSION_EVENT = 'sessionchange';
-const TOKEN_KEY = 'jwt';
+const USER_KEY = 'currentUser';
 
-export function getSessionToken() {
-  return sessionStorage.getItem(TOKEN_KEY);
+export function getCurrentUser() {
+  const value = sessionStorage.getItem(USER_KEY);
+
+  if (!value) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(value);
+  } catch {
+    return null;
+  }
 }
 
-export function setSessionToken(token) {
-  sessionStorage.setItem(TOKEN_KEY, token);
+export function setCurrentUser(user) {
+  sessionStorage.setItem(USER_KEY, JSON.stringify(user));
   window.dispatchEvent(new Event(SESSION_EVENT));
 }
 
-export function clearSessionToken() {
-  sessionStorage.removeItem(TOKEN_KEY);
+export function clearCurrentUser() {
+  sessionStorage.removeItem(USER_KEY);
   window.dispatchEvent(new Event(SESSION_EVENT));
 }
 
