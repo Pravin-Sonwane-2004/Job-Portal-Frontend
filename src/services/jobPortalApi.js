@@ -73,58 +73,11 @@ export const GET_PROFILE = "http://localhost:8080/role-profile/get-profile";
 export const GET_USERS_NAME = "http://localhost:8080/role-profile/users-name";
 export const GET_NAME = "http://localhost:8080/role-profile/full-name";
 
-// --- JOB ALERTS ---
-export const JOB_ALERTS_BASE = "http://localhost:8080/api/job-alerts";
-export const GET_JOB_ALERTS_BY_USER =
-  "http://localhost:8080/api/job-alerts/user"; // + /{userId}
-export const CREATE_JOB_ALERT = "http://localhost:8080/api/job-alerts/create";
-export const DELETE_JOB_ALERT = "http://localhost:8080/api/job-alerts/delete"; // + /{alertId}
-
 // --- RESUMES ---
 export const RESUMES_BASE = "http://localhost:8080/api/resumes";
 export const GET_RESUMES_BY_USER = "http://localhost:8080/api/resumes/user"; // + /{userId}
 export const UPLOAD_RESUME = "http://localhost:8080/api/resumes/upload";
 export const DELETE_RESUME = "http://localhost:8080/api/resumes/delete"; // + /{resumeId}
-
-// --- MESSAGES ---
-export const MESSAGES_BASE = "http://localhost:8080/api/messages";
-export const GET_SENT_MESSAGES = "http://localhost:8080/api/messages/sent"; // + /{userId}
-export const GET_RECEIVED_MESSAGES =
-  "http://localhost:8080/api/messages/received"; // + /{userId}
-export const GET_CONVERSATION =
-  "http://localhost:8080/api/messages/conversation";
-export const SEND_MESSAGE = "http://localhost:8080/api/messages/send";
-export const DELETE_MESSAGE = "http://localhost:8080/api/messages/delete"; // + /{messageId}
-
-// --- COMPANIES ---
-export const COMPANIES_BASE = "http://localhost:8080/api/companies";
-export const CREATE_COMPANY =
-  "http://localhost:8080/api/companies/create-or-update";
-export const DELETE_COMPANY = "http://localhost:8080/api/companies/delete"; // + /{id}
-export const GET_COMPANY_BY_ID = "http://localhost:8080/api/companies"; // + /{id}
-
-// --- COMPANY REVIEWS ---
-export const COMPANY_REVIEWS_BASE = "http://localhost:8080/api/company-reviews";
-export const GET_COMPANY_REVIEWS =
-  "http://localhost:8080/api/company-reviews/company"; // + /{companyId}
-export const ADD_COMPANY_REVIEW =
-  "http://localhost:8080/api/company-reviews/add";
-export const DELETE_COMPANY_REVIEW =
-  "http://localhost:8080/api/company-reviews/delete"; // + /{reviewId}
-
-// --- INTERVIEWS ---
-export const INTERVIEWS_BASE = "http://localhost:8080/api/interviews";
-export const GET_INTERVIEWS_BY_USER =
-  "http://localhost:8080/api/interviews/user"; // + /{userId}
-export const GET_INTERVIEWS_BY_EMPLOYER =
-  "http://localhost:8080/api/interviews/employer"; // + /{employerId}
-export const GET_INTERVIEWS_BY_APPLICATION =
-  "http://localhost:8080/api/interviews/application"; // + /{applicationId}
-export const SCHEDULE_INTERVIEW =
-  "http://localhost:8080/api/interviews/schedule";
-export const UPDATE_INTERVIEW_STATUS =
-  "http://localhost:8080/api/interviews/update-status"; // + /{interviewId}
-export const DELETE_INTERVIEW = "http://localhost:8080/api/interviews/delete"; // + /{interviewId}
 
 // --- GENERIC AXIOS CALLS ---
 const getAuthHeaders = () => {
@@ -284,19 +237,6 @@ export const getUsersName = () =>
 export const getFullName = () =>
   http.get(GET_NAME, { headers: getAuthHeaders() });
 
-// --- JOB ALERTS ---
-export const getJobAlertsByUser = (userId) =>
-  http.get(`${GET_JOB_ALERTS_BY_USER}/${userId}`, {
-    headers: getAuthHeaders(),
-  });
-export const createJobAlertApi = (userId, criteria) =>
-  http.post(CREATE_JOB_ALERT, null, {
-    params: { userId, criteria },
-    headers: getAuthHeaders(),
-  });
-export const deleteJobAlertApi = (alertId) =>
-  http.delete(`${DELETE_JOB_ALERT}/${alertId}`, { headers: getAuthHeaders() });
-
 // --- RESUMES ---
 export const getResumesByUser = (userId) =>
   http.get(`${GET_RESUMES_BY_USER}/${userId}`, { headers: getAuthHeaders() });
@@ -307,82 +247,3 @@ export const uploadResumeApi = (userId, filePath) =>
   });
 export const deleteResumeApi = (resumeId) =>
   http.delete(`${DELETE_RESUME}/${resumeId}`, { headers: getAuthHeaders() });
-
-// --- MESSAGES ---
-export const getSentMessages = (userId) =>
-  http.get(`${GET_SENT_MESSAGES}/${userId}`, { headers: getAuthHeaders() });
-export const getReceivedMessages = (userId) =>
-  http.get(`${GET_RECEIVED_MESSAGES}/${userId}`, {
-    headers: getAuthHeaders(),
-  });
-export const getConversation = (senderId, receiverId) =>
-  http.get(GET_CONVERSATION, {
-    params: { senderId, receiverId },
-    headers: getAuthHeaders(),
-  });
-export const sendMessageApi = (senderId, receiverId, content) =>
-  http.post(SEND_MESSAGE, null, {
-    params: { senderId, receiverId, content },
-    headers: getAuthHeaders(),
-  });
-export const deleteMessageApi = (messageId) =>
-  http.delete(`${DELETE_MESSAGE}/${messageId}`, { headers: getAuthHeaders() });
-
-// --- COMPANIES ---
-export const getCompanies = () =>
-  http.get(COMPANIES_BASE, { headers: getAuthHeaders() });
-export const createCompanyApi = (company) =>
-  http.post(CREATE_COMPANY, company, { headers: getAuthHeaders() });
-export const deleteCompanyApi = (id) =>
-  http.delete(`${DELETE_COMPANY}/${id}`, { headers: getAuthHeaders() });
-export const getCompanyById = (id) =>
-  http.get(`${GET_COMPANY_BY_ID}/${id}`, { headers: getAuthHeaders() });
-
-// --- COMPANY REVIEWS ---
-export const getCompanyReviewsApi = (companyId) =>
-  http.get(`${GET_COMPANY_REVIEWS}/${companyId}`, {
-    headers: getAuthHeaders(),
-  });
-export const addCompanyReviewApi = (companyId, userId, content, rating) =>
-  http.post(ADD_COMPANY_REVIEW, null, {
-    params: { companyId, userId, content, rating },
-    headers: getAuthHeaders(),
-  });
-export const deleteCompanyReviewApi = (reviewId) =>
-  http.delete(`${DELETE_COMPANY_REVIEW}/${reviewId}`, {
-    headers: getAuthHeaders(),
-  });
-
-// --- INTERVIEWS ---
-export const getInterviewsByUser = (userId) =>
-  http.get(`${GET_INTERVIEWS_BY_USER}/${userId}`, {
-    headers: getAuthHeaders(),
-  });
-export const getInterviewsByEmployer = (employerId) =>
-  http.get(`${GET_INTERVIEWS_BY_EMPLOYER}/${employerId}`, {
-    headers: getAuthHeaders(),
-  });
-export const getInterviewsByApplication = (applicationId) =>
-  http.get(`${GET_INTERVIEWS_BY_APPLICATION}/${applicationId}`, {
-    headers: getAuthHeaders(),
-  });
-export const scheduleInterviewApi = (
-  userId,
-  employerId,
-  applicationId,
-  dateTime
-) =>
-  http.post(SCHEDULE_INTERVIEW, null, {
-    params: { userId, employerId, applicationId, dateTime },
-    headers: getAuthHeaders(),
-  });
-export const updateInterviewStatusApi = (interviewId, status) =>
-  http.put(`${UPDATE_INTERVIEW_STATUS}/${interviewId}`, null, {
-    params: { status },
-    headers: getAuthHeaders(),
-  });
-export const deleteInterviewApi = (interviewId) =>
-  http.delete(`${DELETE_INTERVIEW}/${interviewId}`, {
-    headers: getAuthHeaders(),
-  });
-

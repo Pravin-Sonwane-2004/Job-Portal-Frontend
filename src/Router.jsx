@@ -5,7 +5,6 @@ import Container from "@/components/ui/Container";
 import ProtectedRoute from "./ProtectedRoute";
 
 const SettingsPage = lazy(() => import("./settings/SettingsPage"));
-const UploadJob = lazy(() => import("./admin/Upload Job"));
 const AdminPage = lazy(() => import("./admin/pages/AdminPage"));
 const AllUser = lazy(() => import("./admin/pages/AllUser"));
 const UploadJobs = lazy(() => import("./admin/pages/UploadJobs"));
@@ -22,19 +21,13 @@ const Apply = lazy(() => import("./user/apply jobs/Apply"));
 const Dashboard = lazy(() =>
   import("./user/find jobs/Dashboard").then((module) => ({ default: module.Dashboard }))
 );
-const ResumeUploadPage = lazy(() => import("./profile/pages/ResumeUploadPage"));
-const CompanyProfilePage = lazy(() => import("./public/pages/CompanyProfilePage"));
-const InterviewSchedulePage = lazy(() => import("./user/InterviewSchedulePage"));
-const JobAlertsPage = lazy(() => import("./user/JobAlertsPage"));
-const MessagesPage = lazy(() => import("./user/MessagesPage"));
 const SavedJobsPage = lazy(() => import("./user/SavedJobsPage"));
 
 function RouteFallback() {
   return (
     <Container className="py-20">
-      <div className="flex min-h-[30vh] items-center justify-center rounded-[1.75rem] border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <div className="flex items-center gap-3 text-sm font-medium text-slate-600 dark:text-slate-300">
-          <span className="h-4 w-4 animate-spin rounded-full border-2 border-brand-500 border-t-transparent" />
+      <div className="flex min-h-[30vh] items-center justify-center rounded-lg border border-slate-200 bg-white">
+        <div className="text-sm font-medium text-slate-600">
           Loading page
         </div>
       </div>
@@ -129,25 +122,6 @@ export default function Router() {
           }
         />
 
-        {/* Admin: All Applications */}
-        <Route
-          path="/all-applications"
-          element={
-            <ProtectedRoute requiredRole="ADMIN">
-              {/* <AllApplications /> */}
-            </ProtectedRoute>
-          }
-        />
-
-        {/* If "UploadJob" is Admin-only */}
-        <Route
-          path="/upload-job"
-          element={
-            <ProtectedRoute requiredRole="ADMIN">
-              <UploadJob />
-            </ProtectedRoute>
-          }
-        />
         {/* Settings Page (protected for logged-in users) */}
         <Route
           path="/settings"
@@ -163,44 +137,6 @@ export default function Router() {
           element={
             <ProtectedRoute requiredRole="USER">
               <SavedJobsPage />
-            </ProtectedRoute>
-          }
-        />
-        {/* Job Alerts */}
-        <Route
-          path="/job-alerts"
-          element={
-            <ProtectedRoute requiredRole="USER">
-              <JobAlertsPage />
-            </ProtectedRoute>
-          }
-        />
-        {/* Resume Upload */}
-        <Route
-          path="/resume-upload"
-          element={
-            <ProtectedRoute requiredRole="USER">
-              <ResumeUploadPage />
-            </ProtectedRoute>
-          }
-        />
-        {/* Messages */}
-        <Route
-          path="/messages"
-          element={
-            <ProtectedRoute requiredRoles={["USER", "ADMIN"]}>
-              <MessagesPage />
-            </ProtectedRoute>
-          }
-        />
-        {/* Company Profile (public) */}
-        <Route path="/company/:companyId" element={<CompanyProfilePage />} />
-        {/* Interview Scheduling */}
-        <Route
-          path="/interviews"
-          element={
-            <ProtectedRoute requiredRole="USER">
-              <InterviewSchedulePage />
             </ProtectedRoute>
           }
         />

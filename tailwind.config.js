@@ -12,12 +12,6 @@ export default {
       },
     },
     extend: {
-      borderRadius: {
-        '4xl': '2rem',
-      },
-      boxShadow: {
-        soft: '0 24px 60px -28px rgba(15, 23, 42, 0.35)',
-      },
       colors: {
         brand: {
           50: '#eef4ff',

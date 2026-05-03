@@ -21,7 +21,6 @@ const baseAccountLinks = [{ label: 'Settings', to: '/settings' }];
 const roleAccountLinks = {
   user: [
     { label: 'Profile', to: '/profile' },
-    { label: 'Messages', to: '/messages' },
   ],
   admin: [
     { label: 'Profile', to: '/profile' },
