@@ -1,8 +1,41 @@
 import { getCurrentUser } from '../auth';
 import { Link } from 'react-router-dom';
+import { isAdmin, isRecruiter, isUser } from '../auth';
 
 export default function Dashboard() {
   const user = getCurrentUser();
+
+  if (isAdmin(user)) {
+    return (
+      <div className="page">
+        <div className="card">
+          <h2 style={{ fontSize: 24, fontWeight: 700 }}>Admin Portal</h2>
+          <p style={{ color: 'var(--text-secondary)', marginTop: 4 }}>Platform-wide users, jobs, and applications.</p>
+        </div>
+        <div className="grid grid-3 section-gap">
+          <Link to="/admin-users" className="card" style={{ textDecoration: 'none', textAlign: 'center' }}><h3>Users</h3><p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Manage accounts</p></Link>
+          <Link to="/admin-jobs" className="card" style={{ textDecoration: 'none', textAlign: 'center' }}><h3>Jobs</h3><p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Manage listings</p></Link>
+          <Link to="/admin-applications" className="card" style={{ textDecoration: 'none', textAlign: 'center' }}><h3>Applications</h3><p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Review all activity</p></Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (isRecruiter(user)) {
+    return (
+      <div className="page">
+        <div className="card">
+          <h2 style={{ fontSize: 24, fontWeight: 700 }}>Recruiter Portal</h2>
+          <p style={{ color: 'var(--text-secondary)', marginTop: 4 }}>Manage your jobs and applicants.</p>
+        </div>
+        <div className="grid grid-3 section-gap">
+          <Link to="/recruiter-jobs" className="card" style={{ textDecoration: 'none', textAlign: 'center' }}><h3>My Jobs</h3><p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Post and update jobs</p></Link>
+          <Link to="/recruiter-applications" className="card" style={{ textDecoration: 'none', textAlign: 'center' }}><h3>Applicants</h3><p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Track candidates</p></Link>
+          <Link to="/profile" className="card" style={{ textDecoration: 'none', textAlign: 'center' }}><h3>Profile</h3><p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Update recruiter details</p></Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="page">

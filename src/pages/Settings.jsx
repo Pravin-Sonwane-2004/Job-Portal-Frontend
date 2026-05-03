@@ -12,7 +12,7 @@ export default function Settings() {
 
   useEffect(() => {
     if (user?.id) {
-      getFullName(user.id).then(res => { if (res.data) setUserName(res.data); }).catch(() => {});
+      getFullName().then(res => { if (res.data) setUserName(res.data); }).catch(() => {});
     }
   }, [user?.id]);
 

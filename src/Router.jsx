@@ -13,7 +13,17 @@ const Dashboard = lazy(() => import('./pages/Dashboard'));
 const MyApplications = lazy(() => import('./pages/MyApplications'));
 const SavedJobs = lazy(() => import('./pages/SavedJobs'));
 const Admin = lazy(() => import('./pages/Admin'));
-// ... import other pages as needed
+const ApplyJob = lazy(() => import('./pages/ApplyJob'));
+const Profile = lazy(() => import('./pages/Profile'));
+const EditProfile = lazy(() => import('./pages/EditProfile'));
+const ResumeBuilder = lazy(() => import('./pages/ResumeBuilder'));
+const Settings = lazy(() => import('./pages/Settings'));
+const AdminUsers = lazy(() => import('./pages/AdminUsers'));
+const AdminJobs = lazy(() => import('./pages/AdminJobs'));
+const AdminApplications = lazy(() => import('./pages/AdminApplications'));
+const Recruiter = lazy(() => import('./pages/Recruiter'));
+const RecruiterJobs = lazy(() => import('./pages/RecruiterJobs'));
+const RecruiterApplications = lazy(() => import('./pages/RecruiterApplications'));
 
 export default function Router() {
   return (
@@ -26,7 +36,18 @@ export default function Router() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/my-applications" element={<MyApplications />} />
           <Route path="/saved-jobs" element={<SavedJobs />} />
+          <Route path="/apply/:jobId" element={<ApplyJob />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/edit-profile" element={<EditProfile />} />
+          <Route path="/resume-builder" element={<ResumeBuilder />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/admin-users" element={<AdminUsers />} />
+          <Route path="/admin-jobs" element={<AdminJobs />} />
+          <Route path="/admin-applications" element={<AdminApplications />} />
+          <Route path="/recruiter" element={<Recruiter />} />
+          <Route path="/recruiter-jobs" element={<RecruiterJobs />} />
+          <Route path="/recruiter-applications" element={<RecruiterApplications />} />
          <Route path="/register" element={<Register />} />
         </Route>
 

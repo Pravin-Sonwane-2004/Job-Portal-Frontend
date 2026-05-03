@@ -8,7 +8,10 @@ export function getCurrentUser() {
 }
 
 export function setCurrentUser(user) {
-  sessionStorage.setItem(USER_KEY, JSON.stringify(user));
+  const normalized = user?.user
+    ? { ...user.user, token: user.token || user.user.token }
+    : user;
+  sessionStorage.setItem(USER_KEY, JSON.stringify(normalized));
   window.dispatchEvent(new Event(SESSION_EVENT));
 }
 
@@ -32,6 +35,18 @@ export function isAdmin(user) {
 
 export function isUser(user) {
   return String(user?.role || '').toUpperCase() === 'USER';
+}
+
+export function isRecruiter(user) {
+  return String(user?.role || '').toUpperCase() === 'RECRUITER';
+}
+
+export function getDefaultPortal(user) {
+  const role = String(user?.role || '').toUpperCase();
+  if (role === 'ADMIN') return '/admin';
+  if (role === 'RECRUITER') return '/recruiter';
+  if (role === 'USER') return '/dashboard';
+  return '/find-jobs';
 }
 
 export function getDisplayName(user) {

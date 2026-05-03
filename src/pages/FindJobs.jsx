@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getPublicJobs, getUserJobById, saveJob } from '../api';
-import { getCurrentUser } from '../auth';
+import { getCurrentUser, isUser } from '../auth';
 import Loader from '../components/Loader';
 
 export default function FindJobs() {
@@ -15,6 +15,7 @@ export default function FindJobs() {
   const [jobLocation, setJobLocation] = useState('');
   const navigate = useNavigate();
   const user = getCurrentUser();
+  const canApply = isUser(user);
 
   useEffect(() => {
     setLoading(true);
@@ -29,7 +30,7 @@ export default function FindJobs() {
   }, [page, sortBy, jobTitle, jobLocation]);
 
   const handleSave = async (jobId) => {
-    if (!user?.id) { navigate('/signin'); return; }
+    if (!canApply) { navigate(user ? '/dashboard' : '/signin'); return; }
     try { await saveJob(user.id, jobId); alert('Job saved!'); } catch { alert('Failed to save job.'); }
   };
 
@@ -63,8 +64,14 @@ export default function FindJobs() {
                   <div><dt>Salary:</dt><dd>{job.salary || job.jobSalary || 'Negotiable'}</dd></div>
                 </dl>
                 <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-                  <button className="btn btn-primary btn-sm" onClick={() => navigate(`/apply/${job.id}`, { state: { job } })}>Apply</button>
-                  {user && <button className="btn btn-outline btn-sm" onClick={() => handleSave(job.id)}>Save</button>}
+                  {canApply ? (
+                    <>
+                      <button className="btn btn-primary btn-sm" onClick={() => navigate(`/apply/${job.id}`, { state: { job } })}>Apply</button>
+                      <button className="btn btn-outline btn-sm" onClick={() => handleSave(job.id)}>Save</button>
+                    </>
+                  ) : (
+                    <button className="btn btn-outline btn-sm" onClick={() => navigate(user ? '/dashboard' : '/signin')}>{user ? 'Open Portal' : 'Sign in to apply'}</button>
+                  )}
                 </div>
               </div>
             ))}

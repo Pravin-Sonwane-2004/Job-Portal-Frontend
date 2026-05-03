@@ -19,6 +19,9 @@ export default function AdminApplications() {
   if (!isAdmin(currentUser)) return <div className="page"><div className="alert alert-error">Access denied.</div></div>;
   if (loading) return <div className="page"><Loader /></div>;
 
+  const getJob = (app) => app.job || {};
+  const getUser = (app) => app.user || {};
+
   return (
     <div className="page">
       <div className="card">
@@ -44,9 +47,9 @@ export default function AdminApplications() {
             <tbody>
               {applications.map((app, i) => (
                 <tr key={app.applicationId || i} style={{ borderBottom: '1px solid var(--border)' }}>
-                  <td style={{ padding: 8 }}>{app.jobTitle || 'N/A'}</td>
-                  <td style={{ padding: 8 }}>{app.company || 'N/A'}</td>
-                  <td style={{ padding: 8 }}>{app.applicantName || app.userName || 'N/A'}</td>
+                  <td style={{ padding: 8 }}>{app.jobTitle || getJob(app).title || 'N/A'}</td>
+                  <td style={{ padding: 8 }}>{app.company || getJob(app).company || 'N/A'}</td>
+                  <td style={{ padding: 8 }}>{app.applicantName || getUser(app).name || getUser(app).email || 'N/A'}</td>
                   <td style={{ padding: 8 }}>{app.status || 'Applied'}</td>
                 </tr>
               ))}

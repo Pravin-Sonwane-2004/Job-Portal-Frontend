@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../api';
-import { getCurrentUser, setCurrentUser } from '../auth';
+import { getCurrentUser, setCurrentUser, getDefaultPortal } from '../auth';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('USER');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -20,12 +19,12 @@ export default function Login() {
     setError('');
     setLoading(true);
     try {
-      const res = await login({ email, password, role });
+      const res = await login({ email, password });
       const data = res.data;
-      if (data?.id) {
-        setCurrentUser(data);
-        if (data.role === 'ADMIN') navigate('/admin');
-        else navigate('/dashboard');
+      const user = data?.user ? { ...data.user, token: data.token } : data;
+      if (user?.id && user?.token) {
+        setCurrentUser(user);
+        navigate(getDefaultPortal(user));
       } else {
         setError('Login failed.');
       }
@@ -50,14 +49,6 @@ export default function Login() {
           <div className="form-group">
             <label className="form-label">Password</label>
             <input className="form-input" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Enter your password" required />
-          </div>
-          <div className="form-group">
-            <label className="form-label">Role</label>
-            <select className="form-select" value={role} onChange={e => setRole(e.target.value)}>
-              <option value="USER">User</option>
-              <option value="ADMIN">Admin</option>
-              <option value="RECRUITER">Recruiter</option>
-            </select>
           </div>
           <button className="btn btn-primary" type="submit" disabled={loading} style={{ width: '100%' }}>
             {loading ? 'Logging in...' : 'Log In'}

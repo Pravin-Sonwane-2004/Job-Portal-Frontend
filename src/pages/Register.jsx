@@ -62,7 +62,6 @@ export default function Register() {
             <select className="form-select" name="role" value={form.role} onChange={handleChange}>
               <option value="USER">Job Seeker</option>
               <option value="RECRUITER">Recruiter</option>
-              <option value="ADMIN">Administrator</option>
             </select>
           </div>
           <button className="btn btn-primary" type="submit" disabled={loading} style={{ width: '100%' }}>

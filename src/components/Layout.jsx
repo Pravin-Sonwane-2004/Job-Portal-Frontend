@@ -1,19 +1,26 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate, Outlet } from 'react-router-dom';
-import { getCurrentUser, clearCurrentUser, isAdmin, getDisplayName, getRoleLabel, onSessionChange } from '../auth';
+import { getCurrentUser, clearCurrentUser, isAdmin, isRecruiter, isUser, getDisplayName, getRoleLabel, onSessionChange } from '../auth';
 
 const navLinks = (user) => {
   const links = [{ to: '/find-jobs', label: 'Find Jobs' }];
-  
-  // Only add these if user is logged in
-  if (user) {
-    links.push({ to: '/dashboard', label: 'Dashboard' });
+
+  if (user && isUser(user)) {
+    links.push({ to: '/dashboard', label: 'Candidate' });
     links.push({ to: '/my-applications', label: 'Applications' });
+    links.push({ to: '/saved-jobs', label: 'Saved' });
   }
-  
-  // Null-safe check for Admin
+
+  if (user && isRecruiter(user)) {
+    links.push({ to: '/recruiter', label: 'Recruiter' });
+    links.push({ to: '/recruiter-jobs', label: 'My Jobs' });
+    links.push({ to: '/recruiter-applications', label: 'Applicants' });
+  }
+
   if (user && isAdmin(user)) {
     links.push({ to: '/admin', label: 'Admin' });
+    links.push({ to: '/admin-users', label: 'Users' });
+    links.push({ to: '/admin-jobs', label: 'Jobs' });
   }
   return links;
 };
@@ -56,6 +63,7 @@ export default function Layout() {
             {user ? (
               <div className="user-info">
                 <span>{getDisplayName(user)}</span>
+                <span className="profile-badge">{getRoleLabel(user)}</span>
                 <button onClick={handleLogout} className="btn-sm">Sign Out</button>
               </div>
             ) : (
