@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate, Outlet } from 'react-router-dom';
-import { getCurrentUser, clearCurrentUser, isAdmin, isRecruiter, isUser, getDisplayName, getRoleLabel, onSessionChange } from '../auth';
+import { getCurrentUser, clearCurrentUser, isAdmin, isCompanyAdmin, isCompanyUser, isRecruiter, isUser, getDisplayName, getRoleLabel, onSessionChange } from '../auth';
 
 const navLinks = (user) => {
   const links = [{ to: '/find-jobs', label: 'Find Jobs' }];
@@ -15,6 +15,7 @@ const navLinks = (user) => {
     links.push({ to: '/recruiter', label: 'Recruiter' });
     links.push({ to: '/recruiter-jobs', label: 'My Jobs' });
     links.push({ to: '/recruiter-applications', label: 'Applicants' });
+    links.push({ to: '/recruiter-talent', label: 'Talent' });
   }
 
   if (user && isAdmin(user)) {
@@ -22,13 +23,17 @@ const navLinks = (user) => {
     links.push({ to: '/admin-users', label: 'Users' });
     links.push({ to: '/admin-jobs', label: 'Jobs' });
   }
+  if (user && isCompanyUser(user)) {
+    links.push({ to: '/company', label: 'Company' });
+    links.push({ to: '/company-jobs', label: 'Company Jobs' });
+    if (isCompanyAdmin(user)) links.push({ to: '/company-employees', label: 'Employees' });
+  }
   return links;
 };
 
 export default function Layout() {
   // Fix: Execute the function to get the initial state
   const [user, setUser] = useState(() => getCurrentUser()); 
-  const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -4,7 +4,7 @@ import { getProfile, updateProfile } from '../api';
 import { getCurrentUser, setCurrentUser } from '../auth';
 import Loader from '../components/Loader';
 
-const emptyForm = { name: '', email: '', location: '', bio: '', phone: '', linkedin: '', skills: '', designation: '', avatarUrl: '' };
+const emptyForm = { name: '', email: '', location: '', bio: '', phone: '', linkedin: '', skills: '', designation: '', jobRole: '', experienceLevel: '', avatarUrl: '' };
 
 export default function EditProfile() {
   const navigate = useNavigate();
@@ -29,6 +29,8 @@ export default function EditProfile() {
           linkedin: d.linkedinUrl || '',
           skills: Array.isArray(d.skills) ? d.skills.join(', ') : d.skills || '',
           designation: d.designation || '',
+          jobRole: d.jobRole || '',
+          experienceLevel: d.experienceLevel || '',
           avatarUrl: d.avatarUrl || '',
         });
       })
@@ -53,12 +55,14 @@ export default function EditProfile() {
         linkedinUrl: form.linkedin,
         skills: form.skills ? form.skills.split(',').map(s => s.trim()).filter(Boolean) : [],
         designation: form.designation,
+        jobRole: form.jobRole,
+        experienceLevel: form.experienceLevel || null,
         avatarUrl: form.avatarUrl,
       }, { userId: currentUser.id });
       setCurrentUser({ ...currentUser, ...form });
       setSuccess(true);
       setTimeout(() => navigate('/profile'), 1000);
-    } catch (err) {
+    } catch {
       setError('Failed to update profile.');
     } finally {
       setSaving(false);
@@ -74,6 +78,7 @@ export default function EditProfile() {
     { name: 'phone', label: 'Phone', type: 'tel' },
     { name: 'linkedin', label: 'LinkedIn URL', type: 'url' },
     { name: 'designation', label: 'Designation', type: 'text' },
+    { name: 'jobRole', label: 'Target Role', type: 'text' },
     { name: 'avatarUrl', label: 'Avatar URL', type: 'url' },
     { name: 'skills', label: 'Skills (comma-separated)', type: 'text' },
   ];
@@ -94,6 +99,17 @@ export default function EditProfile() {
               <input className="form-input" type={f.type} name={f.name} value={form[f.name]} onChange={handleChange} required={f.required} />
             </div>
           ))}
+          <div className="form-group">
+            <label className="form-label">Experience Level</label>
+            <select className="form-select" name="experienceLevel" value={form.experienceLevel} onChange={handleChange}>
+              <option value="">Select level</option>
+              <option>INTERN</option>
+              <option>JUNIOR</option>
+              <option>MID</option>
+              <option>SENIOR</option>
+              <option>EXPERT</option>
+            </select>
+          </div>
         </div>
         <div className="form-group">
           <label className="form-label">Bio</label>

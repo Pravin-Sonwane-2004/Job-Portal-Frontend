@@ -1,167 +1,233 @@
-# Job Portal Frontend Project
+# Job Portal Frontend
 
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![GitHub stars](https://img.shields.io/github/stars/Pravin-Sonwane-2004/Job-Portal-Frontend.svg?style=social)](https://github.com/Pravin-Sonwane-2004/Job-Portal-Frontend/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/Pravin-Sonwane-2004/Job-Portal-Frontend.svg?style=social)](https://github.com/Pravin-Sonwane-2004/Job-Portal-Frontend/network/members)
-[![GitHub watchers](https://img.shields.io/github/watchers/Pravin-Sonwane-2004/Job-Portal-Frontend.svg?style=social)](https://github.com/Pravin-Sonwane-2004/Job-Portal-Frontend/watchers)
-[![GitHub issues](https://img.shields.io/github/issues/Pravin-Sonwane-2004/Job-Portal-Frontend.svg)](https://github.com/Pravin-Sonwane-2004/Job-Portal-Frontend/issues)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/Pravin-Sonwane-2004/Job-Portal-Frontend.svg)](https://github.com/Pravin-Sonwane-2004/Job-Portal-Frontend/pulls)
+React + Vite frontend for the Job Portal platform. It connects to the Spring Boot backend and provides separate experiences for candidates, recruiters, and admins.
 
----
+## Interview Pitch
 
-## Table of Contents
+This frontend is a single-page application built with React, Vite, React Router, and Axios. It uses lazy-loaded pages, protected routes, role-aware navigation, and a central API client. The frontend stores the logged-in user in session storage, sends JWT tokens with API requests, and redirects users based on their role.
 
-* [About The Project](#about-the-project)
-    * [Built With](#built-with)
-* [Getting Started](#getting-started)
-    * [Prerequisites](#prerequisites)
-    * [Installation](#installation)
-* [Usage](#usage)
-* [Roadmap](#roadmap)
-* [Contributing](#contributing)
-* [License](#license)
-* [Contact](#contact)
-* [Acknowledgements](#acknowledgements)
+In interviews, explain it as:
 
----
+> "I built the frontend as a React SPA with role-based routing. Candidates can browse jobs, save jobs, apply, manage resumes, and update their profile. Recruiters can manage jobs, review applications, update statuses, and search candidate talent. Admins can manage users, jobs, and applications. I used Axios interceptors for JWT headers and session cleanup, Vite proxying for local backend integration, and lazy routes for better loading behavior."
 
-## About The Project
+## Tech Stack
 
-This repository contains the frontend application for a Job Portal. It's designed to provide a user-friendly interface for job seekers to browse, search, and apply for jobs, and for recruiters to post new job listings and manage applications. This frontend interacts with a separate backend API (like the [Job Portal Backend Project](https://github.com/Pravin-Sonwane-2004/Job-Portal-Backend)) to fetch and display data, offering a complete and intuitive job discovery and management experience.
+| Area | Technology |
+| --- | --- |
+| UI Library | React 19 |
+| Build Tool | Vite 6 |
+| Routing | React Router DOM 7 |
+| API Client | Axios |
+| Styling | CSS in `src/index.css` plus component/page styles |
+| Language | JavaScript / JSX |
+| Dev Quality | ESLint |
+| Backend | Spring Boot REST API |
 
-### Key Features (Assumed)
+## Main Features
 
-* **User Interface:** Intuitive and responsive design for both job seekers and recruiters.
-* **Job Listings Display:** Browse and view detailed job descriptions.
-* **Search & Filtering:** Tools for job seekers to efficiently find relevant jobs.
-* **Application Submission:** Form for job seekers to apply for positions.
-* **User Dashboards:** Separate views for job seekers (e.g., application history) and recruiters (e.g., posted jobs, applicant tracking).
-* **API Integration:** Communicates with a backend API to retrieve and send data.
+- Public home, login, register, and job search pages.
+- Forgot-password and reset-password pages connected to backend reset tokens.
+- Candidate dashboard, applications, saved jobs, profile, settings, and resume builder.
+- Recruiter dashboard, job management, application tracking, and talent search.
+- Company signup, company portal, company employee management, and company job posting.
+- Admin dashboard for users, jobs, and applications.
+- Role-aware dashboard insights for candidates, recruiters, and admins.
+- Protected routes through `RequireRole`.
+- Lazy-loaded route components with a shared loader.
+- Central API layer in `src/api.js`.
+- JWT token injection through an Axios request interceptor.
+- Automatic session clearing on unauthorized API responses.
+- Vite backend proxy for local development.
 
-### Built With
+## Project Structure
 
-* [HTML](https://developer.mozilla.org/en-US/docs/Web/HTML)
-* [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS)
-* [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-* *(Optional: Add specific frontend framework/library, e.g., [React](https://react.dev/), [Angular](https://angular.io/), [Vue.js](https://vuejs.org/), [Bootstrap](https://getbootstrap.com/))*
+```text
+src
+|-- App.jsx              App shell
+|-- Router.jsx           Route table and role protection
+|-- api.js               Compatibility export for services/api.js
+|-- auth.js              Compatibility export for services/auth.js
+|-- main.jsx             React entry point
+|-- index.css            Global styling
+|-- components/          Shared UI such as layout and loader
+|-- pages/               Route-level screens
+|-- services/            API client, auth/session helpers, and frontend services
+public
+|-- Companies/           Company logos
+|-- Icons/               Brand icons
+|-- Profile/             Profile images
+|-- category/            Category images
+|-- social/              Social icons
+docs
+|-- ARCHITECTURE.md      Frontend architecture notes
+|-- COMPONENTS.md        Component notes
+|-- STYLING_GUIDE.md     Styling conventions
+```
 
----
+## Role-Based Routes
 
-## Getting Started
+| Route | Access |
+| --- | --- |
+| `/` | Public |
+| `/find-jobs` | Public |
+| `/signin` | Public |
+| `/register` | Public |
+| `/company-signup` | Public |
+| `/forgot-password` | Public |
+| `/reset-password` | Public |
+| `/dashboard` | USER, RECRUITER, ADMIN |
+| `/my-applications` | USER |
+| `/saved-jobs` | USER |
+| `/apply/:jobId` | USER |
+| `/resume-builder` | USER |
+| `/profile` | USER, RECRUITER, ADMIN |
+| `/edit-profile` | USER, RECRUITER, ADMIN |
+| `/settings` | USER, RECRUITER, ADMIN |
+| `/recruiter` | RECRUITER |
+| `/recruiter-jobs` | RECRUITER |
+| `/recruiter-applications` | RECRUITER |
+| `/recruiter-talent` | RECRUITER |
+| `/company` | COMPANY_ADMIN, COMPANY_EMPLOYEE |
+| `/company-jobs` | COMPANY_ADMIN, COMPANY_EMPLOYEE |
+| `/company-employees` | COMPANY_ADMIN |
+| `/admin` | ADMIN |
+| `/admin-users` | ADMIN |
+| `/admin-jobs` | ADMIN |
+| `/admin-applications` | ADMIN |
 
-To get a local copy of this Job Portal Frontend Project up and running, follow these simple steps.
+## Frontend Architecture Flow
 
-### Prerequisites
+1. The user logs in through the login page.
+2. `src/api.js` calls `POST /public/login`.
+3. `src/auth.js` stores the returned user and JWT in `sessionStorage`.
+4. `Router.jsx` checks the user's role before rendering protected routes.
+5. Axios automatically adds `Authorization: Bearer <token>` to protected requests.
+6. If the backend returns `401`, the frontend clears the session.
 
-Ensure you have the following installed:
+The password reset flow works separately from login:
 
-* A modern web browser.
-* *(Optional, if using a framework/build tool): Node.js and npm/yarn.*
+1. The user opens `/forgot-password`.
+2. The frontend calls `POST /public/password/forgot`.
+3. The backend creates an expiring reset token and emails a reset link.
+4. The user opens `/reset-password?token=...`.
+5. The frontend calls `POST /public/password/reset` with the token and new password.
 
-### Installation
+## Backend Connection
 
-1.  **Clone the repo:**
-    ```bash
-    git clone [https://github.com/Pravin-Sonwane-2004/Job-Portal-Frontend.git](https://github.com/Pravin-Sonwane-2004/Job-Portal-Frontend.git)
-    ```
-2.  **Navigate to the project directory:**
-    ```bash
-    cd Job-Portal-Frontend
-    ```
-3.  **Install dependencies (if applicable, e.g., for React/Angular/Vue projects):**
-    ```bash
-    npm install
-    # OR
-    yarn install
-    ```
-    *(If it's a simple HTML/CSS/JS project, this step can be skipped.)*
+The app uses:
 
----
+```js
+const API = import.meta.env.VITE_API_URL || '/api-backend';
+```
 
-## Usage
+For local development, Vite proxies `/api-backend` to:
 
-To run the frontend application, you can typically open the `index.html` file directly in your browser, or if it's a framework-based project, use a development server.
+```text
+http://localhost:8080
+```
 
-1.  **Ensure the Job Portal Backend is running:**
-    This frontend application relies on a backend API for data. Make sure your [Job Portal Backend Project](https://github.com/Pravin-Sonwane-2004/Job-Portal-Backend) (or a similar compatible API) is up and running.
+That means local frontend calls such as:
 
-2.  **Run the frontend:**
-    * **For simple HTML/CSS/JS:** Open `index.html` in your web browser.
-        ```bash
-        # Example (command might vary by OS)
-        open index.html
-        ```
-    * **For framework-based projects (e.g., React, Angular, Vue):**
-        ```bash
-        npm start
-        # OR
-        yarn start
-        ```
-        This will typically launch the application in your browser at a specific port (e.g., `http://localhost:3000`).
+```text
+/api-backend/public/login
+```
 
-Once the frontend is running, you can interact with the Job Portal, browse jobs, create accounts, and apply for positions.
+are forwarded to:
 
----
+```text
+http://localhost:8080/public/login
+```
 
-## Roadmap
+For deployment, set:
 
-See the [open issues](https://github.com/Pravin-Sonwane-2004/Job-Portal-Frontend/issues) for a full list of proposed features (and known issues).
+```env
+VITE_API_URL=https://your-backend-url.com
+```
 
-* [ ] Implement a dynamic and responsive user interface for all pages.
-* [ ] Integrate with the backend API for all CRUD operations related to jobs and users.
-* [ ] Develop comprehensive search and filtering options for job listings.
-* [ ] Create user-specific dashboards for job seekers and recruiters.
-* [ ] Add form validation and error handling for user inputs.
-* [ ] Enhance user experience with animations and interactive elements.
-* [ ] Optimize for performance and faster loading times.
-* [ ] Implement client-side routing.
-* [ ] Write unit and end-to-end tests for the frontend.
+## Local Setup
 
----
+1. Install dependencies:
 
-## Contributing
+```powershell
+npm install
+```
 
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+2. Start the Spring Boot backend on port `8080`.
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
+3. Start the frontend:
 
-1.  Fork the Project
-2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4.  Push to the Branch (`git push origin feature/AmazingFeature`)
-5.  Open a Pull Request
+```powershell
+npm run dev
+```
 
----
+The frontend runs at:
 
-## License
+```text
+http://localhost:3000
+```
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+## Useful Commands
 
----
+```powershell
+npm run dev
+npm run build
+npm run preview
+npm run lint
+```
 
-## Contact
+On Windows PowerShell, if `npm` is blocked by script policy, use:
 
-<p align="center">
-  <a href="mailto:pravinson@gmail.com">
-    <img src="https://img.shields.io/badge/Email-pravinson@gmail.com-red?style=for-the-badge&logo=gmail" alt="Email Badge"/>
-  </a>
-  <a href="https://github.com/Pravin-Sonwane-2004/Job-Portal-Frontend">
-    <img src="https://img.shields.io/badge/GitHub-Pravin--Sonwane--2004-blue?style=for-the-badge&logo=github" alt="GitHub Badge"/>
-  </a>
-  <a href="https://www.youtube.com/@ProgrammingWithPravin">
-    <img src="https://img.shields.io/badge/YouTube-ProgrammingWithPravin-red?style=for-the-badge&logo=youtube" alt="YouTube Badge"/>
-  </a>
-  <a href="https://www.linkedin.com/in/pravin-sonwane-079a621ba/">
-    <img src="https://img.shields.io/badge/LinkedIn-PravinSonwane-blue?style=for-the-badge&logo=linkedin" alt="LinkedIn Badge"/>
-  </a>
-</p>
+```powershell
+npm.cmd run build
+```
 
----
+## Implemented Backend API Areas
 
-## Acknowledgements
+The frontend already has API helpers for:
 
-* [ChooseAnOpenSourceLicense](https://choosealicense.com/)
-* [Img Shields](https://shields.io/)
-* [GitHub Pages](https://pages.github.com)
-* *(Optional: Add relevant frontend framework/library documentation links here, e.g., React Docs, Angular Docs)*
+- Authentication and registration.
+- Public paginated jobs.
+- Candidate job browsing.
+- Candidate applications.
+- Saved jobs.
+- Resume records.
+- Profile fetch and update.
+- Admin user, job, and application management.
+- Recruiter job management.
+- Recruiter application management.
+- Recruiter talent search.
+- Company signup, dashboard, employee, and job-management APIs.
+- Companies, reviews, alerts, messages, and interviews APIs.
+- Email sending.
+
+## How To Explain The Frontend In Interviews
+
+Focus on these points:
+
+- "I used a central Axios client, so token handling and error handling are not duplicated."
+- "I protected routes at the router level using a reusable `RequireRole` component."
+- "I kept auth helpers in one file, which makes role checks and default redirects easy to maintain."
+- "I used Vite's proxy to avoid CORS problems during local development."
+- "I lazy-loaded pages so the first load does not eagerly import every dashboard."
+- "The frontend is role-aware: each role gets a different workflow, not only different buttons."
+- "I separated frontend services into `src/services`, which keeps API/session logic away from page UI code."
+
+## Common Demo Flow
+
+1. Register or log in as a candidate.
+2. Search public jobs.
+3. Open a job and apply.
+4. Save a job.
+5. Show candidate dashboard and application history.
+6. Log in as recruiter.
+7. Create a job and review applications.
+8. Log in as admin.
+9. Manage users, jobs, and applications.
+
+## Future Enhancements
+
+- Add form schema validation.
+- Add toast notifications for all important actions.
+- Add loading and empty states consistently across admin and recruiter pages.
+- Add frontend unit tests for auth helpers and route protection.
+- Add end-to-end tests for login, apply, recruiter review, and admin management.

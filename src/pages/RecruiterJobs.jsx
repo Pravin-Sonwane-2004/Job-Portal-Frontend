@@ -37,6 +37,7 @@ const fromJob = (job) => ({
 
 export default function RecruiterJobs() {
   const user = getCurrentUser();
+  const canAccess = isRecruiter(user);
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -53,11 +54,11 @@ export default function RecruiterJobs() {
   };
 
   useEffect(() => {
-    if (isRecruiter(user)) loadJobs();
+    if (canAccess) loadJobs();
     else setLoading(false);
-  }, []);
+  }, [canAccess]);
 
-  if (!isRecruiter(user)) return <div className="page"><div className="alert alert-error">Access denied. Recruiter only.</div></div>;
+  if (!canAccess) return <div className="page"><div className="alert alert-error">Access denied. Recruiter only.</div></div>;
   if (loading) return <div className="page"><Loader /></div>;
 
   const handleSubmit = async (e) => {

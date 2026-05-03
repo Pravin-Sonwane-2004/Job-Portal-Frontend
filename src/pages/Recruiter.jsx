@@ -28,6 +28,10 @@ export default function Recruiter() {
           <h3>Company Profile</h3>
           <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 4 }}>Keep recruiter details current</p>
         </Link>
+        <Link to="/recruiter-talent" className="card" style={{ textDecoration: 'none', textAlign: 'center' }}>
+          <h3>Talent Search</h3>
+          <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 4 }}>Find candidate profiles</p>
+        </Link>
       </div>
     </div>
   );

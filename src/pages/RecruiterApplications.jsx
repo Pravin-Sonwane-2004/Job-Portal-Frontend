@@ -8,6 +8,7 @@ const getUser = (app) => app.user || {};
 
 export default function RecruiterApplications() {
   const user = getCurrentUser();
+  const canAccess = isRecruiter(user);
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -21,11 +22,11 @@ export default function RecruiterApplications() {
   };
 
   useEffect(() => {
-    if (isRecruiter(user)) loadApplications();
+    if (canAccess) loadApplications();
     else setLoading(false);
-  }, []);
+  }, [canAccess]);
 
-  if (!isRecruiter(user)) return <div className="page"><div className="alert alert-error">Access denied. Recruiter only.</div></div>;
+  if (!canAccess) return <div className="page"><div className="alert alert-error">Access denied. Recruiter only.</div></div>;
   if (loading) return <div className="page"><Loader /></div>;
 
   const updateStatus = async (app, status) => {

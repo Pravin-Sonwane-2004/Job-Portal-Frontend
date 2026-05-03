@@ -54,8 +54,14 @@ export default function Login() {
             {loading ? 'Logging in...' : 'Log In'}
           </button>
         </form>
+        <p style={{ textAlign: 'center', marginTop: 12, fontSize: 14 }}>
+          <a href="#" onClick={e => { e.preventDefault(); navigate('/forgot-password'); }}>Forgot password?</a>
+        </p>
         <p style={{ textAlign: 'center', marginTop: 16, fontSize: 14, color: 'var(--text-secondary)' }}>
           Don't have an account? <a href="#" onClick={e => { e.preventDefault(); navigate('/register'); }}>Sign Up</a>
+        </p>
+        <p style={{ textAlign: 'center', marginTop: 8, fontSize: 14, color: 'var(--text-secondary)' }}>
+          Hiring as a company? <a href="#" onClick={e => { e.preventDefault(); navigate('/company-signup'); }}>Create company account</a>
         </p>
       </div>
     </div>

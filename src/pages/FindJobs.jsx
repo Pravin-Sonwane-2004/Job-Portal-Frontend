@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getPublicJobs, getUserJobById, saveJob } from '../api';
+import { getPublicJobs, saveJob } from '../api';
 import { getCurrentUser, isUser } from '../auth';
 import Loader from '../components/Loader';
 
