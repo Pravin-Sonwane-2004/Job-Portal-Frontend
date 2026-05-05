@@ -1,15 +1,18 @@
+// CompanyEmployees.jsx is a page component. It handles one screen in the job portal.
 import { useEffect, useState } from 'react';
 import { companyAddEmployee, companyGetEmployees, companyRemoveEmployee } from '../services/company/portalApi';
 import Loader from '../components/Loader';
 
 const emptyEmployee = { name: '', email: '', password: '', designation: '', phoneNumber: '' };
 
+// CompanyEmployees is the main React component exported from this file.
 export default function CompanyEmployees() {
   const [employees, setEmployees] = useState([]);
   const [form, setForm] = useState(emptyEmployee);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  // loadEmployees loads data from the backend and stores it in component state.
   const loadEmployees = () => {
     setLoading(true);
     companyGetEmployees()
@@ -18,10 +21,12 @@ export default function CompanyEmployees() {
       .finally(() => setLoading(false));
   };
 
+  // useEffect runs side effects like loading data after the component renders.
   useEffect(() => {
     loadEmployees();
   }, []);
 
+  // handleSubmit runs when the user performs this action on the page.
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError('');

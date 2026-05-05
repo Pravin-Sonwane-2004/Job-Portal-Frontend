@@ -1,3 +1,4 @@
+// CompanyJobs.jsx is a page component. It handles one screen in the job portal.
 import { useEffect, useState } from 'react';
 import { companyCreateJob, companyDeleteJob, companyGetJobs, companyUpdateJob } from '../services/company/portalApi';
 import Loader from '../components/Loader';
@@ -25,6 +26,7 @@ const fromJob = (job) => ({
   requirements: Array.isArray(job.requirements) ? job.requirements.join(', ') : job.requirements || '',
 });
 
+// CompanyJobs is the main React component exported from this file.
 export default function CompanyJobs() {
   const [jobs, setJobs] = useState([]);
   const [form, setForm] = useState(emptyJob);
@@ -33,6 +35,7 @@ export default function CompanyJobs() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
+  // loadJobs loads data from the backend and stores it in component state.
   const loadJobs = () => {
     setLoading(true);
     companyGetJobs()
@@ -41,6 +44,7 @@ export default function CompanyJobs() {
       .finally(() => setLoading(false));
   };
 
+  // useEffect runs side effects like loading data after the component renders.
   useEffect(() => {
     loadJobs();
   }, []);

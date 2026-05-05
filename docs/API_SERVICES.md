@@ -1,3 +1,4 @@
+<!-- API_SERVICES.md documents one part of the project so it is easier to explain in interviews. -->
 # Frontend API Services
 
 The frontend keeps API calls grouped by portal and product area. Every service imports the shared Axios client from `src/services/http.js`, so JWT headers and `401` session cleanup are handled in one place.

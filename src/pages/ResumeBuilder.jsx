@@ -1,8 +1,10 @@
+// ResumeBuilder.jsx is a page component. It handles one screen in the job portal.
 import { useState, useEffect } from 'react';
 import { getResumes, uploadResume, deleteResume } from '../services/user/resumesApi';
 import { getCurrentUser } from '../auth';
 import Loader from '../components/Loader';
 
+// ResumeBuilder is the main React component exported from this file.
 export default function ResumeBuilder() {
   const [resumes, setResumes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -11,6 +13,7 @@ export default function ResumeBuilder() {
   const [error, setError] = useState('');
   const user = getCurrentUser();
 
+  // useEffect runs side effects like loading data after the component renders.
   useEffect(() => {
     if (!user?.id) { setLoading(false); return; }
     getResumes(user.id)
@@ -19,6 +22,7 @@ export default function ResumeBuilder() {
       .finally(() => setLoading(false));
   }, [user?.id]);
 
+  // handleUpload runs when the user performs this action on the page.
   const handleUpload = async (e) => {
     e.preventDefault();
     if (!user?.id) return;
@@ -33,6 +37,7 @@ export default function ResumeBuilder() {
     finally { setUploading(false); }
   };
 
+  // handleDelete runs when the user performs this action on the page.
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this resume?')) return;
     try {

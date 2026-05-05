@@ -1,13 +1,16 @@
+// Dashboard.jsx is a page component. It handles one screen in the job portal.
 import { useEffect, useState } from 'react';
 import { getCurrentUser } from '../auth';
 import { Link } from 'react-router-dom';
 import { isAdmin, isRecruiter } from '../auth';
 import { getProfileInsights } from '../services/user/profileApi';
 
+// InsightsPanel is a helper component used inside this page.
 function InsightsPanel() {
   const [insights, setInsights] = useState(null);
   const [error, setError] = useState('');
 
+  // useEffect runs side effects like loading data after the component renders.
   useEffect(() => {
     let active = true;
     getProfileInsights()
@@ -54,6 +57,7 @@ function InsightsPanel() {
   );
 }
 
+// Dashboard is the main React component exported from this file.
 export default function Dashboard() {
   const user = getCurrentUser();
 

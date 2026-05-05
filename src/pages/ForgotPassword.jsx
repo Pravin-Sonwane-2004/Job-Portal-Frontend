@@ -1,7 +1,9 @@
+// ForgotPassword.jsx is a page component. It handles one screen in the job portal.
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { requestPasswordReset } from '../services/auth/authApi';
 
+// ForgotPassword is the main React component exported from this file.
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
@@ -9,6 +11,7 @@ export default function ForgotPassword() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // handleSubmit runs when the user performs this action on the page.
   const handleSubmit = async (event) => {
     event.preventDefault();
     setMessage('');

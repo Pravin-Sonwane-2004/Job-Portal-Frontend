@@ -1,13 +1,18 @@
+/* index.css contains the shared design system and reusable page styles. */
+
+/* Use border-box so padding and borders are included in element width. */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
+/* Remove default browser margins so layouts are predictable. */
 * {
   margin: 0;
 }
 
+/* Theme variables keep colors and spacing consistent across the app. */
 :root {
   color-scheme: dark;
   --bg: #111418;
@@ -26,10 +31,12 @@
   --radius: 6px;
 }
 
+/* Smooth scrolling gives anchor navigation a cleaner feel. */
 html {
   scroll-behavior: smooth;
 }
 
+/* Base page styling used by every screen. */
 body {
   min-height: 100vh;
   background: var(--bg);
@@ -39,6 +46,7 @@ body {
   line-height: 1.5;
 }
 
+/* Form controls inherit the app font instead of browser defaults. */
 button,
 input,
 select,
@@ -46,10 +54,12 @@ textarea {
   font: inherit;
 }
 
+/* Buttons should clearly feel clickable. */
 button {
   cursor: pointer;
 }
 
+/* App-wide link styling. */
 a {
   color: var(--primary);
   text-decoration: none;

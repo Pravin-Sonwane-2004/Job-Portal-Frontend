@@ -1,7 +1,9 @@
+// ResetPassword.jsx is a page component. It handles one screen in the job portal.
 import { useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { resetPassword } from '../services/auth/authApi';
 
+// ResetPassword is the main React component exported from this file.
 export default function ResetPassword() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
@@ -12,6 +14,7 @@ export default function ResetPassword() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // handleSubmit runs when the user performs this action on the page.
   const handleSubmit = async (event) => {
     event.preventDefault();
     setMessage('');

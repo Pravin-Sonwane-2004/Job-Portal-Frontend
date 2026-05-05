@@ -1,5 +1,7 @@
+// Home.jsx is a page component. It handles one screen in the job portal.
 import { Link } from 'react-router-dom';
 
+// Home is the main React component exported from this file.
 export default function Home() {
   return (
     <div>

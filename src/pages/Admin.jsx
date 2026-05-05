@@ -1,7 +1,9 @@
+// Admin.jsx is a page component. It handles one screen in the job portal.
 import { Link } from 'react-router-dom';
 import { isAdmin } from '../auth';
 import { getCurrentUser } from '../auth';
 
+// Admin is the main React component exported from this file.
 export default function Admin() {
   const user = getCurrentUser();
 

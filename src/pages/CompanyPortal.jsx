@@ -1,9 +1,11 @@
+// CompanyPortal.jsx is a page component. It handles one screen in the job portal.
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { companyDashboard, companyGetProfile, companyUpdateProfile } from '../services/company/portalApi';
 import { getCurrentUser, isCompanyAdmin } from '../auth';
 import Loader from '../components/Loader';
 
+// CompanyPortal is the main React component exported from this file.
 export default function CompanyPortal() {
   const user = getCurrentUser();
   const [dashboard, setDashboard] = useState(null);
@@ -11,6 +13,7 @@ export default function CompanyPortal() {
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
 
+  // useEffect runs side effects like loading data after the component renders.
   useEffect(() => {
     Promise.all([companyDashboard(), companyGetProfile()])
       .then(([dashboardRes, companyRes]) => {

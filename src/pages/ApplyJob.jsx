@@ -1,3 +1,4 @@
+// ApplyJob.jsx is a page component. It handles one screen in the job portal.
 import { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { applyToJob } from '../services/user/applicationsApi';
@@ -6,6 +7,7 @@ import { getProfile } from '../services/user/profileApi';
 import { getResumes } from '../services/user/resumesApi';
 import { getCurrentUser, isUser } from '../auth';
 
+// ApplyJob is the main React component exported from this file.
 export default function ApplyJob() {
   const { jobId } = useParams();
   const location = useLocation();
@@ -29,9 +31,11 @@ export default function ApplyJob() {
     noticePeriod: '',
   });
 
+  // useEffect runs side effects like loading data after the component renders.
   useEffect(() => {
     let active = true;
 
+    // loadContext loads data from the backend and stores it in component state.
     const loadContext = async () => {
       if (!jobId || !user?.id) {
         setLoadingContext(false);
@@ -78,6 +82,7 @@ export default function ApplyJob() {
     setForm(prev => ({ ...prev, [field]: value }));
   };
 
+  // handleApply runs when the user performs this action on the page.
   const handleApply = async (e) => {
     e.preventDefault();
     if (!user?.id) { navigate('/signin'); return; }

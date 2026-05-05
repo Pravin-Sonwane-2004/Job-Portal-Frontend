@@ -1,8 +1,10 @@
+// Register.jsx is a page component. It handles one screen in the job portal.
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { register } from '../services/auth/authApi';
 import { getCurrentUser } from '../auth';
 
+// Register is the main React component exported from this file.
 export default function Register() {
   const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '', role: 'USER' });
   const [error, setError] = useState('');
@@ -10,12 +12,15 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // useEffect runs side effects like loading data after the component renders.
   useEffect(() => {
     if (getCurrentUser()) navigate('/signin', { replace: true });
   }, [navigate]);
 
+  // handleChange runs when the user performs this action on the page.
   const handleChange = (e) => setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
 
+  // handleSubmit runs when the user performs this action on the page.
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');

@@ -1,3 +1,4 @@
+// api.js exports shared API helpers from the services folder.
 export * from './admin';
 export * from './auth';
 export * from './company';

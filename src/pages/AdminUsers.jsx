@@ -1,9 +1,11 @@
+// AdminUsers.jsx is a page component. It handles one screen in the job portal.
 import { useState, useEffect } from 'react';
 import { adminGetUsers, adminDeleteUser, adminUpdateUser, adminCreateUser } from '../services/admin/usersApi';
 import { isAdmin } from '../auth';
 import { getCurrentUser } from '../auth';
 import Loader from '../components/Loader';
 
+// AdminUsers is the main React component exported from this file.
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,8 +17,10 @@ export default function AdminUsers() {
   const [editUser, setEditUser] = useState(null);
   const currentUser = getCurrentUser();
 
+  // useEffect runs side effects like loading data after the component renders.
   useEffect(() => { fetchUsers(); }, []);
 
+  // fetchUsers loads data from the backend and stores it in component state.
   const fetchUsers = () => {
     adminGetUsers().then(res => { setUsers(Array.isArray(res.data) ? res.data : []); setLoading(false); }).catch(() => { setError('Failed to load users.'); setLoading(false); });
   };
@@ -32,11 +36,13 @@ export default function AdminUsers() {
     return matchRole && matchSearch;
   });
 
+  // handleDelete runs when the user performs this action on the page.
   const handleDelete = (email) => {
     if (!window.confirm(`Delete user "${email}"?`)) return;
     adminDeleteUser(email).then(() => setUsers(prev => prev.filter(u => u.email !== email))).catch(() => alert('Failed to delete.'));
   };
 
+  // handleCreate runs when the user performs this action on the page.
   const handleCreate = async () => {
     try {
       await adminCreateUser(newUser);
@@ -46,6 +52,7 @@ export default function AdminUsers() {
     } catch { alert('Failed to create user.'); }
   };
 
+  // handleUpdate runs when the user performs this action on the page.
   const handleUpdate = async () => {
     try {
       await adminUpdateUser(editUser.originalEmail || editUser.email, {

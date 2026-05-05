@@ -1,14 +1,17 @@
+// AdminApplications.jsx is a page component. It handles one screen in the job portal.
 import { useState, useEffect } from 'react';
 import { adminGetApplications } from '../services/admin/applicationsApi';
 import { isAdmin, getCurrentUser } from '../auth';
 import Loader from '../components/Loader';
 
+// AdminApplications is the main React component exported from this file.
 export default function AdminApplications() {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const currentUser = getCurrentUser();
 
+  // useEffect runs side effects like loading data after the component renders.
   useEffect(() => {
     adminGetApplications()
       .then(res => setApplications(Array.isArray(res.data) ? res.data : []))

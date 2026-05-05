@@ -1,6 +1,8 @@
+// Recruiter.jsx is a page component. It handles one screen in the job portal.
 import { Link } from 'react-router-dom';
 import { getCurrentUser, isRecruiter } from '../auth';
 
+// Recruiter is the main React component exported from this file.
 export default function Recruiter() {
   const user = getCurrentUser();
 

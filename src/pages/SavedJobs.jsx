@@ -1,15 +1,18 @@
+// SavedJobs.jsx is a page component. It handles one screen in the job portal.
 import { useState, useEffect } from 'react';
 import { getUserJobById } from '../services/user/jobsApi';
 import { getSavedJobs, unsaveJob } from '../services/user/savedJobsApi';
 import { getCurrentUser } from '../auth';
 import Loader from '../components/Loader';
 
+// SavedJobs is the main React component exported from this file.
 export default function SavedJobs() {
   const [savedJobs, setSavedJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const userId = getCurrentUser()?.id;
 
+  // useEffect runs side effects like loading data after the component renders.
   useEffect(() => {
     if (!userId) { setError('Please sign in to view saved jobs.'); setLoading(false); return; }
     getSavedJobs(userId)
@@ -27,6 +30,7 @@ export default function SavedJobs() {
       .finally(() => setLoading(false));
   }, [userId]);
 
+  // handleUnsave runs when the user performs this action on the page.
   const handleUnsave = async (jobId) => {
     try {
       await unsaveJob(userId, jobId);

@@ -1,3 +1,4 @@
+<!-- structure.md documents one part of the project so it is easier to explain in interviews. -->
 # Job Portal Frontend - Project Structure
 
 ## Current Directory Structure

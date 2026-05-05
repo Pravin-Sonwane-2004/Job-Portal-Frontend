@@ -1,3 +1,4 @@
+// RecruiterJobs.jsx is a page component. It handles one screen in the job portal.
 import { useEffect, useState } from 'react';
 import { recruiterCreateJob, recruiterDeleteJob, recruiterGetJobs, recruiterUpdateJob } from '../services/recruiter/jobsApi';
 import { getCurrentUser, isRecruiter } from '../auth';
@@ -35,6 +36,7 @@ const fromJob = (job) => ({
   requirements: Array.isArray(job.requirements) ? job.requirements.join(', ') : job.requirements || '',
 });
 
+// RecruiterJobs is the main React component exported from this file.
 export default function RecruiterJobs() {
   const user = getCurrentUser();
   const canAccess = isRecruiter(user);
@@ -45,6 +47,7 @@ export default function RecruiterJobs() {
   const [editing, setEditing] = useState(null);
   const [saving, setSaving] = useState(false);
 
+  // loadJobs loads data from the backend and stores it in component state.
   const loadJobs = () => {
     setLoading(true);
     recruiterGetJobs()
@@ -53,6 +56,7 @@ export default function RecruiterJobs() {
       .finally(() => setLoading(false));
   };
 
+  // useEffect runs side effects like loading data after the component renders.
   useEffect(() => {
     if (canAccess) loadJobs();
     else setLoading(false);
@@ -61,6 +65,7 @@ export default function RecruiterJobs() {
   if (!canAccess) return <div className="page"><div className="alert alert-error">Access denied. Recruiter only.</div></div>;
   if (loading) return <div className="page"><Loader /></div>;
 
+  // handleSubmit runs when the user performs this action on the page.
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
@@ -79,11 +84,13 @@ export default function RecruiterJobs() {
     }
   };
 
+  // handleEdit runs when the user performs this action on the page.
   const handleEdit = (job) => {
     setEditing(job);
     setForm(fromJob(job));
   };
 
+  // handleDelete runs when the user performs this action on the page.
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this job?')) return;
     try {

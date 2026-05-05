@@ -1,3 +1,4 @@
+// Settings.jsx is a page component. It handles one screen in the job portal.
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getCurrentUser, clearCurrentUser } from '../auth';
@@ -5,17 +6,20 @@ import { getFullName } from '../services/user/profileApi';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+// Settings is the main React component exported from this file.
 export default function Settings() {
   const navigate = useNavigate();
   const user = getCurrentUser();
   const [userName, setUserName] = useState(user?.name || user?.email || 'User');
 
+  // useEffect runs side effects like loading data after the component renders.
   useEffect(() => {
     if (user?.id) {
       getFullName().then(res => { if (res.data) setUserName(res.data); }).catch(() => {});
     }
   }, [user?.id]);
 
+  // handleLogout runs when the user performs this action on the page.
   const handleLogout = () => {
     clearCurrentUser();
     navigate('/signin');

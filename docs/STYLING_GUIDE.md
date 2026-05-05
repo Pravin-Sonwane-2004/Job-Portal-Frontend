@@ -1,3 +1,4 @@
+<!-- STYLING_GUIDE.md documents one part of the project so it is easier to explain in interviews. -->
 # Styling Guide
 
 ## Styling Strategy

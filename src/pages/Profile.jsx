@@ -1,15 +1,18 @@
+// Profile.jsx is a page component. It handles one screen in the job portal.
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getProfile } from '../services/user/profileApi';
 import { getCurrentUser } from '../auth';
 import Loader from '../components/Loader';
 
+// Profile is the main React component exported from this file.
 export default function Profile() {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const currentUser = getCurrentUser();
 
+  // useEffect runs side effects like loading data after the component renders.
   useEffect(() => {
     if (!currentUser?.id) { setLoading(false); return; }
     getProfile({ userId: currentUser.id })

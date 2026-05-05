@@ -1,3 +1,4 @@
+// CompanySignup.jsx is a page component. It handles one screen in the job portal.
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { registerCompany } from '../services/company/companyApi';
@@ -13,14 +14,17 @@ const initialForm = {
   password: '',
 };
 
+// CompanySignup is the main React component exported from this file.
 export default function CompanySignup() {
   const [form, setForm] = useState(initialForm);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // handleChange runs when the user performs this action on the page.
   const handleChange = (event) => setForm((prev) => ({ ...prev, [event.target.name]: event.target.value }));
 
+  // handleSubmit runs when the user performs this action on the page.
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError('');

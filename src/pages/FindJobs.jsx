@@ -1,3 +1,4 @@
+// FindJobs.jsx is a page component. It handles one screen in the job portal.
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getPublicJobs } from '../services/public/jobsApi';
@@ -5,6 +6,7 @@ import { saveJob } from '../services/user/savedJobsApi';
 import { getCurrentUser, isUser } from '../auth';
 import Loader from '../components/Loader';
 
+// FindJobs is the main React component exported from this file.
 export default function FindJobs() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -18,6 +20,7 @@ export default function FindJobs() {
   const user = getCurrentUser();
   const canApply = isUser(user);
 
+  // useEffect runs side effects like loading data after the component renders.
   useEffect(() => {
     setLoading(true);
     setError('');
@@ -30,6 +33,7 @@ export default function FindJobs() {
       .finally(() => setLoading(false));
   }, [page, sortBy, jobTitle, jobLocation]);
 
+  // handleSave runs when the user performs this action on the page.
   const handleSave = async (jobId) => {
     if (!canApply) { navigate(user ? '/dashboard' : '/signin'); return; }
     try { await saveJob(user.id, jobId); alert('Job saved!'); } catch { alert('Failed to save job.'); }

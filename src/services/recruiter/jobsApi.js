@@ -1,7 +1,27 @@
+// jobsApi.js contains API functions for one feature area of the job portal.
 import { http } from '../http';
 
-export const recruiterGetJobs = () => http.get('/recruiter/jobs');
-export const recruiterCreateJob = (data) => http.post('/recruiter/jobs', data);
-export const recruiterGetJobById = (id) => http.get(`/recruiter/jobs/${id}`);
-export const recruiterUpdateJob = (id, data) => http.put(`/recruiter/jobs/${id}`, data);
-export const recruiterDeleteJob = (id) => http.delete(`/recruiter/jobs/${id}`);
+// Get all jobs created by the logged-in recruiter.
+export const recruiterGetJobs = () => {
+  return http.get('/recruiter/jobs');
+};
+
+// Create a new job using the form data from the recruiter page.
+export const recruiterCreateJob = (data) => {
+  return http.post('/recruiter/jobs', data);
+};
+
+// Get one job by id. This is used for details or edit screens.
+export const recruiterGetJobById = (id) => {
+  return http.get(`/recruiter/jobs/${id}`);
+};
+
+// Update one job by id with the edited form data.
+export const recruiterUpdateJob = (id, data) => {
+  return http.put(`/recruiter/jobs/${id}`, data);
+};
+
+// Delete one job by id.
+export const recruiterDeleteJob = (id) => {
+  return http.delete(`/recruiter/jobs/${id}`);
+};

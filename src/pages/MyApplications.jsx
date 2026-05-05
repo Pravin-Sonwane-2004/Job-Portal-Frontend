@@ -1,14 +1,17 @@
+// MyApplications.jsx is a page component. It handles one screen in the job portal.
 import { useState, useEffect } from 'react';
 import { getMyAppliedJobs, deleteApplicationById } from '../services/user/applicationsApi';
 import { getCurrentUser } from '../auth';
 import Loader from '../components/Loader';
 
+// MyApplications is the main React component exported from this file.
 export default function MyApplications() {
   const [appliedJobs, setAppliedJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const userId = getCurrentUser()?.id;
 
+  // useEffect runs side effects like loading data after the component renders.
   useEffect(() => {
     if (!userId) { setError('Please sign in to view applications.'); setLoading(false); return; }
     getMyAppliedJobs(userId)
@@ -17,6 +20,7 @@ export default function MyApplications() {
       .finally(() => setLoading(false));
   }, [userId]);
 
+  // handleCancel runs when the user performs this action on the page.
   const handleCancel = async (job) => {
     if (!window.confirm(`Cancel application for "${job.title || job.jobTitle}"?`)) return;
     try {

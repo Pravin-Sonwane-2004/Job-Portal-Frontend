@@ -1,3 +1,4 @@
+// RecruiterApplications.jsx is a page component. It handles one screen in the job portal.
 import { useEffect, useState } from 'react';
 import { recruiterGetApplications, recruiterUpdateApplication } from '../services/recruiter/applicationsApi';
 import { getCurrentUser, isRecruiter } from '../auth';
@@ -6,6 +7,7 @@ import Loader from '../components/Loader';
 const getJob = (app) => app.job || {};
 const getUser = (app) => app.user || {};
 
+// RecruiterApplications is the main React component exported from this file.
 export default function RecruiterApplications() {
   const user = getCurrentUser();
   const canAccess = isRecruiter(user);
@@ -13,6 +15,7 @@ export default function RecruiterApplications() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  // loadApplications loads data from the backend and stores it in component state.
   const loadApplications = () => {
     setLoading(true);
     recruiterGetApplications()
@@ -21,6 +24,7 @@ export default function RecruiterApplications() {
       .finally(() => setLoading(false));
   };
 
+  // useEffect runs side effects like loading data after the component renders.
   useEffect(() => {
     if (canAccess) loadApplications();
     else setLoading(false);

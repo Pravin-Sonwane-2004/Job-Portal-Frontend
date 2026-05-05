@@ -1,8 +1,10 @@
+// AdminJobs.jsx is a page component. It handles one screen in the job portal.
 import { useState, useEffect } from 'react';
 import { adminCreateJob, adminUpdateJob, adminDeleteJob, adminGetJobs } from '../services/admin/jobsApi';
 import { isAdmin, getCurrentUser } from '../auth';
 import Loader from '../components/Loader';
 
+// AdminJobs is the main React component exported from this file.
 export default function AdminJobs() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,6 +14,7 @@ export default function AdminJobs() {
   const [form, setForm] = useState({ title: '', location: '', salary: '', company: '' });
   const currentUser = getCurrentUser();
 
+  // useEffect runs side effects like loading data after the component renders.
   useEffect(() => {
     adminGetJobs().then(res => { setJobs(Array.isArray(res.data) ? res.data : []); setLoading(false); }).catch(() => { setError('Failed to load jobs.'); setLoading(false); });
   }, []);
@@ -19,6 +22,7 @@ export default function AdminJobs() {
   if (!isAdmin(currentUser)) return <div className="page"><div className="alert alert-error">Access denied.</div></div>;
   if (loading) return <div className="page"><Loader /></div>;
 
+  // handleCreate runs when the user performs this action on the page.
   const handleCreate = async () => {
     try {
       await adminCreateJob(form);
@@ -28,6 +32,7 @@ export default function AdminJobs() {
     } catch { alert('Failed to create job.'); }
   };
 
+  // handleUpdate runs when the user performs this action on the page.
   const handleUpdate = async () => {
     try {
       await adminUpdateJob(editJob.id, editJob);
@@ -36,6 +41,7 @@ export default function AdminJobs() {
     } catch { alert('Failed to update job.'); }
   };
 
+  // handleDelete runs when the user performs this action on the page.
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this job?')) return;
     try {

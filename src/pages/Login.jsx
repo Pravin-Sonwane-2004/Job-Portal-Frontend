@@ -1,8 +1,10 @@
+// Login.jsx is a page component. It handles one screen in the job portal.
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../services/auth/authApi';
 import { getCurrentUser, setCurrentUser, getDefaultPortal } from '../auth';
 
+// Login is the main React component exported from this file.
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -10,10 +12,12 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // useEffect runs side effects like loading data after the component renders.
   useEffect(() => {
     if (getCurrentUser()) navigate('/', { replace: true });
   }, [navigate]);
 
+  // handleSubmit runs when the user performs this action on the page.
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');

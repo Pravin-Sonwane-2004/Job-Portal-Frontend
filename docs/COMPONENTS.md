@@ -1,3 +1,4 @@
+<!-- COMPONENTS.md documents one part of the project so it is easier to explain in interviews. -->
 # Components
 
 ## Shared Components

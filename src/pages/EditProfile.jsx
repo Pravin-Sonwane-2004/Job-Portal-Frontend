@@ -1,3 +1,4 @@
+// EditProfile.jsx is a page component. It handles one screen in the job portal.
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getProfile, updateProfile } from '../services/user/profileApi';
@@ -6,6 +7,7 @@ import Loader from '../components/Loader';
 
 const emptyForm = { name: '', email: '', location: '', bio: '', phone: '', linkedin: '', skills: '', designation: '', jobRole: '', experienceLevel: '', avatarUrl: '' };
 
+// EditProfile is the main React component exported from this file.
 export default function EditProfile() {
   const navigate = useNavigate();
   const [form, setForm] = useState(emptyForm);
@@ -15,6 +17,7 @@ export default function EditProfile() {
   const [success, setSuccess] = useState(false);
   const currentUser = getCurrentUser();
 
+  // useEffect runs side effects like loading data after the component renders.
   useEffect(() => {
     if (!currentUser?.id) { setLoading(false); setError('Please sign in.'); return; }
     getProfile({ userId: currentUser.id })
@@ -38,8 +41,10 @@ export default function EditProfile() {
       .finally(() => setLoading(false));
   }, [currentUser?.id]);
 
+  // handleChange runs when the user performs this action on the page.
   const handleChange = (e) => setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
 
+  // handleSubmit runs when the user performs this action on the page.
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);

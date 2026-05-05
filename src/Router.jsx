@@ -1,3 +1,4 @@
+// Router defines every page URL and protects pages based on the logged-in user role.
 import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
@@ -33,6 +34,7 @@ const CompanyPortal = lazy(() => import('./pages/CompanyPortal'));
 const CompanyEmployees = lazy(() => import('./pages/CompanyEmployees'));
 const CompanyJobs = lazy(() => import('./pages/CompanyJobs'));
 
+// RequireRole is a helper component used before rendering a protected route.
 function RequireRole({ children, roles }) {
   const user = getCurrentUser();
   const checks = {
@@ -47,6 +49,7 @@ function RequireRole({ children, roles }) {
   return children;
 }
 
+// Router is the main React component exported from this file.
 export default function Router() {
   return (
     <Suspense fallback={<Loader />}>

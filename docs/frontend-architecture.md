@@ -1,3 +1,4 @@
+<!-- frontend-architecture.md documents one part of the project so it is easier to explain in interviews. -->
 # Frontend Architecture Summary
 
 This file is a short companion to `ARCHITECTURE.md`.

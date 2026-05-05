@@ -1,8 +1,10 @@
+// RecruiterTalent.jsx is a page component. It handles one screen in the job portal.
 import { useCallback, useEffect, useState } from 'react';
 import { recruiterSearchTalent } from '../services/recruiter/talentApi';
 import { getCurrentUser, isRecruiter } from '../auth';
 import Loader from '../components/Loader';
 
+// RecruiterTalent is the main React component exported from this file.
 export default function RecruiterTalent() {
   const user = getCurrentUser();
   const canAccess = isRecruiter(user);
@@ -25,6 +27,7 @@ export default function RecruiterTalent() {
       .finally(() => setLoading(false));
   }, [filters.experienceLevel, filters.location, filters.q, filters.skill]);
 
+  // useEffect runs side effects like loading data after the component renders.
   useEffect(() => {
     if (canAccess) loadTalent();
     else setLoading(false);
@@ -32,6 +35,7 @@ export default function RecruiterTalent() {
 
   if (!canAccess) return <div className="page"><div className="alert alert-error">Access denied. Recruiter only.</div></div>;
 
+  // handleSubmit runs when the user performs this action on the page.
   const handleSubmit = (e) => {
     e.preventDefault();
     loadTalent();
