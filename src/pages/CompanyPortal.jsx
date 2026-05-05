@@ -39,6 +39,14 @@ export default function CompanyPortal() {
     }
   };
 
+  if (error && (!dashboard || !company)) {
+    return (
+      <div className="page">
+        <div className="alert alert-error">{error}</div>
+      </div>
+    );
+  }
+
   if (!dashboard || !company) return <div className="page"><Loader /></div>;
 
   return (

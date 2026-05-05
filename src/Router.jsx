@@ -4,7 +4,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import Loader from './components/Loader';
 import Register from './pages/Register';
-import { getCurrentUser, isAdmin, isCompanyAdmin, isCompanyEmployee, isRecruiter, isUser } from './auth';
+import { getCurrentUser, getDefaultPortal, isAdmin, isCompanyAdmin, isCompanyEmployee, isRecruiter, isUser } from './auth';
 
 
 // Lazy imports
@@ -45,7 +45,7 @@ function RequireRole({ children, roles }) {
     COMPANY_EMPLOYEE: isCompanyEmployee(user),
   };
   if (!user) return <Navigate to="/signin" replace />;
-  if (!roles.some(role => checks[role])) return <Navigate to="/dashboard" replace />;
+  if (!roles.some(role => checks[role])) return <Navigate to={getDefaultPortal(user)} replace />;
   return children;
 }
 
