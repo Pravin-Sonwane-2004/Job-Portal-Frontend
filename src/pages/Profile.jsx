@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getProfile } from '../api';
+import { getProfile } from '../services/user/profileApi';
 import { getCurrentUser } from '../auth';
 import Loader from '../components/Loader';
 

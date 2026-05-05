@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { getCurrentUser } from '../auth';
 import { Link } from 'react-router-dom';
 import { isAdmin, isRecruiter } from '../auth';
-import { getProfileInsights } from '../api';
+import { getProfileInsights } from '../services/user/profileApi';
 
 function InsightsPanel() {
   const [insights, setInsights] = useState(null);

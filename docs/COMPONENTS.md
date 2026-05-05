@@ -1,117 +1,44 @@
 # Components
 
-## Core Layout Components
+## Shared Components
 
-### `AppShell`
+### `Layout`
 
-Location: `src/layouts/AppShell.jsx`
-
-Purpose:
-
-- Wraps every page with the shared header, skip link, main content region, and footer.
-
-### `AppHeader`
-
-Location: `src/components/layout/AppHeader.jsx`
+Location: `src/components/Layout.jsx`
 
 Purpose:
 
-- Renders the brand, role-aware navigation, theme toggle, and account menu.
+- Renders the global header.
+- Builds role-aware navigation links.
+- Shows the signed-in user's display name and role label.
+- Handles sign out.
+- Renders the current route through `Outlet`.
+- Renders the footer.
 
-Notes:
+### `Loader`
 
-- Uses `useCurrentUser` for state.
-- Uses `getPrimaryNavigation()` for link selection.
-
-### `AppFooter`
-
-Location: `src/components/layout/AppFooter.jsx`
-
-Purpose:
-
-- Displays lightweight project context and stable secondary links.
-
-## Reusable UI Primitives
-
-### `Container`
-
-Location: `src/components/ui/Container.jsx`
+Location: `src/components/Loader.jsx`
 
 Purpose:
 
-- Provides consistent horizontal padding and max width.
+- Provides a shared loading state for lazy routes and data-loading pages.
 
-Usage:
+## Page Components
 
-```jsx
-import Container from '@/components/ui/Container';
+Route-level screens live in `src/pages`. They own page-specific form state, loading state, and navigation decisions.
 
-<Container className="py-10">
-  <section>...</section>
-</Container>
-```
+Important page groups:
 
-### `ThemeToggle`
+- Candidate: `FindJobs`, `ApplyJob`, `MyApplications`, `SavedJobs`, `ResumeBuilder`, `Profile`, `EditProfile`.
+- Recruiter: `Recruiter`, `RecruiterJobs`, `RecruiterApplications`, `RecruiterTalent`.
+- Company: `CompanySignup`, `CompanyPortal`, `CompanyEmployees`, `CompanyJobs`.
+- Admin: `Admin`, `AdminUsers`, `AdminJobs`, `AdminApplications`.
+- Auth: `Login`, `Register`, `ForgotPassword`, `ResetPassword`.
 
-Location: `src/components/layout/ThemeToggle.jsx`
+## Component Rules
 
-Purpose:
-
-- Toggles dark/light mode through `useThemeMode`.
-
-Usage:
-
-```jsx
-<ThemeToggle />
-```
-
-## Homepage Components
-
-### `HeroSection`
-
-Location: `src/features/home/components/HeroSection.jsx`
-
-Purpose:
-
-- Renders the main landing page headline, calls to action, highlights, and summary metrics.
-
-### `WorkflowSection`
-
-Location: `src/features/home/components/WorkflowSection.jsx`
-
-Purpose:
-
-- Explains the architectural direction in a simple three-card grid.
-
-### `CategoryGridSection`
-
-Location: `src/features/home/components/CategoryGridSection.jsx`
-
-Purpose:
-
-- Displays role categories using service-provided content.
-
-### `CompanyStripSection`
-
-Location: `src/features/home/components/CompanyStripSection.jsx`
-
-Purpose:
-
-- Shows partner logos in a restrained grid.
-
-### `SectionIntro`
-
-Location: `src/features/home/components/SectionIntro.jsx`
-
-Purpose:
-
-- Standardizes section eyebrow, title, and description spacing.
-
-## Existing Shared Components Worth Reusing
-
-These already exist in the repo and still make sense for future cleanup work:
-
-- `src/components/ui/SurfaceCard.jsx`
-- `src/components/ui/ToggleSwitch.jsx`
-
-When adding new pages, prefer these shared building blocks over one-off wrappers.
+- Put reusable chrome in `src/components`.
+- Put route screens in `src/pages`.
+- Keep API calls in `src/services`.
+- Keep cross-page formatting in `src/index.css`.
+- Avoid adding one-off helper components until at least two pages need them.

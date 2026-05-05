@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getSavedJobs, unsaveJob, getUserJobById } from '../api';
+import { getUserJobById } from '../services/user/jobsApi';
+import { getSavedJobs, unsaveJob } from '../services/user/savedJobsApi';
 import { getCurrentUser } from '../auth';
 import Loader from '../components/Loader';
 

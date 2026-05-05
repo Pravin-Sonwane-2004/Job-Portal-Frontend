@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { register } from '../api';
+import { register } from '../services/auth/authApi';
 import { getCurrentUser } from '../auth';
 
 export default function Register() {

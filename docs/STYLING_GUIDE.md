@@ -1,70 +1,59 @@
 # Styling Guide
 
-## Tailwind Strategy
+## Styling Strategy
 
-The application now uses Tailwind as the primary styling system for the refactored shell and homepage.
+The frontend uses a single global stylesheet at `src/index.css`. Page components use the shared class names from that file plus small inline styles for page-specific spacing or typography.
 
-Principles:
+There is no Tailwind dependency in the current frontend package. Keep new styling consistent with the existing CSS variables and utility classes.
 
-- Prefer utility classes over custom component CSS.
-- Keep spacing and typography consistent through shared primitives.
-- Reserve `index.css` for base styles and global document behavior.
+## Design Tokens
 
-## Tailwind Configuration
+Core theme values live in `:root` inside `src/index.css`.
 
-The Tailwind config extends a small design layer:
+Important variables:
 
-- `brand` color scale for accents and actions
-- `shadow-soft` for elevated cards and panels
-- `rounded-4xl` for oversized corner treatments
-- `fontFamily.sans` set to an IBM Plex Sans-first stack
+- `--bg`
+- `--surface`
+- `--surface-2`
+- `--text`
+- `--text-secondary`
+- `--border`
+- `--primary`
+- `--danger`
+- `--success`
+- `--radius`
 
-Brand palette:
+Use these variables when adding new global styles so pages stay visually consistent.
 
-- `brand-50`: `#eef4ff`
-- `brand-100`: `#d9e6ff`
-- `brand-200`: `#bcd0ff`
-- `brand-300`: `#93b2ff`
-- `brand-400`: `#6790ff`
-- `brand-500`: `#416cff`
-- `brand-600`: `#2c4fe3`
-- `brand-700`: `#263fb7`
-- `brand-800`: `#25388f`
-- `brand-900`: `#233270`
+## Common Classes
 
-## Global Styles
+| Class | Purpose |
+| --- | --- |
+| `page` | Standard page width and padding |
+| `page-narrow` | Narrow form/detail layout |
+| `card` | Bordered content surface |
+| `grid`, `grid-2`, `grid-3` | Responsive grid layout |
+| `btn`, `btn-primary`, `btn-outline`, `btn-danger`, `btn-success` | Button styles |
+| `form-group`, `form-label`, `form-input`, `form-select` | Form controls |
+| `alert`, `alert-error`, `alert-success`, `alert-info` | Status messages |
+| `empty-state` | Empty list messaging |
+| `profile-details`, `detail-item` | Label/value details |
 
-`src/index.css` owns:
+## Responsive Behavior
 
-- page background gradients
-- base typography and antialiasing
-- root height behavior
-- smooth scrolling
-- selection styling
+`src/index.css` includes a mobile breakpoint at `780px`. At that width:
 
-Keep this file small. If a style is page-specific, it belongs in JSX through Tailwind classes.
+- Header layout stacks vertically.
+- Navigation wraps.
+- `grid-2`, `grid-3`, and search bars collapse to one column.
 
-## Dark / Light Mode
+When adding fixed-width UI, make sure it still fits below this breakpoint.
 
-Theme state is handled by:
+## Styling Rules
 
-- `src/utils/themeUtils.js`
-- `src/hooks/useThemeMode.js`
-- `src/components/layout/ThemeToggle.jsx`
-
-How it works:
-
-1. The selected theme is stored in `localStorage` under `theme`.
-2. `applyTheme()` adds or removes the `dark` class on `document.documentElement`.
-3. `main.jsx` applies the stored theme before the React tree mounts.
-4. `ThemeToggle` updates the state through `useThemeMode`.
-
-This keeps the theme source centralized and prevents each page from managing its own color mode rules.
-
-## Styling Conventions
-
-- Use `Container` for page width and horizontal padding.
-- Use `SectionIntro` for repeated section heading rhythm.
-- Keep visual state classes close to the element that needs them.
-- Avoid deeply nested wrapper divs when spacing can be handled by grid or flex utilities.
-- If a component needs significant logic, move that logic into a hook before adding more styling complexity.
+- Reuse existing classes before adding new ones.
+- Add global classes only when at least two pages can use them.
+- Keep page-only layout tweaks inline or local to that page.
+- Use existing semantic colors for success, danger, info, surfaces, and borders.
+- Keep cards at the existing `--radius` value.
+- Avoid adding a second design system unless the whole app is being migrated deliberately.

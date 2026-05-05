@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { adminGetUsers, adminDeleteUser, adminUpdateUser, adminCreateUser } from '../api';
+import { adminGetUsers, adminDeleteUser, adminUpdateUser, adminCreateUser } from '../services/admin/usersApi';
 import { isAdmin } from '../auth';
 import { getCurrentUser } from '../auth';
 import Loader from '../components/Loader';

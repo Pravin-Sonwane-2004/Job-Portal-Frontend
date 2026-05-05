@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import { applyToJob, getUserJobById } from '../api';
+import { applyToJob } from '../services/user/applicationsApi';
+import { getUserJobById } from '../services/user/jobsApi';
+import { getProfile } from '../services/user/profileApi';
+import { getResumes } from '../services/user/resumesApi';
 import { getCurrentUser, isUser } from '../auth';
 
 export default function ApplyJob() {
@@ -8,10 +11,14 @@ export default function ApplyJob() {
   const location = useLocation();
   const navigate = useNavigate();
   const [job, setJob] = useState(location.state?.job || null);
+  const [profile, setProfile] = useState(null);
+  const [resumes, setResumes] = useState([]);
   const user = getCurrentUser();
 
   const [status, setStatus] = useState('');
   const [loading, setLoading] = useState(false);
+  const [loadingContext, setLoadingContext] = useState(true);
+  const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({
     resumeLink: '',
     coverLetter: '',
@@ -23,35 +30,93 @@ export default function ApplyJob() {
   });
 
   useEffect(() => {
-    if (!job && jobId) {
-      getUserJobById(jobId)
-        .then(res => setJob(res.data))
-        .catch(() => setStatus('Could not load job details.'));
-    }
-  }, [job, jobId]);
+    let active = true;
+
+    const loadContext = async () => {
+      if (!jobId || !user?.id) {
+        setLoadingContext(false);
+        return;
+      }
+
+      setLoadingContext(true);
+      try {
+        const [jobRes, profileRes, resumesRes] = await Promise.all([
+          job ? Promise.resolve({ data: job }) : getUserJobById(jobId),
+          getProfile().catch(() => null),
+          getResumes(user.id).catch(() => null),
+        ]);
+
+        if (!active) return;
+
+        const profileData = profileRes?.data || null;
+        const resumeList = Array.isArray(resumesRes?.data) ? resumesRes.data : [];
+
+        setJob(jobRes.data);
+        setProfile(profileData);
+        setResumes(resumeList);
+        setForm(prev => ({
+          ...prev,
+          phoneNumber: prev.phoneNumber || profileData?.phoneNumber || '',
+          linkedinUrl: prev.linkedinUrl || profileData?.linkedinUrl || '',
+          resumeLink: prev.resumeLink || resumeList[0]?.filePath || '',
+        }));
+      } catch {
+        if (active) setStatus('Could not load job details.');
+      } finally {
+        if (active) setLoadingContext(false);
+      }
+    };
+
+    loadContext();
+    return () => {
+      active = false;
+    };
+  }, [job, jobId, user?.id]);
+
+  const updateField = (field, value) => {
+    setSubmitted(false);
+    setForm(prev => ({ ...prev, [field]: value }));
+  };
 
   const handleApply = async (e) => {
     e.preventDefault();
     if (!user?.id) { navigate('/signin'); return; }
     if (!isUser(user)) { navigate('/dashboard'); return; }
+    if (!form.resumeLink.trim()) { setStatus('Add a resume link before applying.'); return; }
+    if (!form.phoneNumber.trim()) { setStatus('Add a phone number before applying.'); return; }
+    if (!form.coverLetter.trim()) { setStatus('Add a cover letter before applying.'); return; }
+
     setLoading(true);
     setStatus('');
     try {
-      const res = await applyToJob(user.id, jobId, {
-        ...form,
+      const res = await applyToJob(jobId, {
+        userId: user.id,
+        jobId: Number(jobId),
+        resumeLink: form.resumeLink.trim(),
+        coverLetter: form.coverLetter.trim(),
+        phoneNumber: form.phoneNumber.trim(),
+        linkedinUrl: form.linkedinUrl.trim(),
+        portfolioUrl: form.portfolioUrl.trim(),
+        expectedSalary: form.expectedSalary.trim(),
+        noticePeriod: form.noticePeriod.trim(),
         source: 'Web',
         userAgent: window.navigator.userAgent,
       });
       const msg = typeof res.data === 'string' ? res.data : 'Application submitted.';
       setStatus(msg);
+      setSubmitted(msg.toLowerCase().includes('submitted'));
     } catch {
-      setStatus('Failed to apply. Try again.');
+      setStatus('Failed to apply. Please check the form and try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  if (!job) return <div className="page"><div className="card">{status || 'Loading job details...'}</div></div>;
+  if (loadingContext || !job) return <div className="page"><div className="card">{status || 'Loading application form...'}</div></div>;
+
+  const selectedSavedResume = resumes.some(resume => resume.filePath && resume.filePath === form.resumeLink)
+    ? form.resumeLink
+    : '';
 
   return (
     <div className="page-narrow">
@@ -62,41 +127,57 @@ export default function ApplyJob() {
           <div className="detail-item"><span className="label">Location:</span><span>{job.location || job.jobLocation || 'N/A'}</span></div>
           <div className="detail-item"><span className="label">Salary:</span><span>{job.salary || job.jobSalary || 'Negotiable'}</span></div>
         </div>
+        <div className="profile-details section-gap">
+          <div className="detail-item"><span className="label">Applicant:</span><span>{profile?.name || user?.name || 'N/A'}</span></div>
+          <div className="detail-item"><span className="label">Email:</span><span>{profile?.email || user?.email || 'N/A'}</span></div>
+        </div>
         <form onSubmit={handleApply} className="section-gap">
+          {resumes.length > 0 && (
+            <div className="form-group">
+              <label className="form-label">Saved Resume</label>
+              <select className="form-select" value={selectedSavedResume} onChange={e => updateField('resumeLink', e.target.value)}>
+                {resumes.map(resume => (
+                  <option value={resume.filePath || ''} key={resume.id}>{resume.filePath || `Resume #${resume.id}`}</option>
+                ))}
+                <option value="">Use another resume link</option>
+              </select>
+            </div>
+          )}
           <div className="form-group">
             <label className="form-label">Resume Link</label>
-            <input className="form-input" value={form.resumeLink} onChange={e => setForm(p => ({ ...p, resumeLink: e.target.value }))} placeholder="https://..." required />
+            <input className="form-input" value={form.resumeLink} onChange={e => updateField('resumeLink', e.target.value)} placeholder="https://..." required />
           </div>
           <div className="grid grid-2">
             <div className="form-group">
               <label className="form-label">Phone Number</label>
-              <input className="form-input" value={form.phoneNumber} onChange={e => setForm(p => ({ ...p, phoneNumber: e.target.value }))} required />
+              <input className="form-input" value={form.phoneNumber} onChange={e => updateField('phoneNumber', e.target.value)} required />
             </div>
             <div className="form-group">
               <label className="form-label">Expected Salary</label>
-              <input className="form-input" value={form.expectedSalary} onChange={e => setForm(p => ({ ...p, expectedSalary: e.target.value }))} placeholder="8 LPA" />
+              <input className="form-input" value={form.expectedSalary} onChange={e => updateField('expectedSalary', e.target.value)} placeholder="8 LPA" />
             </div>
             <div className="form-group">
               <label className="form-label">Notice Period</label>
-              <input className="form-input" value={form.noticePeriod} onChange={e => setForm(p => ({ ...p, noticePeriod: e.target.value }))} placeholder="Immediate / 30 days" />
+              <input className="form-input" value={form.noticePeriod} onChange={e => updateField('noticePeriod', e.target.value)} placeholder="Immediate / 30 days" />
             </div>
             <div className="form-group">
               <label className="form-label">LinkedIn URL</label>
-              <input className="form-input" value={form.linkedinUrl} onChange={e => setForm(p => ({ ...p, linkedinUrl: e.target.value }))} placeholder="https://linkedin.com/in/..." />
+              <input className="form-input" value={form.linkedinUrl} onChange={e => updateField('linkedinUrl', e.target.value)} placeholder="https://linkedin.com/in/..." />
             </div>
           </div>
           <div className="form-group">
             <label className="form-label">Portfolio URL</label>
-            <input className="form-input" value={form.portfolioUrl} onChange={e => setForm(p => ({ ...p, portfolioUrl: e.target.value }))} placeholder="https://portfolio.example.com" />
+            <input className="form-input" value={form.portfolioUrl} onChange={e => updateField('portfolioUrl', e.target.value)} placeholder="https://portfolio.example.com" />
           </div>
           <div className="form-group">
             <label className="form-label">Cover Letter</label>
-            <textarea className="form-input" rows={5} value={form.coverLetter} onChange={e => setForm(p => ({ ...p, coverLetter: e.target.value }))} placeholder="Write a short note for the recruiter..." required />
+            <textarea className="form-input" rows={5} value={form.coverLetter} onChange={e => updateField('coverLetter', e.target.value)} placeholder="Write a short note for the recruiter..." required />
           </div>
           <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
           <button className="btn btn-primary" type="submit" disabled={loading}>
-            {loading ? 'Applying...' : 'Confirm Apply'}
+            {loading ? 'Applying...' : submitted ? 'Application Sent' : 'Confirm Apply'}
           </button>
+          {submitted && <button className="btn btn-outline" type="button" onClick={() => navigate('/my-applications')}>View Applications</button>}
           <button className="btn btn-outline" type="button" onClick={() => navigate(-1)}>Back</button>
           </div>
         </form>

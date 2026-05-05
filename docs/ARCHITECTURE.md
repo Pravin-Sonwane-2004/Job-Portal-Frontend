@@ -1,81 +1,66 @@
-# Architecture
+# Frontend Architecture
 
-## Current Structure
+## Runtime Shape
 
 ```text
-src/
-  components/
-    icons/        -> inline SVG icons used by the lightweight shell and homepage
-    layout/       -> header, footer, navigation, theme toggle, account menu
-    ui/           -> low-level reusable primitives such as Container
-  constants/      -> shared navigation metadata and simple configuration
-  features/
-    home/
-      components/ -> homepage presentation sections
-  hooks/
-    useCurrentUser.js
-    useHomePageContent.js
-    useSessionToken.js
-    useThemeMode.js
-  layouts/
-    AppShell.jsx  -> canonical application shell
-    MainLayout.jsx -> compatibility wrapper used by App.jsx
-  pages/
-    home/
-      HomePage.jsx -> refactored main landing page
-  services/
-    homeContentService.js
-    sessionIdentityService.js
-    userService.js
-    sessionService.js
-    http.js
-  utils/
-    jwtUtils.js
-    themeUtils.js
+main.jsx
+  -> App.jsx
+    -> Router.jsx
+      -> Layout.jsx
+        -> route page in src/pages
+          -> domain API service in src/services
+            -> shared Axios client in src/services/http.js
 ```
 
-## What Lives Where
+## Route And Role Flow
 
-- `layouts/`: page chrome and structural composition.
-- `components/layout/`: shell-specific UI such as header, footer, and account controls.
-- `components/ui/`: primitives that should stay presentation-only.
-- `features/home/`: feature-scoped, dumb rendering components for the landing page.
-- `hooks/`: stateful coordination logic and side effects.
-- `services/`: API access, identity parsing, and centralized content/data providers.
-- `constants/`: navigation maps and shared non-visual configuration.
-- `utils/`: low-level helpers that do not own application flow.
+`Router.jsx` defines public and protected routes. Protected routes use the local `RequireRole` component, which reads the current user from `src/auth.js` and checks the role helpers from `src/services/auth.js`.
 
-## Data Flow
+The role portals are:
 
-### UI to API
+| Portal | Roles | Main Routes |
+| --- | --- | --- |
+| Candidate | `USER` | `/dashboard`, `/find-jobs`, `/apply/:jobId`, `/my-applications`, `/saved-jobs`, `/resume-builder` |
+| Recruiter | `RECRUITER` | `/recruiter`, `/recruiter-jobs`, `/recruiter-applications`, `/recruiter-talent` |
+| Company | `COMPANY_ADMIN`, `COMPANY_EMPLOYEE` | `/company`, `/company-jobs`, `/company-employees` |
+| Admin | `ADMIN` | `/admin`, `/admin-users`, `/admin-jobs`, `/admin-applications` |
 
-1. A page or layout component renders a feature or shared component.
-2. The component calls a hook when it needs stateful behavior.
-3. The hook calls a service.
-4. The service talks to `http.js` or returns normalized content.
-5. The service response flows back to the hook.
-6. The hook exposes simple values to the UI.
+## API Flow
 
-### Example: Current User Name
+1. A page imports the API function from its domain service folder.
+2. The service calls `http`, the shared Axios instance.
+3. `http` reads the JWT from the current session and adds the `Authorization` header.
+4. The backend validates the JWT and role in Spring Security.
+5. If the backend returns `401`, `http` clears the current session.
 
-1. `AppHeader` uses `useCurrentUser`.
-2. `useCurrentUser` reads the session token with `useSessionToken`.
-3. The hook asks `sessionIdentityService` for role and display-name fallback data.
-4. The hook calls `userService.fetchCurrentUserName()` for the preferred server value.
-5. The header receives a ready-to-render identity object and stays mostly dumb.
+## Service Boundaries
 
-### Example: Route Protection
+The service folders mirror backend ownership:
 
-1. `ProtectedRoute` reads the token from `sessionService`.
-2. It validates expiry and roles through `sessionIdentityService`.
-3. It renders children or redirects without duplicating JWT parsing logic.
+- `auth`: public authentication endpoints.
+- `public`: public job discovery.
+- `user`: candidate-owned workflows.
+- `recruiter`: recruiter-owned workflows.
+- `company`: company-owned workflows.
+- `admin`: platform administration.
+- `shared`: cross-role APIs.
 
-## Refactor Boundary
+This keeps portal pages from accidentally depending on another portal's route group. For example, `AdminJobs.jsx` uses `services/admin/jobsApi.js`, while `CompanyJobs.jsx` uses `services/company/portalApi.js`.
 
-The active shell and the main homepage now follow this architecture. Several older feature pages still live in legacy folders such as `src/public/...`, `src/user/...`, and `src/admin/...`.
+## Apply Job Flow
 
-That is intentional for now:
+`ApplyJob.jsx` is the candidate application workflow:
 
-- The shell is clean enough to serve as the migration target.
-- Legacy screens can move over incrementally.
-- We avoid a destabilizing big-bang rewrite.
+1. Load the job with `getUserJobById`.
+2. Load the authenticated user's profile with `getProfile`.
+3. Load saved resumes with `getResumes`.
+4. Prefill phone, LinkedIn, and resume link when available.
+5. Validate required fields in the browser.
+6. Submit the final request through `applyToJob`.
+7. Offer a direct path to `/my-applications` after success.
+
+The backend uses the authenticated JWT user as the authoritative applicant, even though the frontend also sends `userId` and `jobId` in the body for DTO completeness.
+
+## Compatibility Exports
+
+`src/api.js` and `src/services/api.js` remain as compatibility barrels. New page code should import from the specific service module instead of adding more calls to the compatibility barrel.

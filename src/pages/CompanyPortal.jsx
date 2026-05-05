@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { companyDashboard, companyGetProfile, companyUpdateProfile } from '../api';
+import { companyDashboard, companyGetProfile, companyUpdateProfile } from '../services/company/portalApi';
 import { getCurrentUser, isCompanyAdmin } from '../auth';
 import Loader from '../components/Loader';
 

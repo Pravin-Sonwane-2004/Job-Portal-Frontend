@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { companyAddEmployee, companyGetEmployees, companyRemoveEmployee } from '../api';
+import { companyAddEmployee, companyGetEmployees, companyRemoveEmployee } from '../services/company/portalApi';
 import Loader from '../components/Loader';
 
 const emptyEmployee = { name: '', email: '', password: '', designation: '', phoneNumber: '' };

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getMyAppliedJobs, deleteApplicationById } from '../api';
+import { getMyAppliedJobs, deleteApplicationById } from '../services/user/applicationsApi';
 import { getCurrentUser } from '../auth';
 import Loader from '../components/Loader';
 

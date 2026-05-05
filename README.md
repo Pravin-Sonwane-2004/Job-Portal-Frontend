@@ -34,7 +34,8 @@ In interviews, explain it as:
 - Role-aware dashboard insights for candidates, recruiters, and admins.
 - Protected routes through `RequireRole`.
 - Lazy-loaded route components with a shared loader.
-- Central API layer in `src/api.js`.
+- Domain-based API service folders under `src/services`.
+- Shared Axios client in `src/services/http.js`.
 - JWT token injection through an Axios request interceptor.
 - Automatic session clearing on unauthorized API responses.
 - Vite backend proxy for local development.
@@ -51,7 +52,15 @@ src
 |-- index.css            Global styling
 |-- components/          Shared UI such as layout and loader
 |-- pages/               Route-level screens
-|-- services/            API client, auth/session helpers, and frontend services
+|-- services/            Domain API modules and auth/session helpers
+|   |-- admin/           Admin users, jobs, and applications APIs
+|   |-- auth/            Login, signup, and password reset APIs
+|   |-- company/         Company signup and company portal APIs
+|   |-- public/          Public job-search APIs
+|   |-- recruiter/       Recruiter jobs, applications, and talent APIs
+|   |-- shared/          Cross-role APIs such as email
+|   |-- user/            Candidate jobs, applications, saved jobs, resumes, profile APIs
+|   |-- http.js          Shared Axios instance and interceptors
 public
 |-- Companies/           Company logos
 |-- Icons/               Brand icons
@@ -59,6 +68,7 @@ public
 |-- category/            Category images
 |-- social/              Social icons
 docs
+|-- API_SERVICES.md      Frontend API service ownership and route mapping
 |-- ARCHITECTURE.md      Frontend architecture notes
 |-- COMPONENTS.md        Component notes
 |-- STYLING_GUIDE.md     Styling conventions
@@ -98,10 +108,10 @@ docs
 ## Frontend Architecture Flow
 
 1. The user logs in through the login page.
-2. `src/api.js` calls `POST /public/login`.
-3. `src/auth.js` stores the returned user and JWT in `sessionStorage`.
+2. `src/services/auth/authApi.js` calls `POST /public/login`.
+3. `src/auth.js` re-exports `src/services/auth.js`, which stores the returned user and JWT in `sessionStorage`.
 4. `Router.jsx` checks the user's role before rendering protected routes.
-5. Axios automatically adds `Authorization: Bearer <token>` to protected requests.
+5. `src/services/http.js` automatically adds `Authorization: Bearer <token>` to protected requests.
 6. If the backend returns `401`, the frontend clears the session.
 
 The password reset flow works separately from login:
@@ -183,34 +193,28 @@ npm.cmd run build
 
 ## Implemented Backend API Areas
 
-The frontend already has API helpers for:
+The frontend API helpers are grouped by portal/domain:
 
-- Authentication and registration.
-- Public paginated jobs.
-- Candidate job browsing.
-- Candidate applications.
-- Saved jobs.
-- Resume records.
-- Profile fetch and update.
-- Admin user, job, and application management.
-- Recruiter job management.
-- Recruiter application management.
-- Recruiter talent search.
-- Company signup, dashboard, employee, and job-management APIs.
-- Companies, reviews, alerts, messages, and interviews APIs.
-- Email sending.
+- `services/auth`: authentication, registration, and password reset.
+- `services/public`: public paginated job search.
+- `services/user`: candidate job browsing, applications, saved jobs, resumes, profile, alerts, messages, and interviews.
+- `services/recruiter`: recruiter-owned jobs, recruiter applications, and talent search.
+- `services/company`: company signup, company dashboard, company profile, employees, and company jobs.
+- `services/admin`: admin users, jobs, and applications.
+- `services/shared`: cross-role helpers such as email sending.
 
 ## How To Explain The Frontend In Interviews
 
 Focus on these points:
 
-- "I used a central Axios client, so token handling and error handling are not duplicated."
+- "I used a shared Axios client, so token handling and error handling are not duplicated."
+- "I split API services by portal so admin, recruiter, company, and candidate pages call only the routes they own."
 - "I protected routes at the router level using a reusable `RequireRole` component."
 - "I kept auth helpers in one file, which makes role checks and default redirects easy to maintain."
 - "I used Vite's proxy to avoid CORS problems during local development."
 - "I lazy-loaded pages so the first load does not eagerly import every dashboard."
 - "The frontend is role-aware: each role gets a different workflow, not only different buttons."
-- "I separated frontend services into `src/services`, which keeps API/session logic away from page UI code."
+- "I kept a small compatibility export in `src/api.js`, but feature pages now import from their specific service modules."
 
 ## Common Demo Flow
 
@@ -224,10 +228,57 @@ Focus on these points:
 8. Log in as admin.
 9. Manage users, jobs, and applications.
 
-## Future Enhancements
+## Things You Can Implement Next
 
-- Add form schema validation.
-- Add toast notifications for all important actions.
-- Add loading and empty states consistently across admin and recruiter pages.
-- Add frontend unit tests for auth helpers and route protection.
-- Add end-to-end tests for login, apply, recruiter review, and admin management.
+Use this as a practical roadmap for improving the frontend.
+
+### High Priority
+
+- Add form validation for login, signup, profile, job posting, company signup, and job application forms.
+- Replace browser `alert()` and `confirm()` calls with reusable toast and modal components.
+- Add consistent success/error/loading states to candidate, recruiter, company, and admin pages.
+- Add edit and delete actions wherever the backend already supports them, such as company jobs and user applications.
+- Add better API error messages by reading backend validation responses instead of showing generic failures.
+- Add route fallback pages for `403 Access Denied`, `404 Not Found`, and expired sessions.
+
+### Candidate Portal Ideas
+
+- Add job details page before applying.
+- Add filters for job type, experience level, salary range, company, and category.
+- Show whether a job is already saved or already applied.
+- Allow candidates to edit an application before recruiter review.
+- Add resume preview and real file upload support when the backend supports files.
+- Add application timeline statuses such as `APPLIED`, `UNDER_REVIEW`, `SHORTLISTED`, `REJECTED`, and `HIRED`.
+
+### Recruiter Portal Ideas
+
+- Add applicant detail view with resume, cover letter, profile, and contact links.
+- Add recruiter remarks while updating application status.
+- Add filters for applications by job and status.
+- Add interview scheduling UI.
+- Add candidate shortlist view.
+- Add recruiter dashboard charts for open jobs, applications, shortlisted candidates, and hires.
+
+### Company Portal Ideas
+
+- Add company job edit/delete confirmation modals.
+- Add employee role and permission management.
+- Add company verification badge and public company profile page.
+- Add company analytics for jobs, applications, employees, and hiring conversion.
+- Add company review moderation tools for company admins if business rules allow it.
+
+### Admin Portal Ideas
+
+- Add admin dashboard charts for users, jobs, companies, recruiters, and applications.
+- Add advanced user filters by role, status, and company.
+- Add admin company management.
+- Add audit logs for sensitive actions such as deleting users, jobs, or applications.
+- Add bulk actions for users, jobs, and applications.
+
+### Code Quality Ideas
+
+- Add frontend unit tests for auth helpers, route protection, and service functions.
+- Add end-to-end tests for login, job apply, recruiter review, company job posting, and admin management.
+- Add reusable form components for inputs, selects, textareas, and submit buttons.
+- Add a small API error utility to normalize backend errors.
+- Add environment examples such as `.env.example`.

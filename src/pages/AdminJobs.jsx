@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { adminCreateJob, adminUpdateJob, adminDeleteJob, getUserJobs } from '../api';
+import { adminCreateJob, adminUpdateJob, adminDeleteJob, adminGetJobs } from '../services/admin/jobsApi';
 import { isAdmin, getCurrentUser } from '../auth';
 import Loader from '../components/Loader';
 
@@ -13,7 +13,7 @@ export default function AdminJobs() {
   const currentUser = getCurrentUser();
 
   useEffect(() => {
-    getUserJobs().then(res => { setJobs(Array.isArray(res.data) ? res.data : []); setLoading(false); }).catch(() => { setError('Failed to load jobs.'); setLoading(false); });
+    adminGetJobs().then(res => { setJobs(Array.isArray(res.data) ? res.data : []); setLoading(false); }).catch(() => { setError('Failed to load jobs.'); setLoading(false); });
   }, []);
 
   if (!isAdmin(currentUser)) return <div className="page"><div className="alert alert-error">Access denied.</div></div>;
@@ -24,7 +24,7 @@ export default function AdminJobs() {
       await adminCreateJob(form);
       setShowCreate(false);
       setForm({ title: '', location: '', salary: '', company: '' });
-      getUserJobs().then(res => setJobs(Array.isArray(res.data) ? res.data : []));
+      adminGetJobs().then(res => setJobs(Array.isArray(res.data) ? res.data : []));
     } catch { alert('Failed to create job.'); }
   };
 
@@ -32,7 +32,7 @@ export default function AdminJobs() {
     try {
       await adminUpdateJob(editJob.id, editJob);
       setEditJob(null);
-      getUserJobs().then(res => setJobs(Array.isArray(res.data) ? res.data : []));
+      adminGetJobs().then(res => setJobs(Array.isArray(res.data) ? res.data : []));
     } catch { alert('Failed to update job.'); }
   };
 

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { recruiterSearchTalent } from '../api';
+import { recruiterSearchTalent } from '../services/recruiter/talentApi';
 import { getCurrentUser, isRecruiter } from '../auth';
 import Loader from '../components/Loader';
 

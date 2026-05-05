@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getResumes, uploadResume, deleteResume } from '../api';
+import { getResumes, uploadResume, deleteResume } from '../services/user/resumesApi';
 import { getCurrentUser } from '../auth';
 import Loader from '../components/Loader';
 

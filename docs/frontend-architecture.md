@@ -1,40 +1,33 @@
-# Frontend Architecture
+# Frontend Architecture Summary
 
-## Updated Structure
+This file is a short companion to `ARCHITECTURE.md`.
 
-```text
-src/
-  App.jsx
-  Router.jsx
-  layouts/
-    MainLayout.jsx
-  components/
-    ui/
-      SurfaceCard.jsx
-      ToggleSwitch.jsx
-      system/
-        index.jsx
-        theme.js
-  views/
-    settings/
-      SettingsView.jsx
-  settings/
-    SettingsPage.jsx
-  header and footer/
-    Header.jsx
-    HeaderNav.jsx
-    HeaderUserSection.jsx
-    Footer.jsx
-  utils/
-    jwtUtils.js
-    themeUtils.js
-```
+## Core Ideas
 
-## Notes
+- The app is a React SPA served by Vite.
+- Routing is centralized in `src/Router.jsx`.
+- Session state is stored in `sessionStorage` through `src/services/auth.js`.
+- API access is grouped by portal under `src/services`.
+- `src/services/http.js` is the only place that owns Axios setup.
+- The Vite dev server proxies `/api-backend` to the Spring backend.
 
-- `layouts/` holds application shells and page-level wrappers.
-- `components/ui/` contains reusable presentational primitives.
-- `views/` contains route-facing screens built from shared components.
-- `settings/SettingsPage.jsx` is now a thin route adapter that re-exports the real view.
-- `components/ui/system/` is a temporary Tailwind compatibility layer used to remove the old UI dependency while feature pages are migrated to cleaner local components.
+## Portal Boundaries
 
+| Portal | Frontend Service Folder | Backend Route Group |
+| --- | --- | --- |
+| Public | `services/public` | `/public` |
+| Auth | `services/auth` | `/public`, `/public/password` |
+| Candidate | `services/user` | `/user`, `/apply/applications`, `/api/saved-jobs`, `/api/resumes`, `/role-profile` |
+| Recruiter | `services/recruiter` | `/recruiter` |
+| Company | `services/company` | `/public/company`, `/company-portal`, `/api/companies` |
+| Admin | `services/admin` | `/admin` |
+
+## Access Rules
+
+Keep these three places aligned whenever a route changes:
+
+1. `src/Router.jsx`
+2. `src/components/Layout.jsx`
+3. Backend `SecurityConfig.java`
+
+The frontend hides links and protects routes for user experience. The backend remains the source of truth for authorization.

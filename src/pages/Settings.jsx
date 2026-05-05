@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getCurrentUser, clearCurrentUser } from '../auth';
-import { getFullName } from '../api';
+import { getFullName } from '../services/user/profileApi';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 

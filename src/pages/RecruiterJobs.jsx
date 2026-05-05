@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { recruiterCreateJob, recruiterDeleteJob, recruiterGetJobs, recruiterUpdateJob } from '../api';
+import { recruiterCreateJob, recruiterDeleteJob, recruiterGetJobs, recruiterUpdateJob } from '../services/recruiter/jobsApi';
 import { getCurrentUser, isRecruiter } from '../auth';
 import Loader from '../components/Loader';
 

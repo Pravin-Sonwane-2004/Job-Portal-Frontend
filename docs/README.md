@@ -2,53 +2,48 @@
 
 ## Overview
 
-This frontend is a Vite + React + Tailwind application for a job portal that supports public browsing, candidate workflows, and admin tools.
+This frontend is a React + Vite single-page application for the Job Portal platform. It supports public job discovery plus separate candidate, recruiter, company, and admin portal workflows.
 
-The current refactor establishes a lightweight core:
+The current frontend is intentionally simple:
 
-- A Tailwind-only application shell
-- A centralized dark/light theme workflow
-- A production-style split between layouts, components, hooks, and services
-- A docs-first maintenance baseline under `/docs`
+- React Router owns route-level access control.
+- `src/components/Layout.jsx` owns the shared header, role-aware navigation, main outlet, and footer.
+- Route pages live in `src/pages`.
+- API calls live in domain folders under `src/services`.
+- `src/services/http.js` owns the Axios instance, JWT injection, and unauthorized-session cleanup.
 
-The new shell and homepage are the reference implementation for future cleanup. Some legacy feature pages still exist in their original folders and should be migrated gradually instead of rewritten all at once.
+## Documentation Map
 
-## Tech Stack
-
-- React 19
-- React Router 7
-- Tailwind CSS 3
-- Axios for API requests
-- Vite 6
+| File | Purpose |
+| --- | --- |
+| `../README.md` | Main setup, feature, and demo guide |
+| `API_SERVICES.md` | Frontend service folder ownership and route mapping |
+| `ARCHITECTURE.md` | Runtime architecture and data flow |
+| `structure.md` | Current folder structure |
+| `COMPONENTS.md` | Shared component notes |
+| `STYLING_GUIDE.md` | CSS and UI conventions |
 
 ## Local Setup
 
-1. Install dependencies:
-
-```bash
+```powershell
 npm install
-```
-
-2. Start the development server:
-
-```bash
 npm run dev
 ```
 
-3. Build the production bundle:
+The frontend runs at `http://localhost:3000` and proxies `/api-backend` to the backend at `http://localhost:8080`.
 
-```bash
-npm run build
+For production builds:
+
+```powershell
+npm.cmd run build
 ```
 
-## Backend Assumption
+Use `npm.cmd` on Windows PowerShell if the `npm.ps1` execution policy blocks scripts.
 
-The frontend expects the backend API to be reachable at `http://localhost:8080`. Several service modules still point directly to that base URL.
+## Maintenance Rules
 
-## Recommended Working Rules
-
-- Keep view components focused on layout and rendering.
-- Put stateful behavior in hooks.
-- Put API access and transformation rules in services.
-- Reuse the application shell and shared UI primitives instead of re-creating page chrome.
-- Treat `/docs` as the canonical maintenance guide for new contributors.
+- Keep portal-specific API calls in their portal service folder.
+- Keep page files focused on UI, form state, loading state, and navigation.
+- Add backend routes to `API_SERVICES.md` when a page starts using them.
+- Keep role access in sync between `Router.jsx`, frontend navigation, and backend `SecurityConfig`.
+- Prefer small, focused service modules over rebuilding a large all-in-one API file.

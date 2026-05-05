@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { registerCompany } from '../api';
+import { registerCompany } from '../services/company/companyApi';
 
 const initialForm = {
   companyName: '',
